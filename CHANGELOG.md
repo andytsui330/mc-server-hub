@@ -1,5 +1,11 @@
 # 更新紀錄
 
+## 未發佈
+
+### 修正
+- README 與使用說明的下載檔名改成 Release 實際檔名（`MCServerHub-<版本>-windows.zip`／`-mac.zip`、`SHA256SUMS-<版本>.txt`）。
+- 打包腳本直接產出英文檔名的 zip（GitHub Release 會吃掉中文附件檔名）；程式本身名稱不變。
+
 ## 1.2.0（2026-11-14）
 
 ### 新增

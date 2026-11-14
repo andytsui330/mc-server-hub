@@ -21,12 +21,12 @@
 
 | 系統 | 檔案 | 第一次打開 |
 | :-- | :-- | :-- |
-| Windows 10／11 | `MC開服平台-<版本>.zip` | 解壓縮後雙擊 `MC開服平台.exe`。若出現「Windows 已保護您的電腦」，按「其他資訊」→「仍要執行」。 |
-| macOS 11 以上（Intel＋Apple 晶片通用） | `MC開服平台-<版本>-mac.zip` | 解壓縮後雙擊，跳出「Apple 無法驗證」按「完成」→ 到「系統設定 → 隱私權與安全性」按「強制打開」→ 輸入密碼 →「打開」。只要做一次，之後直接雙擊。（macOS 15 起「右鍵 → 打開」已經沒用。） |
+| Windows 10／11 | `MCServerHub-<版本>-windows.zip` | 解壓縮後雙擊 `MC開服平台.exe`。若出現「Windows 已保護您的電腦」，按「其他資訊」→「仍要執行」。 |
+| macOS 11 以上（Intel＋Apple 晶片通用） | `MCServerHub-<版本>-mac.zip` | 解壓縮後雙擊，跳出「Apple 無法驗證」按「完成」→ 到「系統設定 → 隱私權與安全性」按「強制打開」→ 輸入密碼 →「打開」。只要做一次，之後直接雙擊。（macOS 15 起「右鍵 → 打開」已經沒用。） |
 
 會跳警告是因為這個工具沒有付費購買微軟／Apple 的數位簽章，不是偵測到病毒。
 
-**Mac 晶片支援**：Mac 版是 universal2，同一個 app 內含 Intel 與 Apple 晶片（M 系列）兩份原生程式，不靠 Rosetta。1.2.0 在 2018 Intel MacBook Pro（macOS 15.8.1）實機測過；**Apple 晶片版本已內含、尚未在 M 系列 Mac 實機測試**，遇到問題歡迎回報。每個版本旁都附 `SHA256` 檢查碼，可以自己核對下載的檔案。
+**Mac 晶片支援**：Mac 版是 universal2，同一個 app 內含 Intel 與 Apple 晶片（M 系列）兩份原生程式，不靠 Rosetta。1.2.0 在 2018 Intel MacBook Pro（macOS 15.8.1）實機測過；**Apple 晶片版本已內含、尚未在 M 系列 Mac 實機測試**，遇到問題歡迎回報。每個版本都附 `SHA256SUMS-<版本>.txt` 檢查碼，可以自己核對下載的檔案。
 
 需要 Java：開服前平台會檢查電腦上的 Java 夠不夠新，不夠會給你官方（Eclipse Temurin）下載連結，裝好不用重開平台。
 

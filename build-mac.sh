@@ -76,7 +76,7 @@ cp -R "$root/dist-mac/$app_name.app" "$stage/"
 cp "$root/docs/使用說明.txt" "$stage/使用說明.txt"
 cp "$root/LICENSE" "$stage/LICENSE.txt"
 cp "$root/THIRD_PARTY_NOTICES.txt" "$stage/THIRD_PARTY_NOTICES.txt"
-zip="$root/_build/stage-mac/$app_name-$version-mac.zip"
+zip="$root/_build/stage-mac/MCServerHub-$version-mac.zip"   # 英文檔名：GitHub Release 會吃掉中文附件檔名
 rm -f "$zip"
 (cd "$stage" && ditto -c -k --sequesterRsrc . "$zip")   # ditto 保留 .app 的權限與屬性
 

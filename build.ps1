@@ -48,7 +48,7 @@ foreach ($n in 'LICENSE', 'THIRD_PARTY_NOTICES.txt') {
     $t = (Get-Content "$root\$n" -Raw -Encoding UTF8) -replace "`r?`n", "`r`n"
     [IO.File]::WriteAllText("$stage\$([IO.Path]::GetFileNameWithoutExtension($n)).txt", $t, (New-Object Text.UTF8Encoding($true)))
 }
-$zip = Join-Path $root "_build\stage\MC開服平台-$version.zip"
+$zip = Join-Path $root "_build\stage\MCServerHub-$version-windows.zip"   # 英文檔名：GitHub Release 會吃掉中文附件檔名
 $srcZip = Join-Path $root "_build\stage\mc-server-hub-$version-src.zip"
 Remove-Item $zip, $srcZip -ErrorAction SilentlyContinue
 Compress-Archive -Path "$stage\*" -DestinationPath $zip
