@@ -1,0 +1,1586 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<title>MC 開服平台</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#08090a">
+<style>{{FONTS}}</style>
+<style>
+/* 外觀正本：100_Todo/projects/minecraft-server-ops/design/設計簡報-1.1.md（定版 mock-1.1-最終方向-v2）。
+   左側可收合清單＋右側「刊頭 → 選中那台的資訊條 → 主控台」。全頁只有「開機」是白色實心。 */
+:root{
+  --bg:#08090a; --s1:#0e0f11; --s2:#15161a; --s3:#1b1c20; --ln:#212326; --ln2:#33363b; --line-only:#55575c;
+  --ink:#f4f4f6; --body:#cfd0d2; --mut:#8f9093; --off:#6b6e74;
+  --tech:#57c1ff; --ok:#5fd39a; --bad:#ff6b6b; --wait:#e8b86a;
+  --ui:"Inter Tight","Microsoft JhengHei UI","Microsoft JhengHei","PingFang TC",sans-serif;
+  --mono:"Geist Mono","Cascadia Mono",Consolas,"Microsoft JhengHei UI","PingFang TC",monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0; height:100%}
+body{background:var(--bg); color:var(--body); font:14px/1.55 var(--ui); -webkit-font-smoothing:antialiased; overflow:hidden}
+button{font:inherit; cursor:pointer; border:0; background:none; color:inherit; padding:0}
+button:disabled{cursor:not-allowed; opacity:.45}
+input,select,textarea{font:inherit; color:inherit}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--tech); outline-offset:2px}
+.sp{flex:1}
+.mono{font-family:var(--mono)}
+a{color:var(--ink); text-underline-offset:3px}
+
+/* ---------- 版面 ---------- */
+.shell{display:grid; grid-template-columns:248px minmax(0,1fr); height:100vh; transition:grid-template-columns .25s ease}
+body.fl .shell{grid-template-columns:60px minmax(0,1fr)}
+
+/* 左側清單 */
+aside{background:var(--s1); border-right:1px solid var(--ln); padding:16px 10px; display:flex; flex-direction:column; gap:3px; overflow:hidden auto; min-width:0}
+.brand{display:flex; align-items:center; gap:10px; padding:2px 6px 14px 8px; white-space:nowrap}
+.brand i{flex:none; width:22px; height:22px; border-radius:6px; background:linear-gradient(135deg,#2b2d31,#45484e); box-shadow:inset 0 1px #ffffff22,0 0 0 1px #57c1ff33}
+.brand b{font-weight:600; color:var(--ink)}
+.brand small{font:11.5px var(--mono); color:var(--mut)}
+.fold{margin-left:auto; width:30px; height:30px; border-radius:7px; display:grid; place-items:center; color:var(--mut); flex:none}
+.fold:hover{background:var(--s2); color:var(--ink)}
+.fold svg{width:15px; height:15px; transition:transform .25s}
+body.fl .fold svg{transform:rotate(180deg)}
+.nav,.srv,.add{display:flex; align-items:center; gap:12px; width:100%; padding:8px 10px; border-radius:8px; font-size:15px; white-space:nowrap; color:var(--body); text-align:left; min-height:46px; transition:background-color .15s,color .15s}
+.nav svg,.add svg{flex:none; width:17px; height:17px; color:var(--mut); margin:0 5px}
+.nav:hover,.srv:hover,.add:hover{background:var(--s2); color:var(--ink)}
+.nav.a,.srv.a{background:var(--s2); color:var(--ink); box-shadow:inset 0 0 0 1px var(--ln2),inset 2px 0 0 var(--c,var(--tech))}
+.grp{font:500 12.5px var(--ui); letter-spacing:.04em; color:var(--mut); padding:14px 10px 4px; white-space:nowrap}
+.srv .nm{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis}
+.srv small{margin-left:auto; font:12px var(--mono); color:var(--mut); flex:none}
+.add{color:var(--mut); font-size:14px}
+/* 像素圖示：16×16 畫布放大、不糊 */
+canvas.px{display:block; image-rendering:pixelated; image-rendering:crisp-edges}
+canvas.px.dk{box-shadow:0 0 0 1px #ffffff30}   /* 深色生物在深色底上加極淡外框 */
+.ic{position:relative; flex:none; width:28px; height:28px; border-radius:7px; display:grid; place-items:center; background:color-mix(in srgb,var(--c) 16%,#0e0f11); box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 40%,transparent)}
+.ic canvas{width:20px; height:20px}
+.srv .ic .d{position:absolute; right:-3px; bottom:-3px; width:10px; height:10px; box-shadow:0 0 0 2px var(--s1); animation:none}
+.srv:hover .ic .d,.srv.a .ic .d{box-shadow:0 0 0 2px var(--s2)}
+.srv.st-starting .ic .d,.srv.st-stopping .ic .d{animation:breathe 2.4s ease-in-out infinite}
+.empty-list{padding:6px 10px; font-size:12.5px; color:var(--mut); white-space:normal}
+.foot-ver{margin-top:auto; padding:10px; font:11.5px var(--mono); color:var(--mut); white-space:nowrap}
+body.fl .brand b,body.fl .brand small,body.fl .srv .nm,body.fl .srv small,body.fl .grp,body.fl .add span,body.fl .nav span,body.fl .foot-ver,body.fl .empty-list{display:none}
+body.fl .brand{flex-direction:column; gap:12px; padding:2px 0 14px}
+body.fl .fold{margin:0}
+body.fl .srv{justify-content:center; padding:8px 0}
+body.fl .nav,body.fl .add{justify-content:center; padding:8px 0}
+
+/* 狀態燈（清單、總覽、膠囊共用） */
+.d{flex:none; width:7px; height:7px; border-radius:50%; background:var(--off)}
+.st-running .d{background:var(--ok); box-shadow:0 0 0 3px #5fd39a22; animation:pulse 2.4s ease-in-out infinite}
+.st-starting .d,.st-stopping .d{background:var(--wait); animation:breathe 2.4s ease-in-out infinite}
+.st-external .d{background:var(--tech)}
+@keyframes pulse{50%{box-shadow:0 0 0 5px #5fd39a10}}
+@keyframes breathe{50%{opacity:.35}}
+
+/* 主畫面 */
+main{position:relative; height:100vh; display:flex; flex-direction:column; padding:0 36px 24px; overflow:hidden auto; min-width:0}
+main::before{content:""; position:absolute; inset:0 0 auto; height:520px; pointer-events:none; z-index:0;
+  background:repeating-linear-gradient(0deg,transparent 0 47px,#ffffff08 47px 48px),repeating-linear-gradient(90deg,transparent 0 47px,#ffffff08 47px 48px);
+  -webkit-mask-image:radial-gradient(ellipse at 50% 0,#000 30%,transparent 75%); mask-image:radial-gradient(ellipse at 50% 0,#000 30%,transparent 75%)}
+main>*{position:relative; z-index:1}
+.mast{display:flex; align-items:center; gap:18px; padding:16px 0; border-bottom:1px solid var(--ln); flex:none; flex-wrap:wrap}
+.crumb{font-size:13px; color:var(--mut); min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.crumb b{color:var(--ink); font-weight:500}
+.newver{font-size:12.5px; color:var(--wait); padding:4px 0; border-bottom:1px solid transparent}
+.newver:hover{border-color:var(--wait)}
+.sum{font-size:13px; color:var(--mut); display:flex; align-items:center; gap:8px; white-space:nowrap}
+.sum::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--off)}
+.sum.live::before{background:var(--ok)}
+.lnk{font-size:13px; color:var(--body); padding:5px 0; border-bottom:1px solid transparent; transition:color .15s,border-color .15s; white-space:nowrap}
+.lnk:hover:not(:disabled){color:var(--ink); border-color:var(--ink)}
+.lnk.rm:hover:not(:disabled){color:var(--bad); border-color:var(--bad)}
+
+/* 資訊條 */
+.hero{display:grid; grid-template-columns:auto minmax(0,1fr) auto; gap:0 28px; align-items:center; padding:22px 0 20px; border-bottom:1px solid var(--ln); flex:none}
+.no{font:400 58px/.9 var(--ui); color:var(--ink); font-variant-numeric:tabular-nums; letter-spacing:-.03em}
+.big{position:relative; width:84px; height:84px; border-radius:14px; display:grid; place-items:center; background:color-mix(in srgb,var(--c) 14%,#0e0f11); box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 45%,transparent); transition:box-shadow .15s}
+.big canvas{width:64px; height:64px}
+.big:hover{box-shadow:inset 0 0 0 2px var(--c)}
+.big .pen{position:absolute; right:-6px; bottom:-6px; width:24px; height:24px; border-radius:50%; background:var(--s3); box-shadow:0 0 0 1px var(--ln2); display:grid; place-items:center; color:var(--body); opacity:0; transition:opacity .15s}
+.big .pen svg{width:12px; height:12px}
+.big:hover .pen,.big:focus-visible .pen{opacity:1}
+.kk{font:12.5px var(--mono); color:var(--mut); display:flex; gap:10px; flex-wrap:wrap}
+.kk span+span::before{content:"·"; margin-right:10px}
+.hero h2{margin:4px 0 0; font:700 34px/1.2 var(--ui); color:var(--c,var(--ink)); letter-spacing:.01em; display:flex; align-items:center; gap:14px; flex-wrap:wrap; min-width:0}
+.hero h2 .t{min-width:0; overflow-wrap:anywhere}
+.badge{font:500 13px var(--ui); display:inline-flex; align-items:center; gap:7px; padding:3px 10px; border-radius:99px; background:#ffffff08; color:var(--mut); box-shadow:inset 0 0 0 1px var(--ln2); white-space:nowrap}
+.badge.st-running{background:#5fd39a14; color:var(--ok); box-shadow:inset 0 0 0 1px #5fd39a44}
+.badge.st-starting,.badge.st-stopping{background:#e8b86a12; color:var(--wait); box-shadow:inset 0 0 0 1px #e8b86a44}
+.badge.st-external{background:#57c1ff12; color:var(--tech); box-shadow:inset 0 0 0 1px #57c1ff44}
+.figs{display:grid; grid-template-columns:repeat(3,minmax(110px,1fr)); margin-top:12px; max-width:620px}
+.fg{padding-right:18px; min-width:0}
+.fg+.fg{padding-left:18px; border-left:1px solid var(--ln)}
+.fg>span{font:500 12px var(--ui); color:var(--mut)}
+.fg b{display:block; font:400 28px/1.2 var(--ui); color:var(--ink); font-variant-numeric:tabular-nums; letter-spacing:-.02em; white-space:nowrap}
+.fg b small{font:12.5px var(--mono); color:var(--mut); margin-left:6px; letter-spacing:0}
+.fg b.warn{color:var(--wait)}
+.who{display:flex; gap:6px; margin-top:6px; flex-wrap:wrap; min-height:22px}
+.who span{font:500 12px var(--ui); color:var(--ink); background:var(--s2); box-shadow:inset 0 0 0 1px var(--ln); padding:2px 8px; border-radius:6px}
+.who em{font-style:normal; font-size:12px; color:var(--mut)}
+.spark{display:block; width:100%; height:24px; margin-top:4px; overflow:visible}
+.cap{font:11.5px var(--mono); color:var(--wait)}
+.ctrl{display:flex; flex-direction:column; align-items:flex-end; gap:12px}
+.pw{display:inline-flex; align-items:center; gap:10px; border-radius:99px; padding:12px 28px; min-height:46px; font-weight:600; font-size:14.5px; background:var(--ink); color:#08090a; white-space:nowrap; transition:background-color .2s,color .2s,box-shadow .2s}
+.pw svg{width:16px; height:16px; flex:none}
+.pw:hover:not(:disabled){background:#fff}
+.pw.out{background:transparent; color:var(--ink); box-shadow:inset 0 0 0 1px var(--ln2)}
+.pw.out:hover:not(:disabled){background:transparent; color:var(--bad); box-shadow:inset 0 0 0 1px var(--bad)}
+.pw.busy,.pw.busy:hover{background:transparent; color:var(--wait); box-shadow:inset 0 0 0 1px #e8b86a66; cursor:progress}
+.pw.busy svg{animation:breathe 1.2s ease-in-out infinite}
+.pw.force,.pw.force:hover{background:var(--bad); color:#1a0505; box-shadow:none; cursor:pointer}
+.pw.ext,.pw.ext:hover{background:transparent; color:var(--mut); box-shadow:inset 0 0 0 1px var(--ln); cursor:help}
+.ghosts{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; max-width:420px}
+.gh{font-size:13px; color:var(--body); padding:6px 14px; min-height:32px; border-radius:99px; box-shadow:inset 0 0 0 1px var(--ln2); white-space:nowrap; transition:background-color .15s,color .15s}
+.gh:hover:not(:disabled){color:var(--ink); background:var(--s2)}
+.msgs{grid-column:1/-1; display:flex; flex-direction:column; gap:8px}
+.msgs:not(:empty){margin-top:16px}
+.msg{display:flex; gap:14px; align-items:flex-start; padding:2px 0 2px 14px; border-left:2px solid var(--ln2); font-size:13px; line-height:1.65; white-space:pre-wrap; overflow-wrap:anywhere; color:var(--mut)}
+.msg span{flex:1; min-width:0}
+.msg.bad{color:#ff9a9a; border-left-color:var(--bad)}
+.msg.good{color:var(--body); border-left-color:var(--ok)}
+
+/* 主控台 */
+.con{position:relative; margin-top:20px; border:1px solid var(--ln); background:var(--s1); display:flex; flex-direction:column; flex:1 1 auto; min-height:0}
+.con::before,.con::after,.sheet::before,.sheet::after{content:""; position:absolute; width:10px; height:10px; border:solid var(--tech); pointer-events:none}
+.con::before,.sheet::before{top:-1px; left:-1px; border-width:1px 0 0 1px}
+.con::after,.sheet::after{bottom:-1px; right:-1px; border-width:0 1px 1px 0}
+/* 對話框會捲動：右下角往外凸 1px 就多出捲動條 → 兩個角都貼齊內緣 */
+.sheet::before{top:0; left:0} .sheet::after{bottom:0; right:0}
+.conhd{display:flex; gap:20px; align-items:center; padding:8px 20px; border-bottom:1px solid var(--ln); flex:none}
+.conhd b{font:600 13.5px var(--ui); color:var(--ink)}
+.conhd small{font:12px var(--mono); color:var(--mut); min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.logwrap{position:relative; flex:1 1 auto; min-height:160px}
+.log{position:absolute; inset:0; overflow:auto; padding:12px 20px; font:13px/1.7 var(--mono); color:#b4b8bd; background:#050607; white-space:pre-wrap; word-break:break-word}
+.log .t{color:var(--mut)}
+.log .hub{color:var(--tech)} .log .me{color:#fff} .log .join{color:var(--ok)} .log .left{color:var(--mut)}
+.log .warn{color:var(--wait)} .log .err{color:var(--bad)} .log .chat{color:#e2e3e6}
+.log-empty{position:absolute; inset:0; display:grid; place-items:center; padding:20px; text-align:center; color:var(--mut); font-size:13px; pointer-events:none}
+.pickhd{display:flex; align-items:center; gap:12px; width:100%; padding:9px 20px; border-top:1px solid var(--ln); text-align:left; flex:none}
+.pickhd b{font:600 13px var(--ui); letter-spacing:.04em; color:var(--ink)}
+.pickhd small{font-size:12px; color:var(--mut)}
+.pickhd svg{width:14px; height:14px; color:var(--mut); transition:transform .25s; margin-left:auto}
+.pickhd:hover{background:var(--s2)}
+body.fc .pickhd svg{transform:rotate(180deg)}
+.pickwrap{display:grid; grid-template-rows:1fr; transition:grid-template-rows .25s ease; flex:none}
+body.fc .pickwrap{grid-template-rows:0fr}
+.pick{overflow:hidden auto; min-height:0; max-height:clamp(96px,calc(100vh - 580px),300px); overscroll-behavior:contain}
+body.fc .pick{visibility:hidden}
+.pick:has(.form){max-height:clamp(220px,calc(100vh - 420px),380px)}   /* 展開小表單時給足高度，矮螢幕改由整頁捲動 */
+.pick.off .cmds,.pick.off .cats{opacity:.5}
+.pick-note{padding:0 20px 8px; font-size:12.5px; color:var(--wait)}
+.cats{display:flex; gap:4px; padding:2px 14px 8px; flex-wrap:wrap}
+.cat{font-size:13px; color:var(--mut); padding:5px 11px; border-radius:7px; min-height:30px}
+.cat:hover{color:var(--ink); background:var(--s2)}
+.cat.a{color:var(--ink); background:#57c1ff14; box-shadow:inset 0 0 0 1px #57c1ff55}
+.cat.dz{color:#ff8a8a}
+.cmds{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); border-top:1px solid var(--ln)}
+.cell{display:block; width:100%; padding:9px 16px; border-right:1px solid var(--ln); border-bottom:1px solid var(--ln); font-size:13.5px; color:var(--ink); text-align:left; min-height:52px; min-width:0}
+.cell:hover:not(:disabled){background:var(--s2)}
+.cell .pv{display:block; font:12px var(--mono); color:var(--mut); margin-top:1px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.cell .un{display:block; font-size:11.5px; color:var(--wait)}
+.cell.warn{box-shadow:inset 2px 0 0 var(--bad)}
+.cell.warn .pv{color:#ff8a8a}
+.cell.addnote{color:var(--mut)}
+.form{grid-column:1/-1; padding:12px 16px 14px; border-bottom:1px solid var(--ln); background:var(--s2); box-shadow:inset 2px 0 0 var(--tech); display:flex; flex-wrap:wrap; gap:10px 14px; align-items:flex-end}
+.form.warn{box-shadow:inset 2px 0 0 var(--bad); background:#ff6b6b0d}
+.form .ttl{flex-basis:100%; display:flex; gap:12px; align-items:baseline; flex-wrap:wrap}
+.form .ttl b{color:var(--ink); font-weight:600}
+.form .ttl code{font:12px var(--mono); color:var(--mut)}
+.form .note{flex-basis:100%; font-size:12.5px; color:var(--mut)}
+.form .note.bad{color:#ffb3b3}
+.fld{display:flex; flex-direction:column; gap:4px; min-width:0}
+.fld>span{font-size:12px; color:var(--mut)}
+.fld input,.fld select,.f input,.f select,.f textarea{background:var(--bg); border:1px solid var(--ln2); border-radius:6px; color:var(--ink); padding:7px 10px; outline:0; min-height:34px; transition:border-color .15s}
+.fld input:focus,.fld select:focus,.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--tech)}
+select{background-color:var(--bg); color:var(--ink)}
+select option{background-color:var(--s1); color:var(--ink)}
+.fld input[type=number]{width:96px}
+.fld.wide input{width:min(320px,100%)}
+.chips{display:flex; gap:4px; flex-wrap:wrap; max-width:100%}
+.chip{font-size:12px; padding:3px 9px; border-radius:6px; box-shadow:inset 0 0 0 1px var(--ln2); color:var(--body); min-height:26px}
+.chip:hover,.chip.a{color:var(--ink); background:#57c1ff14; box-shadow:inset 0 0 0 1px #57c1ff55}
+.seg{display:inline-flex; border-radius:7px; box-shadow:inset 0 0 0 1px var(--ln2); overflow:hidden}
+.seg button{padding:6px 14px; font-size:13px; color:var(--mut); min-height:34px}
+.seg button.a{background:#57c1ff1c; color:var(--ink)}
+.acts{display:flex; gap:8px; margin-left:auto; align-items:center}
+.b{display:inline-flex; align-items:center; justify-content:center; gap:8px; border-radius:99px; padding:7px 16px; min-height:34px; font-size:13px; font-weight:500; white-space:nowrap; color:var(--ink); box-shadow:inset 0 0 0 1px var(--ln2); transition:background-color .15s,color .15s,box-shadow .15s; text-decoration:none}
+.b:hover:not(:disabled){background:var(--s3)}
+.b.pri{background:#57c1ff; color:#03121c; box-shadow:none; font-weight:600}
+.b.pri:hover:not(:disabled){background:#7fd0ff}
+.b.danger{background:var(--bad); color:#1a0505; box-shadow:none; font-weight:600}
+.b.danger:hover:not(:disabled){background:#ff8585}
+.foot{display:flex; gap:14px; padding:9px 20px; border-top:1px solid var(--ln); align-items:center; flex:none}
+.foot form{flex:1; display:flex; gap:12px; align-items:center; min-width:0}
+.foot b{font:500 13px var(--mono); color:var(--tech)}
+.foot input{flex:1; min-width:0; background:none; border:0; outline:0; color:var(--ink); font:13px var(--mono); padding:8px 0}
+.foot input::placeholder{font-family:var(--ui); color:var(--mut)}
+.foot input:focus-visible{outline:0}
+.foot form:focus-within{box-shadow:0 1px 0 var(--tech)}
+.kbd{font:12px var(--mono); padding:2px 7px; border-radius:5px; background:var(--s2); box-shadow:inset 0 -1px var(--ln2); color:var(--mut); white-space:nowrap}
+button.kbd:hover{color:var(--ink)}
+
+/* 總覽 */
+.ovw{padding-top:18px}
+.ovw h3{margin:0 0 4px; font:600 20px/1.3 var(--ui); color:var(--ink)}
+.ovw p{margin:0 0 16px; color:var(--mut); font-size:13px}
+.ovrow{display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:center; border-top:1px solid var(--ln)}
+.ovrow:last-child{border-bottom:1px solid var(--ln)}
+.ovmain{display:grid; grid-template-columns:14px 34px minmax(140px,1.6fr) minmax(230px,2fr) 90px minmax(150px,1.2fr); gap:14px; align-items:center; min-height:44px; padding:6px 12px; text-align:left; width:100%}
+.ovmain:hover{background:var(--s1)}
+.ovmain .ic{width:30px; height:30px}
+.ovmain .nm{color:var(--ink); font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.ovmain .v,.ovmain .o,.ovmain .m{font:12.5px var(--mono); color:var(--mut); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.ovmain .m{display:flex; gap:10px; align-items:center}
+.ovmain .m svg{width:60px; height:16px; flex:none; overflow:visible}
+.mini{font-size:12.5px; padding:5px 14px; border-radius:99px; box-shadow:inset 0 0 0 1px var(--ln2); color:var(--ink); min-height:30px; margin-right:12px; white-space:nowrap}
+.mini:hover:not(:disabled){background:var(--s2)}
+.mini.out:hover:not(:disabled){color:var(--bad); box-shadow:inset 0 0 0 1px var(--bad)}
+.mini.busy{color:var(--wait)}
+.mini.force{background:var(--bad); color:#1a0505; box-shadow:none}
+
+/* 歡迎 */
+.welcome{display:grid; grid-template-columns:auto minmax(0,1fr); gap:28px; padding:72px 0; align-items:start}
+.welcome .no{color:var(--off)}
+.welcome h2{margin:6px 0 8px; font:600 28px/1.25 var(--ui); color:var(--ink)}
+.welcome p{margin:0 0 24px; color:var(--mut); max-width:520px}
+.welcome .row{display:flex; gap:12px; flex-wrap:wrap}
+.pw.small{padding:10px 22px; min-height:40px; font-size:14px}
+
+/* 對話框 */
+.modal{position:fixed; inset:0; display:grid; place-items:center; background:#000000b8; z-index:10; overscroll-behavior:contain; padding:16px}
+.sheet{position:relative; width:min(460px,94vw); max-height:92vh; overflow:auto; padding:26px 28px 22px; background:var(--s1); border:1px solid var(--ln2); overscroll-behavior:contain}
+.sheet.wide{width:min(600px,94vw)}
+.sheet h3{margin:0 0 10px; font:600 19px/1.35 var(--ui); color:var(--ink)}
+.sheet p{margin:0 0 18px; color:var(--body); line-height:1.7; overflow-wrap:anywhere; white-space:pre-wrap}
+.sheet .row{display:flex; gap:10px; justify-content:flex-end; align-items:center; flex-wrap:wrap; margin-top:6px}
+.sheet .row .left{margin-right:auto}
+.sec{border-top:1px solid var(--ln); padding:14px 0 12px}
+.sec>h4{margin:0 0 8px; font:600 12.5px var(--ui); letter-spacing:.04em; color:var(--mut)}
+.f{display:flex; flex-direction:column; gap:6px; margin-bottom:14px}
+.f>span{font-size:12.5px; color:var(--mut)}
+.f .inline{display:flex; gap:8px; align-items:center}
+.f .inline input{flex:1; min-width:0}
+.f textarea{min-height:150px; resize:vertical; line-height:1.6}
+.sub{display:block; font-size:12px; color:var(--mut); overflow-wrap:anywhere}
+.hint{font-size:13px; line-height:1.65; padding:2px 0 2px 14px; margin-bottom:14px; border-left:2px solid var(--ln2); color:var(--mut)}
+.hint.good{color:var(--body); border-left-color:var(--ok)}
+.hint.bad{color:var(--wait); border-left-color:var(--wait)}
+.hint.err{color:#ff9a9a; border-left-color:var(--bad)}
+.check{display:flex; gap:10px; align-items:flex-start; line-height:1.6; margin:0 0 14px; cursor:pointer; color:var(--body)}
+.check input{margin-top:4px; flex:none; accent-color:var(--tech)}
+.cards{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px}
+.card{position:relative; display:flex; flex-direction:column; gap:2px; padding:10px 12px; border-radius:8px; box-shadow:inset 0 0 0 1px var(--ln2); cursor:pointer; min-height:62px}
+.card input{position:absolute; opacity:0; pointer-events:none}
+.card b{color:var(--ink); font-weight:600; font-size:13.5px}
+.card small{font-size:11.5px; color:var(--mut); line-height:1.4}
+.card:has(input:checked){background:#57c1ff12; box-shadow:inset 0 0 0 1px var(--tech)}
+.card:has(input:focus-visible){outline:2px solid var(--tech); outline-offset:2px}
+.card.off{opacity:.45; cursor:not-allowed}
+.bar{height:6px; margin:4px 0 14px; overflow:hidden; background:var(--s3); border-radius:3px}
+.bar i{display:block; height:100%; width:0; background:var(--tech); border-radius:3px; transition:width .3s}
+.bar.loop i{width:30%; animation:slide 1.3s ease-in-out infinite alternate}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(233%)}}
+.outbox{margin:0 0 12px; max-height:180px; overflow:auto; padding:10px 12px; background:#050607; border:1px solid var(--ln); font:12px/1.6 var(--mono); color:#b4b8bd; white-space:pre-wrap; word-break:break-word}
+.kv{display:grid; grid-template-columns:96px minmax(0,1fr); gap:6px 12px; font-size:13px}
+.kv dt{color:var(--mut)}
+.kv dd{margin:0; color:var(--body); font-family:var(--mono); font-size:12.5px; overflow-wrap:anywhere}
+.nlist{display:flex; flex-direction:column; border-top:1px solid var(--ln); margin-bottom:14px; max-height:220px; overflow:auto}
+.nrow{display:flex; gap:10px; align-items:center; padding:8px 2px; border-bottom:1px solid var(--ln)}
+.nrow div{flex:1; min-width:0}
+.nrow b{display:block; color:var(--ink); font-weight:500; font-size:13.5px}
+.nrow code{display:block; font:12px var(--mono); color:var(--mut); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.lrow{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) auto; gap:8px; margin-bottom:8px}
+.lrow input{background:var(--bg); border:1px solid var(--ln2); border-radius:6px; color:var(--ink); padding:7px 10px; outline:0; min-width:0}
+.lrow input:focus{border-color:var(--tech)}
+
+/* 選圖示與顏色 */
+.sheet.icons{width:min(760px,94vw); padding:0; display:flex; flex-direction:column; overflow:hidden}
+.ihd{display:flex; align-items:center; gap:14px; padding:16px 22px; border-bottom:1px solid var(--ln); flex:none}
+.ihd h3{margin:0}
+.ihd .ic{width:44px; height:44px; border-radius:10px}
+.ihd .ic canvas{width:32px; height:32px}
+.ihd .pvn{font:700 17px/1.3 var(--ui); color:var(--c); overflow-wrap:anywhere}
+.ibody{overflow:auto; padding:4px 22px 16px; overscroll-behavior:contain; min-height:0}
+.ibody h4{margin:16px 0 8px; font:500 12.5px var(--ui); letter-spacing:.04em; color:var(--mut)}
+.sw{display:flex; gap:10px; flex-wrap:wrap}
+.sw button{width:32px; height:32px; border-radius:50%; background:var(--v); box-shadow:inset 0 0 0 2px #00000040}
+.sw button[aria-pressed=true]{box-shadow:0 0 0 2px var(--s1),0 0 0 4px var(--v)}
+.ig{display:grid; grid-template-columns:repeat(auto-fill,minmax(64px,1fr)); gap:6px}
+.ig button{display:flex; flex-direction:column; align-items:center; gap:4px; padding:8px 2px 6px; border-radius:8px; background:var(--s2); box-shadow:inset 0 0 0 1px var(--ln); font-size:12px; color:var(--mut); min-width:0}
+.ig button canvas{width:32px; height:32px}
+.ig button span{max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.ig button:hover{background:var(--s3); color:var(--ink)}
+.ig button[aria-pressed=true]{box-shadow:inset 0 0 0 2px var(--c); color:var(--ink); background:color-mix(in srgb,var(--c) 12%,var(--s2))}
+.ift{display:flex; justify-content:flex-end; gap:10px; padding:14px 22px; border-top:1px solid var(--ln); flex:none}
+
+/* 選單、搜尋面板、提示 */
+.pop{position:fixed; z-index:12; min-width:200px; max-width:320px; padding:6px; background:var(--s2); border:1px solid var(--ln2); border-radius:10px; display:flex; flex-direction:column; gap:2px}
+.pop button,.pop a{display:block; width:100%; text-align:left; padding:8px 10px; border-radius:6px; font-size:13px; color:var(--body); text-decoration:none; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.pop button:hover,.pop a:hover{background:var(--s3); color:var(--ink)}
+.pop hr{border:0; border-top:1px solid var(--ln2); margin:4px 0}
+.pop label{display:flex; gap:10px; align-items:center; padding:8px 10px; font-size:13px}
+.pop small{display:block; padding:4px 10px 6px; color:var(--mut); font-size:11.5px; line-height:1.5; white-space:normal}
+.pal{place-items:start center; padding-top:12vh}
+.palbox{width:min(620px,94vw); background:var(--s1); border:1px solid var(--ln2); border-radius:12px; overflow:hidden}
+.palbox input{width:100%; background:none; border:0; border-bottom:1px solid var(--ln); outline:0; color:var(--ink); font-size:15px; padding:16px 18px}
+.palbox input:focus-visible{outline:0}
+.pallist{max-height:min(52vh,420px); overflow:auto; padding:6px; overscroll-behavior:contain}
+.palitem{display:flex; gap:12px; align-items:baseline; width:100%; text-align:left; padding:8px 10px; border-radius:6px; color:var(--body)}
+.palitem b{color:var(--ink); font-weight:500; white-space:nowrap}
+.palitem small{color:var(--mut); font-size:12px; white-space:nowrap}
+.palitem code{margin-left:auto; font:12px var(--mono); color:var(--mut); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0}
+.palitem.a{background:var(--s3)}
+.palnone{padding:16px 12px; color:var(--mut); font-size:13px}
+.palfoot{display:flex; gap:14px; padding:8px 14px; border-top:1px solid var(--ln); font-size:12px; color:var(--mut)}
+.toast{position:fixed; left:50%; bottom:26px; transform:translate(-50%,12px); opacity:0; max-width:min(560px,92vw); padding:10px 18px; background:var(--s2); border:1px solid var(--ln2); border-radius:8px; color:var(--ink); transition:opacity .2s,transform .2s; z-index:20; pointer-events:none}
+.toast.show{opacity:1; transform:translate(-50%,0)}
+.banner{position:fixed; inset:0; display:grid; place-items:center; background:#08090af2; z-index:30; text-align:center; padding:20px}
+.banner h2{margin:0 0 8px; font:600 28px/1.25 var(--ui); color:var(--ink)}
+.banner p{color:var(--mut); margin:0}
+
+@media (max-width:1180px){ main{padding:0 20px 18px} .hero{gap:20px} }
+/* 1000–1200 寬時清單還展開，三個數字放不下會蓋到右邊按鈕 → 按鈕改排到下一行 */
+@media (max-width:1200px){ .hero{grid-template-columns:auto minmax(0,1fr)} .ctrl{grid-column:1/-1; align-items:flex-start} .ghosts{justify-content:flex-start; max-width:none} }
+@media (max-width:1000px){ .cards{grid-template-columns:repeat(2,minmax(0,1fr))} .ovmain{grid-template-columns:14px 34px minmax(120px,1fr) 90px} .ovmain .v,.ovmain .m{display:none} }
+@media (max-height:720px){ .hero{padding:14px 0 12px; gap:20px} .no{font-size:44px} .big{width:64px; height:64px} .big canvas{width:48px; height:48px} .hero h2{font-size:26px} .fg b{font-size:24px} .mast{padding:12px 0} .con{margin-top:14px} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important; animation:none!important} }
+</style>
+</head>
+<body>
+<div class="shell">
+  <aside aria-label="伺服器清單">
+    <div class="brand"><i aria-hidden="true"></i><b translate="no">MC Server Hub</b><small translate="no" title="目前版本">v{{VERSION}}</small>
+      <button class="fold" id="fold" aria-label="收合或展開左側清單" aria-expanded="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button></div>
+    <button class="nav" id="nav-ov" title="總覽"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="4" rx="1"/><rect x="3" y="10" width="18" height="4" rx="1"/><rect x="3" y="16" width="18" height="4" rx="1"/></svg><span>總覽</span></button>
+    <div class="grp" id="grp">伺服器</div>
+    <div id="srvlist"></div>
+    <button class="add" id="add-new" title="建立新伺服器"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>建立新伺服器</span></button>
+    <button class="add" id="add-dir" title="加入現有資料夾"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h6l2 2h10v10H3z"/></svg><span>加入現有資料夾</span></button>
+    <div class="foot-ver">只在這台電腦 · 127.0.0.1</div>
+  </aside>
+
+  <main id="main">
+    <header class="mast">
+      <span class="crumb" id="crumb">連線中…</span>
+      <button class="newver" id="update" hidden></button>
+      <span class="sp"></span>
+      <span class="sum" id="sum"></span>
+      <button class="lnk" id="links-btn" aria-haspopup="true">實用連結</button>
+      <button class="lnk" id="quit">關閉平台</button>
+    </header>
+
+    <div id="view-server" hidden>
+      <section class="hero" id="hero" aria-label="選中的伺服器">
+        <button class="big" id="h-icon" title="換圖示與顏色" aria-label="更換這台的圖示與顏色"><canvas class="px" width="16" height="16"></canvas><span class="pen" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M11 2.5l2.5 2.5L6 12.5H3.5V10z"/></svg></span></button>
+        <div style="min-width:0">
+          <div class="kk" id="h-kk"></div>
+          <h2><span class="t" id="h-name"></span><span class="badge" id="h-badge"><span class="d"></span><span id="h-state"></span></span></h2>
+          <div class="figs">
+            <div class="fg"><span>在線</span><b id="h-online">—</b><div class="who" id="h-who"></div></div>
+            <div class="fg"><span>記憶體 <span class="cap" id="h-cap" hidden>已到上限</span></span><b id="h-mem">—</b><svg class="spark" id="h-spark" viewBox="0 0 120 24" preserveAspectRatio="none" aria-hidden="true"></svg></div>
+            <div class="fg"><span>已開機</span><b id="h-up">—</b></div>
+          </div>
+        </div>
+        <div class="ctrl">
+          <button class="pw" id="h-power"></button>
+          <div class="ghosts">
+            <button class="gh" id="h-backup">備份世界</button>
+            <button class="gh" id="h-open" aria-haspopup="true">開啟資料夾</button>
+            <button class="gh" id="h-copy">複製連線網址</button>
+            <button class="gh" id="h-info">詳細資訊</button>
+          </div>
+        </div>
+        <div class="msgs" id="h-msgs"></div>
+      </section>
+
+      <section class="con" aria-label="主控台">
+        <div class="conhd"><b>主控台</b><small id="c-name"></small><span class="sp"></span>
+          <button class="lnk" id="follow" aria-pressed="true">自動捲到最新 ✓</button><button class="lnk" id="clear">清空畫面</button></div>
+        <div class="logwrap" id="logs"><div class="log-empty" id="log-empty">伺服器還沒開機，按上面的「開機」就會在這裡看到主控台</div></div>
+        <button class="pickhd" id="pickhd" aria-expanded="true" aria-controls="pickwrap"><b>常用指令</b><small>點一下收合／展開 · 按 Ctrl K 搜尋</small><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button>
+        <div class="pickwrap" id="pickwrap"><div class="pick" id="pick">
+          <div class="pick-note" id="pick-note" hidden>伺服器開機後才能下指令</div>
+          <div class="cats" id="cats" role="tablist" aria-label="指令分類"></div>
+          <div class="cmds" id="cmds"></div>
+        </div></div>
+        <div class="foot">
+          <form id="cmdform" autocomplete="off"><b aria-hidden="true">&gt;</b><input id="cmd" name="cmd" aria-label="自己輸入遊戲指令" spellcheck="false" autocomplete="off" placeholder="或自己輸入指令（不用打 /），例如 say 大家好"></form>
+          <button class="kbd" id="open-pal" title="搜尋指令">Ctrl K 搜尋指令</button>
+          <button class="b" form="cmdform">送出</button>
+        </div>
+      </section>
+    </div>
+
+    <section class="ovw" id="view-ov" hidden aria-labelledby="ov-h">
+      <h3 id="ov-h">總覽</h3><p>每台一列；點名稱進到那台的主控台。</p>
+      <div id="ov-list"></div>
+    </section>
+
+    <section class="welcome" id="welcome" hidden>
+      <div class="no" aria-hidden="true">00</div>
+      <div><h2>還沒有伺服器</h2><p>可以從零建一台新的，或把電腦裡現有的伺服器資料夾加進來。資料夾和世界都留在你選的位置，平台只記住它在哪。</p>
+        <div class="row"><button class="pw small" id="w-new">建立新伺服器</button><button class="gh" id="w-add">加入現有資料夾</button></div></div>
+    </section>
+  </main>
+</div>
+
+<!-- 確認 -->
+<div class="modal" id="dlg-confirm" role="dialog" aria-modal="true" aria-labelledby="cf-title" hidden><div class="sheet">
+  <h3 id="cf-title"></h3><p id="cf-text"></p>
+  <div class="row"><button class="b" id="cf-no">取消</button><button class="b danger" id="cf-yes">確定</button></div>
+</div></div>
+<!-- 訊息 -->
+<div class="modal" id="dlg-alert" role="alertdialog" aria-modal="true" aria-labelledby="al-title" hidden><div class="sheet">
+  <h3 id="al-title"></h3><p id="al-text"></p>
+  <div class="row"><a id="al-link" class="b" target="_blank" rel="noopener" hidden>開啟下載頁</a><button class="b pri" id="al-ok">知道了</button></div>
+</div></div>
+<!-- EULA -->
+<div class="modal" id="dlg-eula" role="dialog" aria-modal="true" aria-labelledby="eu-title" hidden><div class="sheet">
+  <h3 id="eu-title">開機前要同意授權合約</h3>
+  <p>Minecraft 伺服器必須由你本人同意官方的使用者授權合約（EULA）才能執行，平台不會替你同意。</p>
+  <label class="check"><input type="checkbox" id="eu-yes"><span>我已閱讀並同意 <a href="https://aka.ms/MinecraftEULA" target="_blank" rel="noopener">Minecraft 使用者授權合約（EULA）</a></span></label>
+  <div class="row"><button class="b" id="eu-no">取消</button><button class="b pri" id="eu-go" disabled>同意並開機</button></div>
+</div></div>
+<!-- 加入現有資料夾 -->
+<div class="modal" id="dlg-add" role="dialog" aria-modal="true" aria-labelledby="ad-title" hidden><div class="sheet wide">
+  <h3 id="ad-title">加入現有伺服器</h3>
+  <p>選擇已經有 {{SCRIPT}} 的伺服器資料夾（原版、Fabric、Forge、NeoForge 都可以），連接埠和版本會自動讀取。</p>
+  <div class="f"><span>伺服器資料夾</span><div class="inline"><input type="text" id="ad-dir" aria-label="伺服器資料夾" autocomplete="off" spellcheck="false" placeholder="按右邊選擇，或把路徑貼上來…"><button class="b" id="ad-pick">選擇…</button></div></div>
+  <label class="f"><span>顯示名稱（可不填）</span><input type="text" id="ad-name" maxlength="40" autocomplete="off" placeholder="不填就用資料夾名稱"></label>
+  <div class="hint err" id="ad-err" role="alert" hidden></div>
+  <div class="row"><button class="b" id="ad-no">取消</button><button class="b pri" id="ad-go">加入</button></div>
+</div></div>
+<!-- 建立新伺服器 -->
+<div class="modal" id="dlg-wiz" role="dialog" aria-modal="true" aria-labelledby="wz-title" hidden><div class="sheet wide">
+  <h3 id="wz-title">建立新伺服器</h3>
+  <div id="w-form">
+    <div class="hint" id="w-load">正在向 Minecraft 官方讀取版本清單…</div>
+    <label class="f"><span>1. 伺服器名稱</span><input type="text" id="w-name" maxlength="40" autocomplete="off" placeholder="例：週末生存服"></label>
+    <label class="f"><span>2. 遊戲版本（只列正式版）</span><select id="w-ver"></select></label>
+    <div class="f" role="radiogroup" aria-labelledby="w-type-l"><span id="w-type-l">3. 類型</span><div class="cards" id="w-cards">
+      <label class="card" data-k="vanilla"><input type="radio" name="w-type" value="vanilla" checked><b>原版</b><small>不能裝模組</small></label>
+      <label class="card" data-k="fabric"><input type="radio" name="w-type" value="fabric"><b>Fabric</b><small></small></label>
+      <label class="card" data-k="forge"><input type="radio" name="w-type" value="forge"><b>Forge</b><small></small></label>
+      <label class="card" data-k="neoforge"><input type="radio" name="w-type" value="neoforge"><b>NeoForge</b><small></small></label>
+    </div></div>
+    <div class="hint" id="w-mod" hidden></div>
+    <label class="f"><span>4. 記憶體</span><select id="w-ram"></select><small class="sub" id="w-ram-sub"></small></label>
+    <div class="f"><span>5. 存放位置</span><div class="inline"><input type="text" id="w-parent" aria-label="存放位置" autocomplete="off" spellcheck="false"><button class="b" id="w-pick">選擇…</button></div><small class="sub" id="w-target"></small></div>
+    <div class="hint" id="w-java" hidden></div>
+    <label class="check"><input type="checkbox" id="w-eula"><span>6. 我已閱讀並同意 <a href="https://aka.ms/MinecraftEULA" target="_blank" rel="noopener">Minecraft 使用者授權合約（EULA）</a></span></label>
+    <div class="row"><button class="b" id="w-no">取消</button><button class="b pri" id="w-go" disabled>建立並開機</button></div>
+  </div>
+  <div id="w-run" hidden>
+    <p id="w-msg" aria-live="polite">準備中…</p>
+    <div class="bar loop" id="w-bar"><i></i></div>
+    <pre class="outbox" id="w-lines" hidden></pre>
+    <small class="sub" id="w-src">伺服器檔案從官方網站下載，通常 1–3 分鐘；這個畫面在完成前不能關。</small>
+  </div>
+</div></div>
+<!-- 詳細資訊 -->
+<div class="modal" id="dlg-info" role="dialog" aria-modal="true" aria-labelledby="in-title" hidden><div class="sheet wide">
+  <h3 id="in-title"></h3>
+  <div class="sec"><h4>朋友連線網址</h4>
+    <div class="f"><div class="inline"><input type="text" id="in-addr" aria-label="朋友連線網址" autocomplete="off" spellcheck="false" placeholder="例：myserver.example.net:25565"><button class="b" id="in-addr-save">儲存</button><button class="b" id="in-addr-copy">複製</button></div></div></div>
+  <div class="sec"><h4>給朋友的加入說明</h4>
+    <pre class="outbox" id="in-join" style="font-family:var(--ui); font-size:13px"></pre>
+    <div class="row"><button class="b" id="in-join-edit">編輯範本</button><button class="b" id="in-join-copy">複製說明（可貼 LINE）</button></div></div>
+  <div class="sec"><h4>種子碼</h4>
+    <div class="f"><div class="inline"><input type="text" id="in-seed" aria-label="種子碼" readonly><button class="b" id="in-seed-copy">複製</button><button class="b" id="in-seed-ask">查種子碼</button></div><small class="sub" id="in-seed-note"></small></div></div>
+  <div class="sec"><h4>這台的設定</h4>
+    <div class="f"><span>記憶體上限</span><div class="inline"><select id="in-ram" aria-label="記憶體上限"></select><button class="b" id="in-ram-go">套用</button></div><small class="sub" id="in-ram-note"></small></div>
+    <label class="check"><input type="checkbox" id="in-autobk"><span>正常關機後自動備份世界（閃退不會備份；舊備份不會自動刪）</span></label></div>
+  <div class="sec"><h4>技術資訊</h4>
+    <dl class="kv"><dt>資料夾</dt><dd id="in-dir"></dd><dt>Java</dt><dd id="in-java"></dd><dt>程序編號</dt><dd id="in-pid"></dd></dl></div>
+  <div class="row"><button class="lnk rm left" id="in-remove">從清單移除</button><button class="b pri" id="in-close">完成</button></div>
+</div></div>
+<!-- 我的筆記 -->
+<div class="modal" id="dlg-notes" role="dialog" aria-modal="true" aria-labelledby="nt-title" hidden><div class="sheet wide">
+  <h3 id="nt-title">我的筆記（自訂指令）</h3>
+  <p>把常用的指令存起來，之後在「常用指令」點一下就能用。指令裡可以放欄位，執行時再填：</p>
+  <div class="hint" id="nt-fields"></div>
+  <div class="nlist" id="nt-list"></div>
+  <div class="sec" style="border-top:0; padding-top:0"><h4 id="nt-form-h">新增一筆</h4>
+    <label class="f"><span>名稱</span><input type="text" id="nt-name" maxlength="40" autocomplete="off" placeholder="例：傳回家"></label>
+    <label class="f"><span>指令（不用打 /）</span><input type="text" id="nt-tpl" maxlength="300" autocomplete="off" spellcheck="false" class="mono" placeholder="例：tp <player> 120 70 -300"></label>
+    <div class="f" style="flex-direction:row; gap:12px">
+      <label class="f" style="flex:1; margin:0"><span>分類</span><input type="text" id="nt-cat" maxlength="20" autocomplete="off" placeholder="我的筆記"></label>
+      <label class="f" style="flex:1; margin:0"><span>執行前要確認嗎</span><select id="nt-danger"><option value="">不用確認</option><option value="confirm">要按確認</option><option value="strong">要打字確認（會刪東西的）</option></select></label></div>
+    <label class="f"><span>說明（可不填）</span><input type="text" id="nt-note" maxlength="200" autocomplete="off"></label>
+    <div class="hint err" id="nt-err" role="alert" hidden></div>
+    <div class="row"><button class="b left" id="nt-reset">清空表單</button><button class="b" id="nt-save">儲存這筆</button><button class="b pri" id="nt-close">完成</button></div>
+  </div>
+</div></div>
+<!-- 實用連結 -->
+<div class="modal" id="dlg-links" role="dialog" aria-modal="true" aria-labelledby="lk-title" hidden><div class="sheet wide">
+  <h3 id="lk-title">編輯實用連結</h3>
+  <p>出現在上方「實用連結」選單。網址要以 https:// 開頭。</p>
+  <div id="lk-rows"></div>
+  <button class="b" id="lk-add" style="margin-bottom:14px">＋ 新增一個</button>
+  <div class="hint err" id="lk-err" role="alert" hidden></div>
+  <div class="row"><button class="b" id="lk-no">取消</button><button class="b pri" id="lk-save">儲存</button></div>
+</div></div>
+<!-- 加入說明範本 -->
+<div class="modal" id="dlg-join" role="dialog" aria-modal="true" aria-labelledby="jn-title" hidden><div class="sheet wide">
+  <h3 id="jn-title">編輯加入說明範本</h3>
+  <p>所有伺服器共用這份範本。&lt;連線網址&gt;、&lt;版本&gt;、&lt;載入器&gt; 會自動換成每台的內容。</p>
+  <label class="f"><span>範本</span><textarea id="jn-text" maxlength="2000" spellcheck="false"></textarea></label>
+  <div class="hint err" id="jn-err" role="alert" hidden></div>
+  <div class="row"><button class="b" id="jn-no">取消</button><button class="b pri" id="jn-save">儲存</button></div>
+</div></div>
+<!-- 選圖示與顏色 -->
+<div class="modal" id="dlg-icon" role="dialog" aria-modal="true" aria-labelledby="ic-title" hidden><div class="sheet icons">
+  <div class="ihd"><span class="ic" id="ic-pv"><canvas class="px" width="16" height="16"></canvas></span><div style="min-width:0"><h3 id="ic-title">選擇圖示與顏色</h3><div class="pvn" id="ic-name"></div></div></div>
+  <div class="ibody">
+    <h4>顏色（名稱與圖示底色）</h4>
+    <div class="sw" id="ic-sw" role="group" aria-label="顏色"></div>
+    <div id="ic-cats"></div>
+  </div>
+  <div class="ift"><button class="b" id="ic-no">取消</button><button class="b pri" id="ic-ok">套用</button></div>
+</div></div>
+<!-- 指令搜尋 -->
+<div class="modal pal" id="dlg-pal" role="dialog" aria-modal="true" aria-label="搜尋指令" hidden><div class="palbox">
+  <input id="pal-q" type="text" autocomplete="off" spellcheck="false" placeholder="搜尋指令：打中文或英文，例如 白天、give、白名單…" aria-label="搜尋指令" aria-controls="pal-list">
+  <div class="pallist" id="pal-list" role="listbox" aria-label="指令"></div>
+  <div class="palfoot"><span><span class="kbd">↑</span> <span class="kbd">↓</span> 選擇</span><span><span class="kbd">Enter</span> 使用</span><span><span class="kbd">Esc</span> 關閉</span></div>
+</div></div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="banner" id="gone" hidden><div><h2>平台已經關閉</h2><p>要再用的話，再雙擊一次「{{APP_FILE}}」</p></div></div>
+
+<script>
+const TOKEN = "{{TOKEN}}";
+const $ = s => document.querySelector(s);
+const LABEL = {stopped:"已關機", starting:"開機中…", running:"執行中", stopping:"關機中…", external:"在別處執行中"};
+const ICON_POWER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v8"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></svg>';
+const MEM_SLOTS = 60;
+let servers = [], byId = {}, active = null, view = "server", failures = 0, firstLoad = true;
+let settings = {custom_commands: [], links: [], join_template: ""};
+let cmdData = null, cmdFor = null, curCat = null, openCell = null;
+const logState = {}, prevState = {};
+
+/* ---------- 小工具 ---------- */
+const store = {
+  get(k, d){ try { const v = localStorage.getItem("hub." + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v){ try { localStorage.setItem("hub." + k, JSON.stringify(v)); } catch {} }
+};
+function h(tag, props, ...kids){
+  const e = document.createElement(tag);
+  for (const k in props || {}) {
+    const v = props[k];
+    if (v == null || v === false) continue;
+    if (k === "class") e.className = v;
+    else if (k === "text") e.textContent = v;
+    else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v === true ? "" : v);
+  }
+  for (const c of kids.flat()) if (c != null && c !== false) e.append(c);
+  return e;
+}
+async function api(path, body){
+  const r = await fetch(path, {method: body ? "POST" : "GET", headers: {"X-Hub-Token": TOKEN, "Content-Type": "application/json"}, body: body ? JSON.stringify(body) : undefined});
+  return r.json();
+}
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2600); }
+async function copyText(text, okMsg){
+  try { await navigator.clipboard.writeText(text); }
+  catch {
+    const ta = h("textarea", {style: "position:fixed;opacity:0"}); ta.value = text; document.body.append(ta); ta.select();
+    try { document.execCommand("copy"); } catch {} ta.remove();
+  }
+  toast(okMsg || "已複製");
+}
+const pad2 = n => String(n).padStart(2, "0");
+const fmtUp = s => { if (s == null) return "—"; const hh = Math.floor(s/3600), m = Math.floor(s%3600/60), x = s%60; return hh ? `${hh}:${pad2(m)}:${pad2(x)}` : `${m}:${pad2(x)}`; };
+const gb = v => (v/1024).toFixed(1);
+const safeUrl = u => /^https:\/\/[^\s<>"']+$/.test(u || "") ? u : null;
+
+/* ---------- 對話框（堆疊、Esc、焦點回原處） ---------- */
+const stack = [];
+function openDlg(id, focusSel){
+  const d = $(id); if (!d.hidden) return;
+  stack.push({id, back: document.activeElement}); d.hidden = false;
+  const f = focusSel ? d.querySelector(focusSel) : d.querySelector("input:not([type=hidden]):not([disabled]),select,textarea,button:not([disabled])");
+  if (f) f.focus();
+}
+function closeDlg(id){
+  const d = $(id); if (d.hidden) return; d.hidden = true;
+  const i = stack.findIndex(x => x.id === id);
+  if (i >= 0) { const [x] = stack.splice(i, 1); if (x.back && x.back.focus && document.contains(x.back)) x.back.focus(); }
+}
+function confirmBox(title, text, yes = "確定", danger = true){
+  return new Promise(res => {
+    $("#cf-title").textContent = title; $("#cf-text").textContent = text; $("#cf-yes").textContent = yes;
+    $("#cf-yes").className = "b " + (danger ? "danger" : "pri");
+    const done = v => { $("#cf-yes").onclick = $("#cf-no").onclick = null; closeDlg("#dlg-confirm"); res(v); };
+    $("#cf-yes").onclick = () => done(true); $("#cf-no").onclick = () => done(false);
+    $("#dlg-confirm")._cancel = () => done(false);
+    openDlg("#dlg-confirm", "#cf-no");
+  });
+}
+function alertBox(title, text, url){
+  $("#al-title").textContent = title; $("#al-text").textContent = text;
+  const u = safeUrl(url); $("#al-link").hidden = !u; if (u) $("#al-link").href = u;
+  openDlg("#dlg-alert", "#al-ok");
+}
+$("#al-ok").onclick = () => closeDlg("#dlg-alert");
+
+/* 小選單（開啟資料夾、實用連結、音效） */
+let popEl = null;
+function closePop(){ if (popEl) { const b = popEl._anchor; popEl.remove(); popEl = null; if (b) b.setAttribute("aria-expanded", "false"); } }
+function pop(anchor, kids){
+  const was = popEl && popEl._anchor === anchor; closePop(); if (was) return;
+  popEl = h("div", {class: "pop", role: "menu"}, kids); popEl._anchor = anchor; document.body.append(popEl);
+  const r = anchor.getBoundingClientRect(), w = popEl.offsetWidth;
+  popEl.style.top = Math.min(r.bottom + 6, innerHeight - popEl.offsetHeight - 8) + "px";
+  popEl.style.left = Math.max(8, Math.min(r.right - w, innerWidth - w - 8)) + "px";
+  anchor.setAttribute("aria-expanded", "true");
+  const f = popEl.querySelector("button,a,input"); if (f) f.focus();
+}
+document.addEventListener("mousedown", e => { if (popEl && !popEl.contains(e.target) && e.target !== popEl._anchor && !popEl._anchor.contains(e.target)) closePop(); });
+
+document.addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); if (stack.length === 0 && servers.length) openPalette(); return; }
+  if (e.key !== "Escape") return;
+  if (popEl) { const a = popEl._anchor; closePop(); a && a.focus(); return; }
+  const top = stack[stack.length - 1]; if (!top) { if (openCell) closeCell(); return; }
+  const d = $(top.id);
+  if (top.id === "#dlg-wiz" && !$("#w-run").hidden) return;   // 建服進行中不能關
+  if (d._cancel) d._cancel(); else closeDlg(top.id);
+});
+
+/* ---------- 音效（瀏覽器內建合成，不放音檔） ----------
+   1.1.1：開機／關機＝三連脈衝（Andy 在試聽台選 B），當機音不變；
+   按鍵聲：一般按鈕＝輕觸滴答（K2），真的送出指令＝低調悶響（K3），同一下只響一種。
+   音量固定 0.4（試聽台的預設值），不再有音量與靜音；舊瀏覽器存的 mute／vol 一律不讀並清掉。
+   寫法照搬 100_Todo/projects/minecraft-server-ops/音效試聽台.html。 */
+window.__sfxLog = [];
+const SFX_VOL = 0.4;
+let audio = null, master = null, noiseBuf = null;
+try { localStorage.removeItem("hub.mute"); localStorage.removeItem("hub.vol"); } catch {}
+function unlockAudio(){
+  if (!audio) {
+    try {
+      audio = new (window.AudioContext || window.webkitAudioContext)();
+      master = audio.createGain(); master.gain.value = SFX_VOL; master.connect(audio.destination);
+      noiseBuf = audio.createBuffer(1, audio.sampleRate, audio.sampleRate);
+      const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+    } catch { audio = null; return; }
+  }
+  if (audio.state === "suspended") audio.resume().catch(() => {});
+}
+addEventListener("pointerdown", unlockAudio, true); addEventListener("keydown", unlockAudio, true);
+function env(g, t, peak, a, d){ g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + d); }
+function tone(f, t, dur, type = "sine", peak = .3, f2){
+  const o = audio.createOscillator(), g = audio.createGain();
+  o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + dur);
+  env(g, t, peak, .005, dur); o.connect(g).connect(master); o.start(t); o.stop(t + dur + .05);
+}
+function noise(t, dur, type, f, peak = .2, f2, q = 1){
+  const src = audio.createBufferSource(), fl = audio.createBiquadFilter(), g = audio.createGain();
+  src.buffer = noiseBuf; fl.type = type; fl.Q.value = q; fl.frequency.setValueAtTime(f, t); if (f2) fl.frequency.exponentialRampToValueAtTime(f2, t + dur);
+  env(g, t, peak, Math.min(.01, dur / 3), dur); src.connect(fl).connect(g).connect(master); src.start(t); src.stop(t + dur + .05);
+}
+function thump(t, f1, f2, dur, peak = .5){ tone(f1, t, dur, "sine", peak, f2); }
+const SOUNDS = {
+  up(t){ [220, 330, 440].forEach((f, i) => { tone(f, t + i * .12, .07, "square", .14); noise(t + i * .12, .03, "highpass", 3000, .06); });
+         thump(t + .38, 130, 45, .3, .55); [440, 660, 880].forEach(f => { tone(f, t + .38, .55, "sine", .12); tone(f * 1.004, t + .38, .55, "sine", .06); }); },
+  down(t){ [440, 330, 220].forEach((f, i) => tone(f, t + i * .13, .08, "square", .13)); thump(t + .4, 110, 38, .35, .4); },
+  fail(t){ tone(196, t, .42, "triangle", .2); },
+  K2(t){ tone(1400, t, .025, "sine", .14, 900); },
+  K3(t){ tone(260, t, .045, "triangle", .22, 170); noise(t, .03, "lowpass", 600, .12); },
+};
+function play(kind, sid){
+  unlockAudio();
+  window.__sfxLog.push({kind, sid: sid || null, at: Date.now(), played: !!audio});
+  if (window.__sfxLog.length > 200) window.__sfxLog.shift();
+  if (!audio) return;
+  // 被瀏覽器暫停時先等 resume() 完成再播；等太久（例如一直沒點過畫面）就不補播，免得很晚才突然響
+  const asked = Date.now(), go = () => { if (Date.now() - asked < 1500) { try { SOUNDS[kind](audio.currentTime + .01); } catch {} } };
+  if (audio.state === "running") go(); else audio.resume().then(go, () => {});
+}
+function soundFor(s){
+  const p = prevState[s.id]; prevState[s.id] = s.state;
+  if (p === undefined || p === s.state) return;
+  if (s.state === "running" && (p === "starting" || p === "stopped")) play("up", s.id);   // 開得快時可能沒拍到「開機中」
+  else if (s.state === "stopping" && (p === "running" || p === "starting")) play("down", s.id);
+  else if (s.state === "stopped" && s.problem && (p === "running" || p === "starting")) play("fail", s.id);
+}
+/* 按鍵聲：點到按鈕先排一聲 K2；同一下如果真的送出指令（sendSfx），就取消 K2 改響 K3 */
+let k2Timer = null;
+document.addEventListener("click", e => {
+  const b = e.target.closest && e.target.closest("button");
+  if (!b || b.disabled) return;
+  clearTimeout(k2Timer); k2Timer = setTimeout(() => { k2Timer = null; play("K2"); }, 0);
+}, true);
+function sendSfx(){ clearTimeout(k2Timer); k2Timer = null; play("K3"); }
+
+/* ---------- 伺服器圖示（全部自己畫的 16×16 像素圖，不用 Minecraft 或其他啟動器的原圖） ----------
+   資料正本：設計稿 mock-1.1.1-圖示與標題（不在 repo 內，Andy 定案）。
+   用 <canvas> 畫，不用 data: 圖片，CSP 不必放寬。圖示 id 與顏色要跟 hub.py 的 ICON_IDS／ICON_COLORS 一致。 */
+const PX = (() => {
+function rng(seed){ return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+const blank = () => Array.from({length: 16}, () => Array(16).fill(null));
+function noise(sh, seed, w = [.55, .28, .17]){ const r = rng(seed), g = blank(); for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) { const v = r(); g[y][x] = v < w[0] ? sh[0] : v < w[0] + w[1] ? sh[1] : sh[2]; } return g; }
+const STONE = ["#8b8b8b", "#727272", "#9d9d9d"];
+const ORE_SPOTS = [[3,3],[4,3],[3,4],[10,2],[11,3],[10,3],[6,8],[7,8],[7,9],[12,10],[12,11],[13,11],[3,12],[4,12],[4,13],[9,13]];
+function ore(c1, c2, seed){ const g = noise(STONE, seed); ORE_SPOTS.forEach(([x, y], i) => g[y][x] = i % 3 === 0 ? c2 : c1); return g; }
+function fromPx(pal, rows, id){
+  const w = Math.max(...rows.map(r => r.length)), h = rows.length, g = blank();
+  if (rows.some(r => r.length !== w)) console.warn("圖示列寬不一致：", id);
+  const ox = Math.floor((16 - w) / 2), oy = Math.floor((16 - h) / 2);
+  rows.forEach((r, y) => [...r].forEach((c, x) => { if (c !== ".") g[y + oy][x + ox] = pal[c] || null; }));
+  return g;
+}
+function grass(){ const g = noise(["#8a5a35", "#6b4226", "#9c6a40"], 11); const gr = noise(["#5fb84a", "#3f8f32", "#74c95c"], 12);
+  for (let x = 0; x < 16; x++) { const depth = 3 + ((x * 7) % 3 === 0 ? 1 : 0); for (let y = 0; y < depth; y++) g[y][x] = gr[y][x]; } return g; }
+function planks(){ const g = noise(["#b08a50", "#a07c45", "#bc965c"], 21, [.6, .25, .15]);
+  for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) { if (y % 4 === 3) g[y][x] = "#7a5a30"; if ((y >> 2) % 2 === 0 ? x === 5 : x === 12) if (y % 4 !== 3) g[y][x] = "#8a6a3a"; } return g; }
+function log(){ const g = blank(), sh = ["#6b4a28", "#4f3519", "#7f5a32"], r = rng(31); for (let x = 0; x < 16; x++) { const base = x % 4 === 0 ? 1 : x % 4 === 2 ? 2 : 0; for (let y = 0; y < 16; y++) g[y][x] = r() < .15 ? sh[(base + 1) % 3] : sh[base]; } return g; }
+function bricks(){ const g = blank(), r = rng(41); for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) { const row = y >> 2, off = row % 2 ? 4 : 0;
+  g[y][x] = (y % 4 === 3 || (x + off) % 8 === 7) ? "#cfc6b8" : (r() < .25 ? "#8e4030" : "#a5503c"); } return g; }
+function glass(){ const g = blank(); for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) { if (x === 0 || y === 0 || x === 15 || y === 15) g[y][x] = "#cfe8f5"; else g[y][x] = "#cfe8f51f"; }
+  [[3,4],[4,3],[5,2],[3,6],[4,5],[5,4],[6,3],[11,10],[12,9],[10,11]].forEach(([x, y]) => g[y][x] = "#ffffffcc"); return g; }
+function water(){ const g = noise(["#3f76e4", "#3566cc", "#5a8cf0"], 51); for (let x = 0; x < 16; x++) { g[(x % 8 < 4 ? 3 : 4)][x] = "#8fb4ff"; g[(x % 8 < 4 ? 10 : 11)][(x + 4) % 16] = "#8fb4ff"; } return g; }
+function ice(){ const g = noise(["#9fd2f5", "#8cc4ee", "#b6defa"], 61); for (let i = 0; i < 6; i++) { g[2 + i][9 - i] = "#ffffffbb"; g[8 + i][13 - i] = "#ffffffbb"; } return g; }
+function pumpkin(){ const g = blank(), r = rng(71); for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) g[y][x] = x % 5 === 0 ? "#c96a12" : r() < .2 ? "#e07e1a" : "#f0901f"; for (let x = 6; x < 10; x++) g[0][x] = "#5a8a2a"; return g; }
+function leaves(){ const g = noise(["#3f8f32", "#2e6e24", "#5fb84a"], 81, [.45, .3, .25]); const r = rng(82); for (let y = 0; y < 16; y++) for (let x = 0; x < 16; x++) if (r() < .06) g[y][x] = "#1f4f18"; return g; }
+
+/* 生物臉：8×8 畫、放大 2 倍剛好 16×16 */
+function face(pal, rows, id){ if (rows.length !== 8 || rows.some(r => r.length !== 8)) console.warn("生物臉不是 8×8：", id);
+  const g = blank(); rows.forEach((r, y) => [...r].forEach((c, x) => { if (c !== ".") { const v = pal[c] || null; g[y*2][x*2] = g[y*2][x*2+1] = g[y*2+1][x*2] = g[y*2+1][x*2+1] = v; } })); return g; }
+const MOBS = [
+  ["友善生物", "pig", "豬", {p: "#f2a5b0", P: "#d97a8a", k: "#222", w: "#fff", n: "#b85a6a"}, ["pppppppp", "pppppppp", "pwkppkwp", "pppppppp", "ppPPPPpp", "ppPnnPpp", "ppPPPPpp", "pppppppp"]],
+  ["友善生物", "cow", "牛", {h: "#d8d8c0", b: "#4a3424", w: "#f4f4f4", k: "#111", n: "#d8b0b0", N: "#8a5a5a"}, ["h......h", "bbbwwbbb", "bkbwwbkb", "bbbwwbbb", "bbwwwwbb", "bnnnnnnb", "bnNnnNnb", "bnnnnnnb"]],
+  ["友善生物", "sheep", "羊", {w: "#f4f4f4", W: "#dcdcdc", f: "#e8c8a8", k: "#222", p: "#f0a0a8"}, ["wWwwwwWw", "wwffffww", "wffffffw", "wfkffkfw", "wffffffw", "wffppffw", "wwffffww", "wWwwwwWw"]],
+  ["友善生物", "chicken", "雞", {w: "#f4f4f4", k: "#222", y: "#ffb02a", r: "#e8221c"}, ["..wwww..", ".wwwwww.", ".wkwwkw.", ".wwwwww.", ".yyyyyy.", ".wwrrww.", ".wwrrww.", ".wwwwww."]],
+  ["友善生物", "horse", "馬", {b: "#8a5a35", B: "#6b4226", m: "#3a2416", k: "#111", n: "#3a2416"}, ["Bb.mm.bB", "bbbmmbbb", "bkbmmbkb", "bbbbbbbb", ".bbBBbb.", ".bBbbBb.", ".bnbbnb.", ".bbbbbb."]],
+  ["友善生物", "rabbit", "兔子", {b: "#c8a888", w: "#f4f4f4", k: "#222", p: "#f0a0a8"}, [".bb..bb.", ".bb..bb.", "bbbbbbbb", "bkbbbbkb", "bbbppbbb", "bbwwwwbb", ".bwwwwb.", "..bbbb.."]],
+  ["友善生物", "wolf", "狼", {w: "#e0e0e0", W: "#b8b8b8", k: "#222"}, ["ww....ww", "wWwwwwWw", "wwwwwwww", "wkwwwwkw", "wwwWWwww", "wwWkkWww", ".wWWWWw.", "..wwww.."]],
+  ["友善生物", "cat", "貓", {o: "#e8a040", O: "#c07a20", g: "#7fd04a", k: "#222", p: "#ff9db0"}, ["o......o", "oo....oo", "oOooooOo", "ogkoogko", "oooppooo", "ooOkkOoo", "oooooooo", ".oooooo."]],
+  ["友善生物", "fox", "狐狸", {o: "#e8782a", w: "#f4f4f4", k: "#222"}, ["o......o", "oo....oo", "oooooooo", "okooooko", "wwooooww", "wwwkkwww", ".wwwwww.", "..wwww.."]],
+  ["友善生物", "panda", "熊貓", {w: "#f4f4f4", k: "#222", K: "#3a3a3a"}, ["kk....kk", "kwwwwwwk", "wwwwwwww", "wKkwwkKw", "wKKwwKKw", "wwwkkwww", "wwwwwwww", ".wwwwww."]],
+  ["友善生物", "bee", "蜜蜂", {y: "#f5c542", k: "#222", w: "#fff", b: "#3a2a10"}, ["yyyyyyyy", "yyyyyyyy", "ykwyykwy", "ykkyykky", "yyyyyyyy", "bbbbbbbb", "yyyyyyyy", "bbbbbbbb"]],
+  ["友善生物", "parrot", "鸚鵡", {r: "#e8221c", R: "#b81810", y: "#ffd84a", k: "#222"}, ["..rrrr..", ".rrrrrr.", "rrrrrrrr", "rkrrrrkr", "rrryyrrr", "rrryyrrr", ".rRRRRr.", "..RRRR.."]],
+  ["友善生物", "villager", "村民", {s: "#c69c7c", S: "#a87c5c", b: "#4a2e1a", e: "#3a7a2a", w: "#fff"}, ["ssssssss", "ssssssss", "sbbbbbbs", "sweSSews", "sssSSsss", "sssSSsss", "sssSSsss", "ssbbbbss"]],
+  ["友善生物", "golem", "鐵巨人", {i: "#d8d0c4", I: "#b0a89c", r: "#e8221c", k: "#555", v: "#4f8f3a"}, ["iiiiiiii", "iIiiiiIi", "iIIIIIIi", "irkiikri", "iiiIIiii", "iviIIivi", "iiiIIiii", "iiIIIIii"]],
+  ["友善生物", "axolotl", "美西螈", {p: "#ffb0c8", P: "#ff80a8", g: "#e05080", k: "#222"}, ["g.pppp.g", "gppppppg", "gpkppkpg", ".pppppp.", "gppPPppg", ".pppppp.", "..pppp..", "........"]],
+  ["友善生物", "frog", "青蛙", {o: "#d0884a", O: "#a8682a", w: "#fff", k: "#222", g: "#e8b070"}, [".ww..ww.", "wkwoowkw", "oooooooo", "oOooooOo", "kkkkkkkk", "oggggggo", ".oooooo.", "........"]],
+  ["友善生物", "turtle", "烏龜", {g: "#5fb84a", G: "#3f8f32", s: "#6f8a3a", S: "#4a6a20"}, ["..gGGg..", ".GssssG.", "gsSssSsg", "GssSSssG", "GssSSssG", "gsSssSsg", ".GssssG.", "..gGGg.."]],
+  ["友善生物", "squid", "魷魚", {q: "#2a4f7a", Q: "#1e3a5a", w: "#fff", k: "#111"}, ["qqqqqqqq", "qQqqqqQq", "qkwqqwkq", "qqqqqqqq", "qQqqqqQq", "qqQqqQqq", "q.qq.qq.", "q..q..q."]],
+  ["友善生物", "dolphin", "海豚", {b: "#7aa8c8", B: "#5a88a8", w: "#dfe8ef", k: "#111"}, ["...bb...", "..bbbb..", ".bbbbbb.", "bkbbbbkb", "bbbbbbbb", "bwwwwwwb", ".wwBBww.", "..wwww.."]],
+  ["敵對生物", "creeper", "苦力怕", {g: "#5fb84a", G: "#3f8f32", k: "#111"}, ["gGggGggG", "ggGgggGg", "gkkggkkg", "gkkggkkg", "gGgkkgGg", "ggkkkkgg", "gGkkkkGg", "ggkGGkgg"]],
+  ["敵對生物", "zombie", "殭屍", {z: "#4f8f3a", Z: "#3a6e2a", h: "#2e5a20", k: "#111"}, ["hhhhhhhh", "hzhhhhzh", "zzzzzzzz", "zkkzzkkz", "zzzZZzzz", "zzZzzZzz", "zzZZZZzz", "zzzzzzzz"]],
+  ["敵對生物", "skeleton", "骷髏", {w: "#d8d8d8", W: "#b0b0b0", k: "#222"}, ["wwwwwwww", "wWwwwwWw", "wwwwwwww", "wkkwwkkw", "wwwkkwww", "wWwwwwWw", "wkkkkkkw", "wwwwwwww"]],
+  ["敵對生物", "spider", "蜘蛛", {s: "#3a3030", S: "#2a2222", r: "#e8221c"}, ["ssSssSss", "sSssssSs", "ssssssss", "srsrrsrs", "srrssrrs", "ssSssSss", "sSsSSsSs", "ssssssss"]],
+  ["敵對生物", "enderman", "終界使者", {k: "#111111", K: "#1e1e24", p: "#c86bff", P: "#e6b3ff"}, ["kkkkkkkk", "kKkkkKkk", "kkkkkkkk", "kkkkkkkk", "pPpkkpPp", "kkkkkkkk", "kKkkkkKk", "kkkkkkkk"]],
+  ["敵對生物", "slime", "史萊姆", {l: "#7ed957", L: "#5fb84a", d: "#2e6e24", k: "#1f3a1a"}, ["llllllll", "lLLLLLLl", "lLddLddl", "lLkdLkdl", "lLLLLLLl", "lLLLdLLl", "lLLLLLLl", "llllllll"]],
+  ["敵對生物", "witch", "女巫", {h: "#3a1a4a", g: "#4fae3a", s: "#c69c7c", S: "#a87c5c", w: "#fff", e: "#6a2a8a", b: "#4a2e1a"}, ["...hh...", "..hhhh..", ".hggggh.", "hhhhhhhh", "swessews", "sssSSsss", "sssSSsss", "ssbSSbss"]],
+  ["敵對生物", "pillager", "掠奪者", {s: "#8a8f8f", S: "#6a6f6f", b: "#2a2a2a", k: "#222", w: "#fff"}, ["ssssssss", "ssssssss", "bbbbbbbb", "swksskws", "sssSSsss", "sssSSsss", "ssbbbbss", "sbssssbs"]],
+  ["敵對生物", "blaze", "烈焰人", {y: "#ffd84a", o: "#ffae2a", k: "#4a2a00"}, ["yyyyyyyy", "yoyyyyoy", "yyyyyyyy", "ykkyykky", "yyyooyyy", "yoyyyyoy", "yyokkoyy", "yyyyyyyy"]],
+  ["敵對生物", "ghast", "地獄幽靈", {w: "#f4f4f4", W: "#d8d8d8", k: "#333"}, ["wwwwwwww", "wWwwwwWw", "wwwwwwww", "wkkwwkkw", "wWwwwwWw", "wwkkkkww", "wwkkkkww", "wwwwwwww"]],
+  ["敵對生物", "piglin", "豬布林", {p: "#e8a0a0", P: "#c88080", k: "#222", w: "#fff", n: "#8a4040", g: "#ffd84a"}, ["pppppppp", "pPppppPp", "pwkppkwp", "pppppppp", "ppPPPPpp", "ppPnnPpp", "gpPPPPpp", "pppppppp"]],
+  ["敵對生物", "wither", "凋零", {k: "#2a2a2a", K: "#1a1a1a", w: "#e8e8e8"}, ["kkkkkkkk", "kKkkkkKk", "kwwkkwwk", "kkkkkkkk", "kkKkkKkk", "kwkwwkwk", "kkwkkwkk", "kkkkkkkk"]],
+  ["敵對生物", "dragon", "終界龍", {k: "#1a1a1a", K: "#2e2e2e", p: "#c86bff"}, ["k......k", "kK....Kk", "kkkkkkkk", "kppkkppk", "kkkkkkkk", "KkkkkkkK", "kkKkkKkk", "kkkkkkkk"]],
+  ["敵對生物", "warden", "伏守者", {t: "#0f3a3a", T: "#0a2a2a", c: "#3ae0d0", k: "#061818"}, ["TtTttTtT", "tttttttt", "tTttttTt", "tttttttt", "tcttttct", "tttttttt", "tkkkkkkt", "tttttttt"]],
+];
+const GEM = ["....kkkkkkkk....", "...kCwCccCCck...", "..kCCCcccccCck..", ".kccccdcccdccck.", "..kcccdcccdcck..", "...kccdcccdck...", "....kcdcccdk....", ".....kdccdk.....", "......kcck......", ".......kk......."];
+const INGOT = ["..kkkkkkkkkk..", ".kwwwwyyyyyyk.", "kwyyyyyyyyyyYk", "kyyyyyyyyyyYYk", "kYYYYYYYYYYYYk", ".kkkkkkkkkkkk."];
+const K = "#1b1b1b";
+const ICONS = [
+  // 方塊
+  {cat: "方塊", id: "grass", n: "草地", g: grass},
+  {cat: "方塊", id: "dirt", n: "泥土", g: () => noise(["#8a5a35", "#6b4226", "#9c6a40"], 2)},
+  {cat: "方塊", id: "stone", n: "石頭", g: () => noise(STONE, 3)},
+  {cat: "方塊", id: "cobble", n: "圓石", g: () => noise(["#7a7a7a", "#5c5c5c", "#959595"], 4, [.4, .35, .25])},
+  {cat: "方塊", id: "sand", n: "沙子", g: () => noise(["#e3d39a", "#d4c182", "#efe2b0"], 5)},
+  {cat: "方塊", id: "snow", n: "雪", g: () => noise(["#f4f8fb", "#e2eaf0", "#ffffff"], 6)},
+  {cat: "方塊", id: "ice", n: "冰", g: ice},
+  {cat: "方塊", id: "water", n: "水", g: water},
+  {cat: "方塊", id: "lava", n: "岩漿", g: () => noise(["#ff8a1f", "#e8590c", "#ffc23a"], 8, [.45, .3, .25])},
+  {cat: "方塊", id: "planks", n: "木板", g: planks},
+  {cat: "方塊", id: "log", n: "原木", g: log},
+  {cat: "方塊", id: "leaves", n: "樹葉", g: leaves},
+  {cat: "方塊", id: "bricks", n: "磚塊", g: bricks},
+  {cat: "方塊", id: "glass", n: "玻璃", g: glass},
+  {cat: "方塊", id: "pumpkin", n: "南瓜", g: pumpkin},
+  {cat: "方塊", id: "obsidian", n: "黑曜石", g: () => noise(["#1e1430", "#140d22", "#3a2a5a"], 9, [.5, .3, .2])},
+  {cat: "方塊", id: "nether", n: "地獄岩", g: () => noise(["#7a2a2a", "#5e1e1e", "#9a3a36"], 10)},
+  {cat: "方塊", id: "endstone", n: "終界石", g: () => noise(["#e6e3a6", "#d2cf8e", "#f2efbe"], 13)},
+  {cat: "方塊", id: "amethyst", n: "紫水晶", g: () => noise(["#9a62d8", "#7a44b8", "#c79bff"], 14, [.45, .3, .25])},
+  // 礦石
+  {cat: "礦石", id: "ore-diamond", n: "鑽石礦", g: () => ore("#4fe3d6", "#a8fff6", 15)},
+  {cat: "礦石", id: "ore-gold", n: "金礦", g: () => ore("#ffd84a", "#fff1a0", 16)},
+  {cat: "礦石", id: "ore-emerald", n: "綠寶石礦", g: () => ore("#2fd16a", "#a0ffc0", 17)},
+  {cat: "礦石", id: "ore-redstone", n: "紅石礦", g: () => ore("#e8221c", "#ff6a5a", 18)},
+  {cat: "礦石", id: "ore-lapis", n: "青金石礦", g: () => ore("#2a4fc8", "#5a80ff", 19)},
+  {cat: "礦石", id: "ore-iron", n: "鐵礦", g: () => ore("#d8b49a", "#f0d6c2", 20)},
+  {cat: "礦石", id: "ore-coal", n: "煤礦", g: () => ore("#2a2a2a", "#474747", 22)},
+  // 寶物
+  {cat: "寶物", id: "diamond", n: "鑽石", g: () => fromPx({k: "#0d3b3a", c: "#4fe3d6", C: "#a8fff6", d: "#1fa79c", w: "#fff"}, GEM)},
+  {cat: "寶物", id: "emerald", n: "綠寶石", g: () => fromPx({k: "#0b3a1c", c: "#2fd16a", C: "#a0ffc0", d: "#14a04a", w: "#fff"}, GEM)},
+  {cat: "寶物", id: "ruby", n: "紅寶石", g: () => fromPx({k: "#3a0b10", c: "#e8323c", C: "#ff9aa0", d: "#a8182a", w: "#fff"}, GEM)},
+  {cat: "寶物", id: "gold", n: "金錠", g: () => fromPx({k: "#5a3a00", y: "#ffd84a", Y: "#e0a820", w: "#fff6c2"}, INGOT)},
+  {cat: "寶物", id: "iron", n: "鐵錠", g: () => fromPx({k: "#2a2a2a", y: "#d4d8dc", Y: "#a2a8ae", w: "#ffffff"}, INGOT)},
+  {cat: "寶物", id: "crown", n: "王冠", g: () => fromPx({y: "#ffd84a", Y: "#e0a820", r: "#e8413c", b: "#4fa3e3"}, ["y....yy....y", "yy..yyyy..yy", "yyyyyyyyyyyy", "yyrYYbbYYryy", "yyyyyyyyyyyy", "YYYYYYYYYYYY"])},
+  {cat: "寶物", id: "star", n: "星星", g: () => fromPx({y: "#ffd84a", o: "#e0a820"}, [".....y.....", "....yyy....", "....yyy....", "yyyyyyyyyyy", ".yyyyyyyyy.", "..yyyyyyy..", "..yyyoyyy..", ".yyyo.oyyy.", ".yyo...oyy.", "yo.......oy"])},
+  {cat: "寶物", id: "heart", n: "愛心", g: () => fromPx({k: "#2a0a0a", r: "#e83c4a", w: "#ffb3b8", R: "#a8202d"}, [".kkk...kkk.", "krrrk.krrrk", "krwrrkrrrRk", "krrrrrrrrRk", ".krrrrrrRk.", "..krrrrRk..", "...krrRk...", "....kRk....", ".....k....."])},
+  // 工具與物品
+  {cat: "工具與物品", id: "sword", n: "劍", g: () => fromPx({k: K, s: "#dfe6ea", S: "#9aa7ad", h: "#7a4a22", g: "#e2b23a"}, ["...........kkk", "..........kssk", ".........ksSk.", "........ksSk..", ".......ksSk...", "......ksSk....", ".kk..ksSk.....", ".kgkksSk......", "..kgsSk.......", "...kgk........", "..khkgk.......", ".khk.kgk......", "kkk...kk......"])},
+  {cat: "工具與物品", id: "pickaxe", n: "鎬", g: () => fromPx({k: K, s: "#8fd6e0", S: "#4fb5c2", h: "#7a4a22", H: "#5a3416"}, ["...kkkkkkk....", "..ksssssssk...", ".ksSkkkkkSsk..", "ksSk..khk.kSsk", "kSk...khk..kSk", "kk....khk...kk", "......khk.....", "......khk.....", "......kHk.....", "......khk.....", "......kHk.....", "......kkk....."])},
+  {cat: "工具與物品", id: "axe", n: "斧頭", g: () => fromPx({k: K, s: "#c9d1d6", S: "#8a969c", h: "#7a4a22", H: "#5a3416"}, ["..kkkkkk....", ".kssssSkk...", "kssssSkhk...", "kssssSkhk...", ".kssSkkhk...", "..kkk.khk...", "......khk...", "......kHk...", "......khk...", "......khk...", "......kHk...", "......kkk..."])},
+  {cat: "工具與物品", id: "shield", n: "盾牌", g: () => fromPx({k: K, m: "#b8bec4", r: "#3a6fd8", w: "#f5c542"}, ["kkkkkkkkkkkk", "kmmmmmmmmmmk", "kmrrrwwrrrmk", "kmrrrwwrrrmk", "kmwwwwwwwwmk", "kmrrrwwrrrmk", "kmrrrwwrrrmk", ".kmrrwwrrmk.", "..kmrwwrmk..", "...kmmmmk...", "....kkkk...."])},
+  {cat: "工具與物品", id: "bomb", n: "炸彈", g: () => fromPx({k: K, g: "#3a3d42", G: "#5a5f66", w: "#9aa0a6", f: "#ffae2a", y: "#ffd84a", b: "#7a4a22"}, ["........yf..", ".......fb...", "......kb....", "...kkkkk....", "..kggggggk..", ".kgwGgggggk.", "kgwggggggggk", "kgGggggggggk", "kggggggggggk", ".kggggggggk.", "..kggggggk..", "...kkkkkk..."])},
+  {cat: "工具與物品", id: "torch", n: "火把", g: () => fromPx({y: "#ffd84a", o: "#ff8a1f", w: "#fff6c2", k: K, h: "#7a4a22"}, ["..yy..", ".yowy.", ".ooyo.", "..oo..", "..kk..", "..hh..", "..hh..", "..hh..", "..hh..", "..hh..", "..hh..", "..hh.."])},
+  {cat: "工具與物品", id: "potion", n: "藥水", g: () => fromPx({k: K, g: "#cfe8f0", p: "#c64ad8", P: "#8a2aa0", w: "#fff", c: "#8a5a35"}, ["...kkkk...", "...kcck...", "...kggk...", "..kggggk..", ".kggggggk.", "kgwpppppgk", "kgppppppPk", "kgppppppPk", "kgpppppPPk", ".kgPPPPPk.", "..kkkkkk.."])},
+  {cat: "工具與物品", id: "chest", n: "寶箱", g: () => fromPx({k: "#2a1a0a", w: "#b07a3a", W: "#8a5a28", d: "#6b4220", m: "#c9c9c9"}, ["kkkkkkkkkkkkkk", "kwwwwwwwwwwwwk", "kwWWWWWWWWWWwk", "kwWWWWWWWWWWwk", "kkkkkkmmkkkkkk", "kwwwwwmmwwwwwk", "kwWWWWkkWWWWwk", "kwWWWWWWWWWWwk", "kwWWWWWWWWWWwk", "kwddddddddddwk", "kkkkkkkkkkkkkk"])},
+  {cat: "工具與物品", id: "book", n: "書", g: () => fromPx({k: K, r: "#8a2a2a", R: "#5a1a1a", w: "#f4ecd8"}, ["kkkkkkkkkkk.", "krrrrrrrrrk.", "krrRRRRRrrk.", "krrrrrrrrrk.", "krrRRRRrrrk.", "krrrrrrrrrk.", "krrrrrrrrrkk", "kkkkkkkkkkwk", ".kwwwwwwwwwk", "..kkkkkkkkkk"])},
+  {cat: "工具與物品", id: "map", n: "地圖", g: () => fromPx({k: K, p: "#e8d9b0", P: "#c9b88a", g: "#6fbf5a", b: "#5aa9e6", r: "#e8413c"}, ["kkkkkkkkkkkk", "kpgggppbbbpk", "kpggpppbbbpk", "kpppprppbbpk", "kpbbppprppgk", "kpbbbpppppgk", "kppbppggpggk", "kPpppgggpppk", "kkkkkkkkkkkk"])},
+  {cat: "工具與物品", id: "compass", n: "指南針", g: () => fromPx({k: K, g: "#9aa0a6", G: "#5f656b", w: "#e8e8e8", r: "#e8413c"}, ["...kkkkkk...", ".kkggggggkk.", ".kgwwwwwwgk.", "kgwwwwrwwwgk", "kgwwwwrwwwgk", "kgwwwrrwwwgk", "kgwwwkwwwwgk", "kgwwwkwwwwgk", ".kgwwwwwwgk.", ".kkGGGGGGkk.", "...kkkkkk..."])},
+  {cat: "工具與物品", id: "pad", n: "手把", g: () => fromPx({k: K, g: "#5a5f66", w: "#e8e8e8", r: "#e8413c", b: "#4fa3e3"}, [".kkkkkkkkkkkk.", "kggggggggggggk", "kggwggggggrggk", "kgwwwgggggbgrk", "kggwggggggrggk", "kggggggggggggk", "kgggkkkkkkgggk", ".kkk......kkk."])},
+  // 食物
+  {cat: "食物", id: "apple", n: "蘋果", g: () => fromPx({k: "#2a0a0a", r: "#e8413c", R: "#b52a26", w: "#ff9d8f", g: "#4caf50", b: "#6b4226"}, ["......kk....", ".....kbkkk..", ".....kbkggk.", "..kkkkkkkk..", ".krrrrrrrrk.", "krwwrrrrrrrk", "krwrrrrrrrrk", "krrrrrrrrrRk", "krrrrrrrrrRk", "krrrrrrrrRRk", ".krrrrrrRRk.", "..kRRkkRRk..", "...kk..kk..."])},
+  {cat: "食物", id: "carrot", n: "胡蘿蔔", g: () => fromPx({k: K, o: "#ff8a1f", O: "#d9650f", g: "#4caf50"}, ["......g.g.", ".....ggg..", "....kkgg..", "...koOk...", "..kooOk...", "..koOk....", ".kooOk....", ".kOok.....", "kOok......", "kk........"])},
+  {cat: "食物", id: "cake", n: "蛋糕", g: () => fromPx({k: "#2a1a0a", w: "#fff6ee", W: "#e6dccf", r: "#e8413c", b: "#c58a4a", B: "#9a6232"}, ["..kkkkkkkkkk..", ".kwwrwwwwrwwk.", "kwwwwwwrwwwwwk", "kwWwwWwwwWwwWk", "kbWbbWbbbWbbbk", "kbbbbbbbbbbbbk", "kBbbbbbbbbbbBk", "kBBbbbbbbbbBBk", ".kkkkkkkkkkkk."])},
+  {cat: "食物", id: "fish", n: "魚", g: () => fromPx({k: K, b: "#5aa9e6", B: "#2f6fa8", w: "#fff"}, ["....kkkkkk....", "..kkbbbbbbk.kk", ".kbbbbbbbbbkbk", "kbwkbbbbbbbbbk", "kbbbbbbbbbbbbk", ".kBBbbbbbbbkBk", "..kkBBBBBBk.kk", "....kkkkkk...."])},
+  {cat: "食物", id: "mushroom", n: "蘑菇", g: () => fromPx({k: K, r: "#e8413c", w: "#fff", s: "#efe3cf"}, ["...kkkkkk...", ".krrwwrrrrk.", "krwwrrrrwwrk", "krwwrrrrwwrk", "krrrrwwrrrrk", "kkkkkkkkkkkk", "...kssssk...", "...kssssk...", "...kssssk...", "...kkkkkk..."])},
+  ...MOBS.map(([cat, id, n, pal, rows]) => ({cat, id, n, g: () => face(pal, rows, id)})),
+  // 自然
+  {cat: "自然", id: "tree", n: "樹", g: () => fromPx({t: "#4caf50", T: "#2e7d32", b: "#7a4a22"}, ["...tttttt...", ".ttTttttTtt.", "tttttTtttttt", "tTttttttTttt", "ttttTttttttT", ".tttttTtttt.", "...ttbbtt...", ".....bb.....", ".....bb.....", ".....bb.....", ".....bb....."])},
+  {cat: "自然", id: "flower", n: "花", g: () => fromPx({r: "#e8413c", y: "#ffd84a", g: "#4caf50"}, ["..rrrr..", ".rryyrr.", ".rryyrr.", "..rrrr..", "...gg...", ".g.gg...", ".gggg.g.", "...gggg.", "...gg...", "...gg..."])},
+  {cat: "自然", id: "fire", n: "火焰", g: () => fromPx({r: "#e8413c", o: "#ff8a1f", y: "#ffd84a"}, ["....o.....", "...oo..o..", "..ooo.oo..", ".oooyooo.o", ".ooyyyoooo", "rooyyyyooo", "roooyyyoor", "rroooyoorr", ".rrroooorr", "..rrrrrrr."])},
+  // 場景
+  {cat: "場景", id: "island", n: "空島", g: () => fromPx({t: "#4caf50", b: "#7a4a22", g: "#5fb84a", G: "#3f8f32", d: "#8a5a35", D: "#6b4226"}, ["......ttt.......", ".....ttttt......", ".....ttttt......", "......tbt.......", ".......b........", "..gggggbgggggg..", ".gGggggggGgggGg.", ".dddddddddddddd.", "..dDddddDdddDd..", "...ddddddddd....", "....dDdddDd.....", ".....ddddd......", "......dDd.......", ".......d........"])},
+  {cat: "場景", id: "castle", n: "城堡", g: () => fromPx({k: K, s: "#a9afb5", S: "#7d848a", d: "#5a3a20", f: "#e8413c"}, ["......kf......", "......kff.....", "......k.......", "kkk..kkkk..kkk", "ksk..kssk..ksk", "kskkkksskkkksk", "kssssssssssssk", "ksSsssssssSssk", "kssssskksssssk", "ksssskddkssssk", "ksSsskddksSssk", "kkkkkkkkkkkkkk"])},
+  {cat: "場景", id: "house", n: "小屋", g: () => fromPx({k: K, r: "#c0392b", R: "#8e2a20", w: "#d9b27a", d: "#6b4220", g: "#9fd8ff"}, ["......kk......", ".....krrk.....", "....krrrrk....", "...krrRrrrk...", "..krrrrrRrrk..", ".krrRrrrrrrrk.", "kkkkkkkkkkkkkk", ".kwwwwwwwwwwk.", ".kwggwwwwddwk.", ".kwggwwwwddwk.", ".kwwwwwwwddwk.", ".kkkkkkkkkkkk."])},
+  {cat: "場景", id: "portal", n: "傳送門", g: () => fromPx({o: "#2a1a3a", O: "#1a1024", p: "#a24ce0", P: "#d48bff"}, ["oooooooooooo", "oOooooooooOo", "oopPppppPpoo", "ooppPpppppoo", "oopppPPpppoo", "ooPpppppPpoo", "oopPppPpppoo", "oopppppPpPoo", "ooPppPppppoo", "oopppppPppoo", "oOooooooooOo", "oooooooooooo"])},
+  {cat: "場景", id: "moon", n: "月亮", g: () => fromPx({m: "#f4f1d0", M: "#c9c497"}, ["...mmmm...", ".mmmmm....", "mmmmm.....", "mmmm......", "mmmm......", "mmmM......", "mmmmM.....", ".mmmmMMmm.", "...mmmMm.."])},
+  {cat: "場景", id: "sun", n: "太陽", g: () => fromPx({y: "#ffd84a", o: "#ffae2a"}, [".....yy.....", ".y...yy...y.", "..y......y..", "....oooo....", "...oyyyyo...", "yy.oyyyyo.yy", "yy.oyyyyo.yy", "...oyyyyo...", "....oooo....", "..y......y..", ".y...yy...y.", ".....yy....."])},
+];
+const CACHE = {};
+function draw(cv, id){ const g = CACHE[id] || (CACHE[id] = ICONS.find(i => i.id === id).g()); const c = cv.getContext("2d"); c.clearRect(0, 0, 16, 16);
+  g.forEach((row, y) => row.forEach((col, x) => { if (col) { c.fillStyle = col; c.fillRect(x, y, 1, 1); } })); }
+const COLORS = [["綠", "#5fd39a"], ["冰藍", "#57c1ff"], ["紫", "#b48cff"], ["粉", "#ff8ab8"], ["紅", "#ff6b6b"], ["橘", "#ffa45c"], ["黃", "#f2d16b"], ["白", "#f4f4f6"]];
+return {ICONS, COLORS, draw};
+})();
+
+const ICON_DARK = new Set(["enderman", "wither", "dragon", "warden"]);
+const ICON_BY_ID = Object.fromEntries(PX.ICONS.map(i => [i.id, i]));
+/* 沒設過的伺服器：草地＋依清單順序配色（只顯示，不寫進設定檔） */
+function look(s, i){
+  return {icon: ICON_BY_ID[s.icon] ? s.icon : "grass", color: PX.COLORS.some(c => c[1] === s.color) ? s.color : PX.COLORS[i % PX.COLORS.length][1]};
+}
+function drawIcon(cv, id){ PX.draw(cv, id); cv.classList.toggle("dk", ICON_DARK.has(id)); }
+function pxCanvas(id){ const cv = h("canvas", {class: "px", width: "16", height: "16", "aria-hidden": "true"}); drawIcon(cv, id); return cv; }
+function iconTile(s, i, extra){ const lk = look(s, i); return h("span", {class: "ic", style: `--c:${lk.color}`}, pxCanvas(lk.icon), extra || null); }
+
+/* 選圖示與顏色：點刊頭大圖示打開，選完按「套用」才存 */
+let iconPick = null;
+function openIconPicker(){
+  const s = byId[active]; if (!s) return;
+  iconPick = {id: s.id, ...look(s, servers.indexOf(s))};
+  $("#ic-name").textContent = s.name;
+  $("#ic-sw").replaceChildren(...PX.COLORS.map(([n, v]) => h("button", {type: "button", style: `--v:${v}`, title: n, "aria-label": n + "色", "aria-pressed": "false",
+    "data-v": v, onclick: () => { iconPick.color = v; paintIconPicker(); }})));
+  const cats = [...new Set(PX.ICONS.map(i => i.cat))];
+  $("#ic-cats").replaceChildren(...cats.flatMap(c => [h("h4", {text: c}), h("div", {class: "ig", role: "group", "aria-label": c},
+    ...PX.ICONS.filter(i => i.cat === c).map(i => h("button", {type: "button", "data-id": i.id, title: i.n, "aria-pressed": "false",
+      onclick: () => { iconPick.icon = i.id; paintIconPicker(); }}, pxCanvas(i.id), h("span", {text: i.n}))))]));
+  paintIconPicker();
+  openDlg("#dlg-icon", "#ic-ok");
+  $("#dlg-icon .ibody").scrollTop = 0;   // 從最上面（顏色）開始看；焦點放在目前的圖示上但不捲走
+  const cur = $(`#ic-cats [data-id="${iconPick.icon}"]`); if (cur) cur.focus({preventScroll: true});
+}
+function paintIconPicker(){
+  $("#dlg-icon .sheet").style.setProperty("--c", iconPick.color);
+  $("#ic-pv").style.setProperty("--c", iconPick.color);
+  drawIcon($("#ic-pv canvas"), iconPick.icon);
+  document.querySelectorAll("#ic-sw button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === iconPick.color)));
+  document.querySelectorAll("#ic-cats button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.id === iconPick.icon)));
+}
+$("#h-icon").onclick = openIconPicker;
+$("#ic-no").onclick = () => closeDlg("#dlg-icon");
+$("#ic-ok").onclick = async () => {
+  const r = await api("/api/server-settings", {id: iconPick.id, icon: iconPick.icon, color: iconPick.color});
+  if (r.error) return toast(r.error);
+  closeDlg("#dlg-icon"); await refresh(); toast("已換好圖示與顏色");
+};
+
+/* ---------- 版面收合 ---------- */
+function applyFold(){
+  const fl = store.get("fold", false) || innerWidth < 1000;
+  document.body.classList.toggle("fl", fl); $("#fold").setAttribute("aria-expanded", String(!fl));
+  const fc = store.get("cmdfold", false);
+  document.body.classList.toggle("fc", fc); $("#pickhd").setAttribute("aria-expanded", String(!fc));
+}
+$("#fold").onclick = () => { store.set("fold", !document.body.classList.contains("fl")); applyFold(); };
+$("#pickhd").onclick = () => { store.set("cmdfold", !document.body.classList.contains("fc")); applyFold(); };
+addEventListener("resize", applyFold); applyFold();
+
+/* ---------- 左側清單、總覽 ---------- */
+function stateLabel(s){ return s.state === "stopping" && s.stopping_s != null ? `關機中…（存檔 ${s.stopping_s} 秒）` : LABEL[s.state]; }
+function shortState(s){ return {running: s.online != null ? `${s.online}/${s.max}` : "開", starting: "開機中", stopping: "關機中", external: "外部", stopped: "關"}[s.state]; }
+function renderList(){
+  const box = $("#srvlist");
+  $("#grp").textContent = `伺服器 ${servers.length} 台`;
+  $("#nav-ov").classList.toggle("a", view === "overview");
+  const sig = JSON.stringify([view, active, servers.map((s, i) => [s.id, s.name, s.state, shortState(s), look(s, i)])]);   // 沒變就不重畫，鍵盤焦點才不會跑掉
+  if (box.dataset.v === sig) return; box.dataset.v = sig;
+  if (!servers.length) { box.replaceChildren(h("div", {class: "empty-list", text: "還沒有伺服器"})); return; }
+  box.replaceChildren(...servers.map((s, i) => h("button", {class: `srv st-${s.state}` + (view === "server" && s.id === active ? " a" : ""), title: `${s.name}（${LABEL[s.state]}）`,
+      style: `--c:${look(s, i).color}`, "aria-current": view === "server" && s.id === active ? "true" : null, onclick: () => select(s.id)},
+    iconTile(s, i, h("span", {class: "d"})), h("span", {class: "nm", text: s.name}), h("small", {text: shortState(s)}))));
+  $("#nav-ov").classList.toggle("a", view === "overview");
+}
+function spark(svg, s, w = 120, ht = 24){
+  const hist = s.mem_hist || [];
+  svg.replaceChildren(); svg.setAttribute("viewBox", `0 0 ${w} ${ht}`);
+  if (hist.length < 2) return false;
+  const cap = s.xmx_mb || Math.max(...hist) * 1.2, top = Math.max(cap, ...hist);
+  const step = w / (MEM_SLOTS - 1), x0 = w - (hist.length - 1) * step;
+  const pts = hist.map((v, i) => [x0 + i * step, ht - 1 - Math.min(v, top) / top * (ht - 3)]);
+  const warn = s.xmx_mb && hist[hist.length - 1] > s.xmx_mb * 0.85, col = warn ? "#e8b86a" : "#57c1ff";
+  const d = "M" + pts.map(p => p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" L");
+  const ns = "http://www.w3.org/2000/svg", mk = (t, a) => { const e = document.createElementNS(ns, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
+  if (s.xmx_mb) svg.append(mk("line", {x1: 0, x2: w, y1: (ht - 1 - s.xmx_mb / top * (ht - 3)).toFixed(1), y2: (ht - 1 - s.xmx_mb / top * (ht - 3)).toFixed(1), stroke: "#33363b", "stroke-dasharray": "2 3", "vector-effect": "non-scaling-stroke"}));
+  svg.append(mk("path", {d: d + ` L${w} ${ht} L${x0.toFixed(1)} ${ht}Z`, fill: col + "14"}),
+             mk("path", {d, fill: "none", stroke: col, "stroke-width": "1.3", "vector-effect": "non-scaling-stroke"}),
+             mk("circle", {cx: w, cy: pts[pts.length - 1][1].toFixed(1), r: "2.4", fill: col}));
+  return warn;
+}
+function powerSpec(s){
+  if (s.state === "stopped") return s.backup_busy ? {cls: "", text: "備份中…", dis: true} : {cls: "", text: "開機"};
+  if (s.state === "starting") return {cls: "busy", text: "開機中…"};
+  if (s.state === "running") return {cls: "out", text: "關機"};
+  if (s.state === "stopping") return s.can_force ? {cls: "force", text: "強制結束"} : {cls: "busy", text: `關機中…（${s.stopping_s ?? 0} 秒）`};
+  return {cls: "ext", text: "在別處開的"};
+}
+function renderOverview(){
+  const sig = JSON.stringify(servers.map((s, i) => [s.id, s.name, s.state, s.online, s.max, s.mem_mb, s.mem_hist, s.stopping_s, s.can_force, s.backup_busy, s.version, look(s, i)]));
+  const focusIdx = [...$("#ov-list").querySelectorAll("button")].indexOf(document.activeElement);
+  if ($("#ov-list").dataset.v === sig) return; $("#ov-list").dataset.v = sig;
+  queueMicrotask(() => { if (focusIdx >= 0) $("#ov-list").querySelectorAll("button")[focusIdx]?.focus(); });
+  $("#ov-list").replaceChildren(...servers.map((s, i) => {
+    const p = powerSpec(s), sv = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    spark(sv, s, 60, 16);
+    return h("div", {class: `ovrow st-${s.state}`},
+      h("button", {class: "ovmain", onclick: () => select(s.id), title: "看這台的主控台"},
+        h("span", {class: "d"}), iconTile(s, i), h("span", {class: "nm", text: s.name, style: `color:${look(s, i).color}`}),
+        h("span", {class: "v", text: [s.version, "連接埠 " + s.port].filter(Boolean).join(" · ")}),
+        h("span", {class: "o", text: s.online != null ? `${s.online}/${s.max} 人` : LABEL[s.state]}),
+        h("span", {class: "m"}, s.mem_mb != null ? `${gb(s.mem_mb)} GB` : "—", sv)),
+      h("button", {class: "mini " + (p.cls === "" ? "" : p.cls === "out" ? "out" : p.cls), text: p.text, disabled: p.dis || null,
+        "aria-label": `${s.name}：${p.text}`, onclick: () => power(s.id)}));
+  }));
+}
+
+/* ---------- 選中那台：資訊條 ---------- */
+function renderHero(){
+  const s = byId[active]; if (!s) return;
+  const idx = servers.indexOf(s);
+  $("#hero").className = "hero st-" + s.state;
+  const lk = look(s, idx);
+  $("#hero").style.setProperty("--c", lk.color);
+  const cv = $("#h-icon canvas"); if (cv.dataset.v !== lk.icon) { cv.dataset.v = lk.icon; drawIcon(cv, lk.icon); }
+  $("#crumb").replaceChildren("伺服器 / ", h("b", {text: s.name}));
+  const parts = [pad2(idx + 1)].concat(String(s.version || "").split(" · ").filter(Boolean), "連接埠 " + s.port);
+  const kk = $("#h-kk"); if (kk.dataset.v !== parts.join("|")) { kk.dataset.v = parts.join("|"); kk.replaceChildren(...parts.map(p => h("span", {text: p}))); }
+  $("#h-name").textContent = s.name; $("#c-name").textContent = s.name;
+  $("#h-badge").className = "badge st-" + s.state; $("#h-state").textContent = stateLabel(s);
+  const on = $("#h-online"); on.replaceChildren(s.online == null ? "—" : String(s.online)); if (s.online != null) on.append(h("small", {text: `/ ${s.max}`}));
+  const who = $("#h-who");
+  who.replaceChildren(...(s.names.length ? s.names.map(n => h("span", {text: n})) : [h("em", {text: s.state === "running" ? "目前沒人" : s.state === "starting" ? "準備好就能進服" : ""})]));
+  const mem = $("#h-mem"), over = s.mem_mb != null && s.xmx_mb && s.mem_mb > s.xmx_mb;
+  mem.replaceChildren(s.mem_mb == null ? "—" : gb(s.mem_mb)); if (s.mem_mb != null) mem.append(h("small", {text: `/ ${s.xmx_mb ? gb(s.xmx_mb) : "?"} GB`}));
+  const warn = spark($("#h-spark"), s);
+  mem.classList.toggle("warn", !!warn); $("#h-cap").hidden = !over;
+  $("#h-up").textContent = fmtUp(s.uptime_s);
+  const p = powerSpec(s), pw = $("#h-power");
+  pw.className = "pw" + (p.cls ? " " + p.cls : ""); pw.disabled = !!p.dis;
+  if (pw.dataset.t !== p.text) { pw.dataset.t = p.text; pw.innerHTML = ICON_POWER; pw.append(p.text); }
+  const stopped = s.state === "stopped";
+  $("#h-backup").disabled = !stopped || s.backup_busy; $("#h-backup").textContent = s.backup_busy ? "備份中…" : "備份世界";
+  $("#h-backup").title = stopped ? "把世界複製一份到伺服器資料夾的 backups（會對帳）" : "伺服器開著不能備份，請先關機";
+  const msgs = [];
+  if (s.problem) msgs.push(h("div", {class: "msg bad", role: "alert"}, h("span", {text: s.problem})));
+  if (s.backup) msgs.push(h("div", {class: "msg " + (s.backup.ok === true ? "good" : s.backup.ok === false ? "bad" : "")}, h("span", {text: s.backup.text}),
+    s.backup.ok ? h("button", {class: "lnk", text: "打開備份位置", onclick: () => api("/api/open", {id: s.id, what: "backups"})}) : null));
+  const box = $("#h-msgs"), sig = msgs.map(m => m.textContent).join("|");
+  if (box.dataset.v !== sig) { box.dataset.v = sig; box.replaceChildren(...msgs); }
+  const live = s.state === "running" || s.state === "starting";
+  $("#pick").classList.toggle("off", !live); $("#pick-note").hidden = live;
+  $("#pick-note").textContent = s.state === "external" ? "這台是在別處開的，請到那個視窗下指令" : "伺服器開機後才能下指令";
+}
+
+/* ---------- 開關機 ---------- */
+async function power(id){
+  const s = byId[id]; if (!s) return;
+  let r;
+  if (s.state === "stopped") {
+    if (s.backup_busy) return;
+    r = await api("/api/start", {id});
+    if (r.need === "eula") { if (!await askEula()) return; await api("/api/eula", {id, agree: true}); r = await api("/api/start", {id}); }
+    if (r.error) { alertBox("現在還不能開機", r.error, r.help_url); r = null; }
+    else { toast(`${s.name} 開機中，大型模組包約要 1–3 分鐘`); if (view !== "server" || active !== id) select(id); }
+  } else if (s.state === "running" || s.state === "starting") {
+    const who = s.online ? `目前有 ${s.online} 位玩家在線上，他們會被踢出。` : "";
+    const title = s.state === "starting" ? `要中止 ${s.name} 的開機嗎？` : `要關閉 ${s.name} 嗎？`;
+    if (!await confirmBox(title, `${who}平台會送出遊戲內的 stop 指令，伺服器先存檔再關機，通常 10–60 秒。`, "關機")) return;
+    r = await api("/api/stop", {id});
+  } else if (s.state === "stopping" && s.can_force) {
+    if (!await confirmBox("確定要強制結束？", "已經送出 stop 超過 2 分鐘還沒關。強制結束可能讓最後幾分鐘的進度沒存到，甚至損壞存檔。建議先看主控台有沒有在跑、再等一下。", "強制結束")) return;
+    r = await api("/api/force", {id});
+  } else if (s.state === "external") return toast("這台是從別的地方開的（例如 {{SCRIPT}} 視窗），請到那個視窗輸入 stop 關機");
+  else if (s.state === "stopping") return toast("正在存檔關機，請稍等；超過 2 分鐘還沒關才能強制結束");
+  else return;
+  if (r && r.error) toast(r.error);
+  refresh();
+}
+$("#h-power").onclick = () => power(active);
+function askEula(){
+  return new Promise(res => {
+    $("#eu-yes").checked = false; $("#eu-go").disabled = true;
+    $("#eu-yes").onchange = () => $("#eu-go").disabled = !$("#eu-yes").checked;
+    const done = v => { closeDlg("#dlg-eula"); res(v); };
+    $("#eu-go").onclick = () => done(true); $("#eu-no").onclick = () => done(false); $("#dlg-eula")._cancel = () => done(false);
+    openDlg("#dlg-eula", "#eu-yes");
+  });
+}
+
+/* ---------- 幽靈按鈕 ---------- */
+$("#h-backup").onclick = async () => { const r = await api("/api/backup", {id: active}); if (r.error) toast(r.error); else toast("開始備份，完成後會顯示結果"); refresh(); };
+$("#h-open").onclick = () => {
+  const s = byId[active]; if (!s) return;
+  const go = what => () => { closePop(); api("/api/open", {id: s.id, what}).then(r => r.error && toast(r.error)); };
+  pop($("#h-open"), [h("button", {role: "menuitem", text: "伺服器資料夾", onclick: go("")}),
+    s.modded ? h("button", {role: "menuitem", text: "mods 資料夾（放模組）", onclick: go("mods")}) : null,
+    h("button", {role: "menuitem", text: "備份資料夾", onclick: go("backups")})].filter(Boolean));
+};
+$("#h-copy").onclick = () => {
+  const s = byId[active]; if (!s) return;
+  if (!s.address) { toast("還沒填連線網址，先在這裡填好"); openInfo("#in-addr"); return; }
+  copyText(s.address, "已複製，可以貼給朋友了");
+};
+$("#h-info").onclick = () => openInfo();
+
+/* ---------- 詳細資訊 ---------- */
+let info = null;
+async function openInfo(focus){
+  const s = byId[active]; if (!s) return;
+  info = await api(`/api/info?id=${encodeURIComponent(s.id)}`);
+  if (info.error) return toast(info.error);
+  $("#in-title").textContent = s.name + " · 詳細資訊";
+  $("#in-addr").value = s.address || "";
+  $("#in-join").textContent = info.join_text;
+  $("#in-seed").value = info.seed || ""; $("#in-seed").placeholder = info.seed ? "" : "（沒寫在設定檔）";
+  $("#in-seed-note").textContent = info.seed_note || "";
+  $("#in-seed-copy").disabled = !info.seed;
+  $("#in-seed-ask").disabled = !(s.state === "running");
+  $("#in-seed-ask").title = s.state === "running" ? "送出 seed 指令，結果會出現在主控台" : "伺服器開著才能查";
+  const sel = $("#in-ram"); sel.replaceChildren();
+  const top = Math.min(64, info.ram_total_gb || 16);
+  for (let g = 1; g <= top; g++) sel.add(new Option(`${g} GB`, g));
+  if (info.ram_gb) { if (!Number.isInteger(info.ram_gb)) sel.add(new Option(`${info.ram_gb} GB（目前）`, info.ram_gb)); sel.value = info.ram_gb; }
+  const stopped = s.state === "stopped" && !s.backup_busy;
+  sel.disabled = $("#in-ram-go").disabled = !stopped || !info.ram_gb;
+  $("#in-ram-note").textContent = !info.ram_gb ? "這台的啟動檔看不出記憶體設定，請用{{EDITOR}}手動改。" : stopped ? `這台電腦共有 ${info.ram_total_gb} GB；原版 2–4 GB 夠用，有裝模組建議 6 GB 以上。改之前會留一份 .bak。` : "要先關機才能改記憶體。";
+  $("#in-autobk").checked = !!info.auto_backup;
+  $("#in-dir").textContent = info.dir; $("#in-java").textContent = info.java || "（開機後才知道）"; $("#in-pid").textContent = info.pid || "—";
+  $("#in-remove").disabled = !stopped; $("#in-remove").title = stopped ? "" : "請先關機";
+  openDlg("#dlg-info", focus || "#in-addr");
+}
+$("#in-close").onclick = () => closeDlg("#dlg-info");
+const saveAddr = async () => { const r = await api("/api/address", {id: active, address: $("#in-addr").value}); if (r.error) return toast(r.error); toast("已儲存連線網址"); await refresh(); info = await api(`/api/info?id=${encodeURIComponent(active)}`); $("#in-join").textContent = info.join_text; };
+$("#in-addr-save").onclick = saveAddr;
+$("#in-addr").onkeydown = e => { if (e.key === "Enter") saveAddr(); };
+$("#in-addr-copy").onclick = () => $("#in-addr").value ? copyText($("#in-addr").value, "已複製連線網址") : toast("還沒填網址喔");
+$("#in-join-copy").onclick = () => copyText($("#in-join").textContent, "已複製加入說明，可以貼到 LINE");
+$("#in-seed-copy").onclick = () => copyText($("#in-seed").value, "已複製種子碼");
+$("#in-seed-ask").onclick = async () => { const r = await api("/api/run", {id: active, cmd: "seed", values: {}}); if (r.error) toast(r.error); else { toast("已送出 seed，結果在主控台"); closeDlg("#dlg-info"); } };
+$("#in-ram-go").onclick = async () => {
+  const r = await api("/api/server-settings", {id: active, ram_gb: +$("#in-ram").value});
+  if (r.error) return toast(r.error); toast(`記憶體改成 ${$("#in-ram").value} GB，下次開機生效`);
+};
+$("#in-autobk").onchange = async () => { const r = await api("/api/server-settings", {id: active, auto_backup: $("#in-autobk").checked}); toast(r.error || ($("#in-autobk").checked ? "已開啟：正常關機後會自動備份" : "已關閉自動備份")); };
+$("#in-remove").onclick = async () => {
+  const s = byId[active]; if (!s) return;
+  if (!await confirmBox(`要把 ${s.name} 從清單移除嗎？`, `只會從平台清單拿掉，資料夾和世界都不會被刪除，之後可以再加回來。\n位置：${s.dir}`, "移除")) return;
+  const r = await api("/api/remove", {id: s.id}); if (r.error) return toast(r.error);
+  closeDlg("#dlg-info"); dropServer(s.id); active = null; await refresh(); toast("已從清單移除，檔案都還在");
+};
+$("#in-join-edit").onclick = () => { $("#jn-text").value = settings.join_template; $("#jn-err").hidden = true; openDlg("#dlg-join", "#jn-text"); };
+$("#jn-no").onclick = () => closeDlg("#dlg-join");
+$("#jn-save").onclick = async () => {
+  const r = await api("/api/settings", {join_template: $("#jn-text").value});
+  if (r.error) { $("#jn-err").textContent = r.error; $("#jn-err").hidden = false; return; }
+  settings = r; closeDlg("#dlg-join"); toast("已儲存加入說明範本");
+  if (!$("#dlg-info").hidden) { info = await api(`/api/info?id=${encodeURIComponent(active)}`); $("#in-join").textContent = info.join_text; }
+};
+
+/* ---------- 實用連結 ---------- */
+$("#links-btn").onclick = () => {
+  const items = (settings.links || []).filter(l => safeUrl(l.url)).map(l => h("a", {role: "menuitem", href: l.url, target: "_blank", rel: "noopener noreferrer", text: l.name, title: l.url, onclick: closePop}));
+  const chk = h("input", {type: "checkbox", "aria-label": "啟動時檢查新版"}); chk.checked = settings.update_check !== false;
+  chk.onchange = async () => {
+    const r = await api("/api/settings", {update_check: chk.checked});
+    if (r.error) { chk.checked = !chk.checked; toast(r.error); return; }
+    settings = r; if (!r.update_check) $("#update").hidden = true;
+    toast(r.update_check ? "已開啟新版提醒（下次啟動平台時檢查）" : "已關閉新版提醒，平台不會再連線檢查");
+  };
+  pop($("#links-btn"), [...items, h("hr"), h("button", {role: "menuitem", text: "編輯連結…", onclick: () => { closePop(); openLinks(); }}),
+    h("hr"), h("label", {}, chk, h("span", {text: "啟動時檢查新版"})),
+    h("small", {text: "只讀一個版本號，不傳送任何資料、不自動下載。"})]);
+};
+function linkRow(l){
+  const n = h("input", {type: "text", maxlength: "40", "aria-label": "連結名稱", placeholder: "名稱", autocomplete: "off"}), u = h("input", {type: "url", "aria-label": "網址", placeholder: "https://…", autocomplete: "off", spellcheck: "false"});
+  n.value = l.name || ""; u.value = l.url || "";
+  const row = h("div", {class: "lrow"}, n, u, h("button", {class: "b", text: "刪除", onclick: () => row.remove()}));
+  return row;
+}
+function openLinks(){ $("#lk-rows").replaceChildren(...(settings.links || []).map(linkRow)); $("#lk-err").hidden = true; openDlg("#dlg-links"); }
+$("#lk-add").onclick = () => { const r = linkRow({}); $("#lk-rows").append(r); r.querySelector("input").focus(); };
+$("#lk-no").onclick = () => closeDlg("#dlg-links");
+$("#lk-save").onclick = async () => {
+  const links = [...$("#lk-rows").children].map(r => { const [n, u] = r.querySelectorAll("input"); return {name: n.value.trim(), url: u.value.trim()}; }).filter(l => l.name || l.url);
+  const r = await api("/api/settings", {links});
+  if (r.error) { $("#lk-err").textContent = r.error; $("#lk-err").hidden = false; return; }
+  settings = r; closeDlg("#dlg-links"); toast("已儲存實用連結");
+};
+
+/* ---------- 常用指令 ---------- */
+async function loadCommands(force){
+  if (!active) return;
+  if (!force && cmdFor === active && cmdData) return renderCmds();
+  const id = active, d = await api(`/api/commands?id=${encodeURIComponent(id)}`);
+  if (id !== active) return;
+  cmdData = d; cmdFor = id; openCell = null;
+  const cats = catsOf();
+  if (!cats.includes(curCat)) curCat = store.get("cat", cats[0]); if (!cats.includes(curCat)) curCat = cats[0];
+  renderCmds();
+}
+function catsOf(){ const c = [...new Set(cmdData.commands.map(x => x.cat))]; if (!c.includes("我的筆記")) c.push("我的筆記"); return c; }
+const isCustom = c => String(c.id).startsWith("my_");
+const fieldLabel = f => (cmdData.fields[f] || {}).label || f;
+const preview = c => c.special ? (c.note || "") : (c.preview || c.tpl).replace(/<(\w+)>/g, (m, f) => cmdData.fields[f] ? `<${fieldLabel(f)}>` : m);
+function renderCmds(){
+  if (!cmdData) return;
+  $("#cats").replaceChildren(...catsOf().map(c => h("button", {class: "cat" + (c === curCat ? " a" : "") + (c === "清除" ? " dz" : ""), role: "tab", "aria-selected": String(c === curCat), text: c,
+    onclick: () => { curCat = c; store.set("cat", c); openCell = null; renderCmds(); }})));
+  const list = cmdData.commands.filter(c => c.cat === curCat), out = [];
+  for (const c of list) {
+    if (openCell === c.id) { out.push(cmdForm(c)); continue; }
+    out.push(h("button", {class: "cell" + (c.danger ? " warn" : ""), title: c.note || preview(c), onclick: () => pickCmd(c)},
+      c.name, h("span", {class: "pv mono", text: preview(c) || " "}), c.uncertain ? h("span", {class: "un", text: "版本不確定，失敗請看主控台"}) : null));
+  }
+  if (curCat === "我的筆記" || list.some(isCustom)) out.push(h("button", {class: "cell addnote", onclick: openNotes}, "＋ 新增／編輯我的筆記", h("span", {class: "pv", text: "把常用指令存起來"})));
+  else if (!list.length) out.push(h("div", {class: "cell addnote", text: "這個分類沒有指令"}));
+  $("#cmds").replaceChildren(...out);
+  const fm = $("#cmds .form");
+  if (fm) { fm.scrollIntoView({block: "nearest"}); const f = fm.querySelector("[data-first]"); if (f) f.focus({preventScroll: true}); }
+}
+function canRun(){ const s = byId[active]; return s && (s.state === "running" || s.state === "starting"); }
+function pickCmd(c){
+  if (!canRun()) return toast(byId[active]?.state === "external" ? "這台是在別處開的，請到那個視窗下指令" : "伺服器開機後才能下指令");
+  if (!c.fields.length && !c.danger) return runCmd(c, {}, undefined);
+  openCell = c.id; renderCmds();
+}
+function closeCell(){ openCell = null; renderCmds(); }
+function effDanger(c, vals){
+  let d = {"": 0, confirm: 1, strong: 2}[c.danger || ""];
+  if (Object.values(vals).includes("@a") || (c.confirm_if_false && vals.bool === "false")) d = Math.max(d, 1);
+  return d;
+}
+function fieldInput(key, spec, vals, form){
+  const lab = spec.label;
+  const wrap = (input, extra) => h("label", {class: "fld" + (spec.kind === "text" ? " wide" : "")}, h("span", {text: lab}), input, extra || null);
+  if (spec.kind === "player") {
+    const inp = h("input", {type: "text", maxlength: "17", autocomplete: "off", spellcheck: "false", placeholder: "玩家名稱…", "data-k": key});
+    const s = byId[active], names = (s && s.names || []).slice(0, 12);
+    const chips = h("div", {class: "chips"}, ...names.map(n => h("button", {type: "button", class: "chip", text: n, onclick: () => { inp.value = n; inp.dispatchEvent(new Event("input")); }})),
+      h("button", {type: "button", class: "chip", text: "全部 @a", title: "對所有在線玩家，執行前要確認", onclick: () => { inp.value = "@a"; inp.dispatchEvent(new Event("input")); }}));
+    if (names.length === 1) inp.value = names[0];
+    return h("div", {class: "fld"}, h("span", {text: lab}), inp, chips);
+  }
+  if (spec.kind === "id" || spec.kind === "ench") {
+    const sel = h("select", {"data-k": key, "aria-label": lab});
+    for (const p of spec.picks || []) sel.add(new Option(spec.kind === "ench" ? `${p[1]}（最高 ${p[2]} 級）` : `${p[1]}（${p[0]}）`, p[0]));
+    let other = null;
+    if (spec.kind === "id") {
+      sel.add(new Option("自己輸入…", "__other"));
+      other = h("input", {type: "text", maxlength: "64", autocomplete: "off", spellcheck: "false", placeholder: "英文名稱，例如 golden_apple", hidden: true, "aria-label": lab + "（自己輸入）"});
+      sel.addEventListener("change", () => { other.hidden = sel.value !== "__other"; if (!other.hidden) other.focus(); });
+      sel._other = other;
+    }
+    if (spec.kind === "ench") sel.addEventListener("change", () => { const lv = form.querySelector('[data-k="level"]'); const p = (spec.picks || []).find(x => x[0] === sel.value); if (lv && p) { lv.max = p[2]; if (+lv.value > p[2]) lv.value = p[2]; } });
+    return h("label", {class: "fld"}, h("span", {text: lab}), sel, other);
+  }
+  if (spec.kind === "int") {
+    const inp = h("input", {type: "number", min: String(spec.min), max: String(spec.max), step: "1", "data-k": key, inputmode: "numeric"});
+    inp.value = spec.default ?? spec.min; return wrap(inp);
+  }
+  if (spec.kind === "num") return wrap(h("input", {type: "text", inputmode: "decimal", maxlength: "12", autocomplete: "off", placeholder: "例如 100", "data-k": key, style: "width:96px"}));
+  if (spec.kind === "bool") {
+    const seg = h("div", {class: "seg", role: "radiogroup", "aria-label": lab, "data-k": key});
+    seg.dataset.v = "true";
+    for (const [v, t] of [["true", "開"], ["false", "關"]]) seg.append(h("button", {type: "button", role: "radio", class: v === "true" ? "a" : "", "aria-checked": String(v === "true"), text: t,
+      onclick: () => { seg.dataset.v = v; seg.querySelectorAll("button").forEach(b => { const on = b.textContent === t; b.classList.toggle("a", on); b.setAttribute("aria-checked", String(on)); }); form.dispatchEvent(new Event("input")); }}));
+    return h("div", {class: "fld"}, h("span", {text: lab}), seg);
+  }
+  return wrap(h("input", {type: "text", maxlength: "200", autocomplete: "off", placeholder: spec.optional ? "可不填" : "", "data-k": key}));
+}
+function readVals(form){
+  const vals = {};
+  form.querySelectorAll("[data-k]").forEach(el => {
+    const k = el.dataset.k;
+    vals[k] = el.classList.contains("seg") ? el.dataset.v : el.tagName === "SELECT" && el.value === "__other" ? el._other.value.trim() : el.value.trim();
+  });
+  return vals;
+}
+function cmdForm(c){
+  const form = h("form", {class: "form", autocomplete: "off"});
+  const fields = c.fields.map(k => fieldInput(k, cmdData.fields[k] || {label: k, kind: "text"}, {}, form));
+  const note = h("div", {class: "note"}), confirmBox2 = h("div", {class: "fld", hidden: true}), typed = h("input", {type: "text", autocomplete: "off", spellcheck: "false", "aria-label": "打字確認"});
+  confirmBox2.append(h("span"), typed);
+  const go = h("button", {type: "submit", class: "b pri", text: "執行"}), cancel = h("button", {type: "button", class: "b", text: "取消", onclick: closeCell});
+  let armed = false;
+  const need = () => { const v = readVals(form); return (v.player && v.player !== "@a") ? v.player : "確定"; };
+  const sync = () => {
+    const d = effDanger(c, readVals(form));
+    form.classList.toggle("warn", d > 0);
+    const base = [c.note, c.uncertain ? "版本不確定，失敗請看主控台" : ""].filter(Boolean).join("　");
+    if (d === 2) { note.className = "note bad"; note.textContent = (base ? base + "。" : "") + `會刪東西或給權限，不能復原。請在右邊打「${need()}」才能執行。`; confirmBox2.hidden = false; confirmBox2.firstChild.textContent = `打「${need()}」確認`; go.className = "b danger"; go.disabled = typed.value.trim() !== need(); }
+    else if (d === 1) { note.className = "note bad"; note.textContent = armed ? "再按一次「確定執行」就會送出。" : (base ? base + "。" : "") + "這個指令會影響所有人或改變遊戲規則，執行前會再問一次。"; confirmBox2.hidden = true; go.className = "b danger"; go.disabled = false; go.textContent = armed ? "確定執行" : "執行"; }
+    else { note.className = "note"; note.textContent = base; confirmBox2.hidden = true; go.className = "b pri"; go.disabled = false; go.textContent = "執行"; }
+  };
+  form.addEventListener("input", () => { armed = false; sync(); });
+  typed.addEventListener("input", e => { e.stopPropagation(); sync(); });
+  form.onsubmit = e => {
+    e.preventDefault();
+    const vals = readVals(form), d = effDanger(c, vals);
+    if (d === 1 && !armed) { armed = true; sync(); go.focus(); return; }
+    if (d === 2 && typed.value.trim() !== need()) return;
+    runCmd(c, vals, d === 2 ? "strong" : d === 1 ? true : undefined);
+  };
+  form.append(h("div", {class: "ttl"}, h("b", {text: c.name}), h("code", {text: preview(c)})), ...fields, confirmBox2, h("div", {class: "acts"}, cancel, go), note);
+  const first = form.querySelector("input:not([hidden]),select"); if (first) first.setAttribute("data-first", ""); else go.setAttribute("data-first", "");
+  sync();
+  return form;
+}
+async function runCmd(c, values, confirm){
+  if (!active) return;
+  sendSfx();
+  const body = {id: active, cmd: c.id, values}; if (confirm !== undefined) body.confirm = confirm;
+  const r = await api("/api/run", body);
+  if (r.error) return toast(r.error);
+  toast(r.sent ? `已送出：${r.sent}` : `已執行：${c.name}`);
+  if (openCell) closeCell();
+  pullLogs();
+}
+
+/* ---------- 指令搜尋（Ctrl K） ---------- */
+let palHits = [], palIdx = 0;
+async function openPalette(){
+  if (!active) return; if (view !== "server") select(active);
+  await loadCommands(); $("#pal-q").value = ""; palSearch(); openDlg("#dlg-pal", "#pal-q");
+}
+$("#open-pal").onclick = openPalette;
+$("#pal-q").oninput = palSearch;
+function palSearch(){
+  const terms = $("#pal-q").value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+  palHits = (cmdData ? cmdData.commands : []).filter(c => { const hay = [c.name, c.cat, c.tpl, c.preview || "", c.id, c.note || ""].join(" ").toLowerCase(); return terms.every(t => hay.includes(t)); }).slice(0, 40);
+  palIdx = 0; palPaint();
+}
+function palPaint(){
+  const box = $("#pal-list");
+  if (!palHits.length) {
+    box.replaceChildren(h("div", {class: "palnone"}, "沒找到。試試：", ...["白天", "給物品", "白名單"].map(w => h("button", {class: "chip", style: "margin-left:6px", text: w, onclick: () => { $("#pal-q").value = w; palSearch(); $("#pal-q").focus(); }}))));
+    return;
+  }
+  box.replaceChildren(...palHits.map((c, i) => h("button", {class: "palitem" + (i === palIdx ? " a" : ""), role: "option", "aria-selected": String(i === palIdx), id: "pal-" + i,
+    onclick: () => palUse(i), onmousemove: () => { if (palIdx !== i) { palIdx = i; palPaint(); } }},
+    h("b", {text: c.name}), h("small", {text: c.cat}), h("code", {text: preview(c)}))));
+  $("#pal-q").setAttribute("aria-activedescendant", "pal-" + palIdx);
+  const a = box.querySelector(".a"); if (a) a.scrollIntoView({block: "nearest"});
+}
+$("#pal-q").onkeydown = e => {
+  if (e.key === "ArrowDown") { palIdx = Math.min(palIdx + 1, palHits.length - 1); palPaint(); e.preventDefault(); }
+  else if (e.key === "ArrowUp") { palIdx = Math.max(palIdx - 1, 0); palPaint(); e.preventDefault(); }
+  else if (e.key === "Enter") { e.preventDefault(); if (palHits.length) palUse(palIdx); }
+};
+function palUse(i){
+  const c = palHits[i]; closeDlg("#dlg-pal");
+  if (document.body.classList.contains("fc")) { store.set("cmdfold", false); applyFold(); }
+  curCat = c.cat; openCell = null; renderCmds(); pickCmd(c);
+}
+
+/* ---------- 我的筆記 ---------- */
+let noteEdit = null;
+function openNotes(){
+  $("#nt-fields").textContent = "可用欄位：" + Object.entries(cmdData ? cmdData.fields : {}).map(([k, v]) => `<${k}> ${v.label}`).join("、");
+  noteForm(null); paintNotes(); openDlg("#dlg-notes", "#nt-name");
+}
+function paintNotes(){
+  const list = settings.custom_commands || [];
+  $("#nt-list").replaceChildren(...(list.length ? list.map(c => h("div", {class: "nrow"},
+      h("div", null, h("b", {text: c.name + (c.cat && c.cat !== "我的筆記" ? `（${c.cat}）` : "")}), h("code", {text: c.tpl})),
+      h("button", {class: "b", text: "編輯", onclick: () => { noteForm(c); $("#nt-name").focus(); }}),
+      h("button", {class: "b", text: "刪除", onclick: async () => {
+        if (!await confirmBox(`刪除「${c.name}」？`, "只刪這筆筆記，不影響伺服器。", "刪除")) return;
+        await saveNotes(list.filter(x => x.id !== c.id), "已刪除"); }})))
+    : [h("div", {class: "nrow"}, h("div", {class: "sub", text: "還沒有筆記。用下面的表單新增第一筆。"}))]));
+}
+function noteForm(c){
+  noteEdit = c ? c.id : null;
+  $("#nt-form-h").textContent = c ? `編輯「${c.name}」` : "新增一筆";
+  $("#nt-name").value = c ? c.name : ""; $("#nt-tpl").value = c ? c.tpl : ""; $("#nt-cat").value = c && c.cat !== "我的筆記" ? c.cat : "";
+  $("#nt-danger").value = c ? c.danger || "" : ""; $("#nt-note").value = c ? c.note || "" : ""; $("#nt-err").hidden = true;
+}
+async function saveNotes(list, msg){
+  const r = await api("/api/settings", {custom_commands: list});
+  if (r.error) { $("#nt-err").textContent = r.error; $("#nt-err").hidden = false; return false; }
+  settings = r; paintNotes(); toast(msg); await loadCommands(true); return true;
+}
+$("#nt-save").onclick = async () => {
+  const item = {name: $("#nt-name").value.trim(), tpl: $("#nt-tpl").value.trim(), cat: $("#nt-cat").value.trim() || "我的筆記", danger: $("#nt-danger").value, note: $("#nt-note").value.trim()};
+  if (noteEdit) item.id = noteEdit;
+  const list = (settings.custom_commands || []).slice(), i = list.findIndex(x => x.id === noteEdit);
+  if (i >= 0) list[i] = item; else list.push(item);
+  if (await saveNotes(list, noteEdit ? "已更新筆記" : "已新增筆記")) noteForm(null);
+};
+$("#nt-reset").onclick = () => noteForm(null);
+$("#nt-close").onclick = () => closeDlg("#dlg-notes");
+
+/* ---------- 主控台 ---------- */
+let follow = true;
+function ensureLog(id){
+  if (logState[id]) return logState[id];
+  const el = h("div", {class: "log", tabindex: "0", hidden: true, "aria-label": "主控台紀錄", "aria-live": "off"});
+  $("#logs").append(el); return logState[id] = {seq: 0, el};
+}
+function showLog(){
+  for (const k in logState) logState[k].el.hidden = k !== active;
+  $("#log-empty").hidden = !!(logState[active] && logState[active].el.childElementCount);
+  scrollEnd(true);
+}
+function scrollEnd(force){ const st = logState[active]; if (st && (force || follow)) st.el.scrollTop = st.el.scrollHeight; }
+$("#follow").onclick = () => { follow = !follow; $("#follow").setAttribute("aria-pressed", String(follow)); $("#follow").textContent = follow ? "自動捲到最新 ✓" : "自動捲到最新"; if (follow) scrollEnd(true); };
+$("#clear").onclick = () => { const st = logState[active]; if (st) { st.el.replaceChildren(); $("#log-empty").hidden = false; } };
+function cls(t){
+  if (t.startsWith("» ")) return "hub";
+  if (t.startsWith("> ")) return "me";
+  if (/joined the game/.test(t)) return "join";
+  if (/left the game/.test(t)) return "left";
+  if (/\/(ERROR|FATAL)\]|Exception|\bERROR\b/.test(t)) return "err";
+  if (/\/WARN\]|\[WARN\]/.test(t)) return "warn";
+  if (/\]: <[^>]+> /.test(t)) return "chat";
+  return "";
+}
+let pulling = false;
+async function pullLogs(){
+  if (pulling) return; pulling = true;
+  try {
+    for (const s of servers) {
+      const st = ensureLog(s.id);
+      let d; try { d = await api(`/api/log?id=${encodeURIComponent(s.id)}&since=${st.seq}`); } catch { continue; }
+      if (!d.lines || !d.lines.length) { if (d.seq != null) st.seq = d.seq; continue; }
+      const atBottom = st.el.scrollHeight - st.el.scrollTop - st.el.clientHeight < 40, frag = document.createDocumentFragment();
+      for (const [, t] of d.lines) {
+        const div = document.createElement("div"), k = cls(t), m = /^\[\d\d:\d\d:\d\d\] ?/.exec(t);
+        if (m) div.append(h("span", {class: "t", text: m[0]}), t.slice(m[0].length)); else div.textContent = t;
+        if (k) div.className = k; frag.append(div);
+      }
+      st.el.append(frag); st.seq = d.seq;
+      while (st.el.childElementCount > 2500) st.el.firstChild.remove();
+      if (s.id === active) { $("#log-empty").hidden = true; if (atBottom || follow) scrollEnd(); }
+    }
+  } finally { pulling = false; }
+}
+const history = store.get("hist", []); let hIdx = -1;
+$("#cmdform").onsubmit = async e => {
+  e.preventDefault();
+  const text = $("#cmd").value.trim(); if (!text || !active) return;
+  sendSfx();
+  const r = await api("/api/cmd", {id: active, cmd: text});
+  if (r.error) return toast(r.error);
+  $("#cmd").value = ""; history.unshift(text); history.splice(50); store.set("hist", history); hIdx = -1; pullLogs();
+};
+$("#cmd").onkeydown = e => {
+  if (e.key === "ArrowUp" && history.length) { hIdx = Math.min(hIdx + 1, history.length - 1); $("#cmd").value = history[hIdx]; e.preventDefault(); }
+  if (e.key === "ArrowDown") { hIdx = Math.max(hIdx - 1, -1); $("#cmd").value = hIdx < 0 ? "" : history[hIdx]; e.preventDefault(); }
+};
+
+/* ---------- 切換畫面 ---------- */
+function select(id){
+  if (!byId[id]) return;
+  const changed = active !== id;
+  active = id; view = "server"; store.set("active", id);
+  if (changed) { openCell = null; cmdData = null; cmdFor = null; }
+  paint(); showLog(); loadCommands();
+}
+$("#nav-ov").onclick = () => { view = "overview"; paint(); };
+function paint(){
+  const none = !servers.length;
+  $("#welcome").hidden = !none;
+  $("#view-server").hidden = none || view !== "server";
+  $("#view-ov").hidden = none || view !== "overview";
+  if (none) $("#crumb").replaceChildren("開始使用");
+  else if (view === "overview") { $("#crumb").replaceChildren("伺服器 / ", h("b", {text: "總覽"})); renderOverview(); }
+  else renderHero();
+  renderList();
+}
+function dropServer(id){ if (logState[id]) { logState[id].el.remove(); delete logState[id]; } delete prevState[id]; }
+
+function showGone(stale){
+  $("#gone h2").textContent = stale ? "平台重新開過了" : "平台已經關閉";
+  $("#gone p").textContent = stale ? "這個視窗是舊的，請按 F5 重新整理，或關掉後再雙擊一次「{{APP_FILE}}」" : "要再用的話，再雙擊一次「{{APP_FILE}}」";
+  $("#gone").hidden = false;
+}
+/* ---------- 每 1.5 秒同步一次 ---------- */
+async function refresh(){
+  let d;
+  try { d = await api("/api/state"); } catch { if (++failures > 2) showGone(false); return; }
+  // 平台重開過（例如更新後），這個舊視窗的通行碼已失效 → 請使用者重新整理，不要一直報錯
+  if (!Array.isArray(d?.servers)) { if (++failures > 2) showGone(true); return; }
+  failures = 0; $("#gone").hidden = true;
+  const alive = new Set(d.servers.map(s => s.id));
+  for (const id of Object.keys(logState)) if (!alive.has(id)) dropServer(id);
+  servers = d.servers; byId = Object.fromEntries(servers.map(s => [s.id, s]));
+  for (const s of servers) { ensureLog(s.id); if (firstLoad) prevState[s.id] = s.state; else soundFor(s); }
+  firstLoad = false;
+  if (!byId[active]) {
+    const want = store.get("active", null);
+    if (servers.length) select(byId[want] ? want : servers[0].id); else active = null;
+  }
+  const on = servers.filter(s => s.state !== "stopped").length, ppl = servers.reduce((a, s) => a + (s.online || 0), 0);
+  $("#sum").textContent = !servers.length ? "平台就緒" : on ? `${on} 台執行中 · ${ppl} 人在線` : "伺服器都關著";
+  $("#sum").classList.toggle("live", on > 0);
+  const up = $("#update"); up.hidden = !d.update;
+  if (d.update) { up.dataset.v = d.update; up.textContent = `有新版 v${d.update}`; }
+  if (cmdData && byId[active] && !openCell && cmdFor === active) { const live = canRun(); if ($("#pick").dataset.live !== String(live)) { $("#pick").dataset.live = String(live); renderCmds(); } }
+  paint();
+}
+$("#update").onclick = () => alertBox("有新版可以用", `目前是 v{{VERSION}}，最新版是 v${$("#update").dataset.v}。請到你當初下載這個工具的地方拿新版壓縮檔，把伺服器都關機、關閉平台後，用新的 exe 蓋掉舊的就好；伺服器清單和設定都會留著。平台不會自己下載或更換程式。`);
+$("#quit").onclick = async () => {
+  const r = await api("/api/quit", {});
+  if (r.error) return toast(r.error);
+  $("#gone").hidden = false; setTimeout(() => window.close(), 600);
+};
+
+/* ---------- 加入現有資料夾 ---------- */
+async function pickInto(input){
+  const r = await api("/api/pick-folder", {});
+  if (r.error) toast(r.error); else if (r.path) { input.value = r.path; input.dispatchEvent(new Event("input")); }
+}
+function openAdd(){ $("#ad-dir").value = $("#ad-name").value = ""; $("#ad-err").hidden = true; openDlg("#dlg-add", "#ad-dir"); }
+$("#ad-pick").onclick = () => pickInto($("#ad-dir"));
+$("#ad-no").onclick = () => closeDlg("#dlg-add");
+$("#ad-go").onclick = async () => {
+  const r = await api("/api/add", {dir: $("#ad-dir").value, name: $("#ad-name").value});
+  if (r.error) { $("#ad-err").textContent = r.error; $("#ad-err").hidden = false; return; }
+  closeDlg("#dlg-add"); await refresh(); select(r.id); toast("已加入，按「開機」就能啟動");
+};
+
+/* ---------- 建立新伺服器 ---------- */
+let wizVersions = [], javaOk = false;
+const wizType = () => document.querySelector('input[name="w-type"]:checked').value;
+const SRC = {
+  forge: ["Forge 安裝器從 Forge 官方（maven.minecraftforge.net）下載；Forge 官方下載頁靠廣告營收，想支持作者可以到 ", "https://files.minecraftforge.net/", " 看看。"],
+  neoforge: ["NeoForge 安裝器從 NeoForge 官方（maven.neoforged.net）下載，官方網站：", "https://neoforged.net/", "。"]
+};
+function wizValid(){
+  const parent = $("#w-parent").value.trim().replace(/[\\/]+$/, ""), name = $("#w-name").value.trim(), sep = parent.includes("/") && !parent.includes("\\") ? "/" : "\\";
+  $("#w-target").textContent = parent && name ? "會建立資料夾：" + parent + sep + name : "平台會在這裡新增一個以伺服器名稱命名的資料夾";
+  $("#w-go").disabled = !(name && $("#w-ver").value && parent && $("#w-eula").checked && javaOk);
+}
+function wizLoaders(){
+  const v = wizVersions.find(x => x.id === $("#w-ver").value) || {};
+  const info = {vanilla: {ok: true, sub: "不能裝模組"}, fabric: {ok: !!v.fabric, sub: v.fabric ? "輕量模組" : "這個版本沒有"},
+    forge: v.forge ? {ok: v.forge.ok, sub: v.forge.ok ? v.forge.version : v.forge.why} : {ok: false, sub: "讀不到清單"},
+    neoforge: v.neoforge ? {ok: v.neoforge.ok, sub: v.neoforge.ok ? v.neoforge.version : v.neoforge.why} : {ok: false, sub: "讀不到清單"}};
+  document.querySelectorAll("#w-cards .card").forEach(card => {
+    const k = card.dataset.k, i = info[k], radio = card.querySelector("input");
+    radio.disabled = !i.ok; card.classList.toggle("off", !i.ok); card.querySelector("small").textContent = i.sub || ""; card.title = i.ok ? "" : i.sub || "";
+  });
+  if (document.querySelector('input[name="w-type"]:checked').disabled) document.querySelector('input[name="w-type"][value="vanilla"]').checked = true;
+  wizModHint();
+}
+function wizModHint(){
+  const t = wizType(), box = $("#w-mod");
+  if (t !== "forge" && t !== "neoforge") { box.hidden = true; return; }
+  const [a, url, b] = SRC[t];
+  box.hidden = false; box.className = "hint";
+  box.replaceChildren("安裝器會自己連 Forge／NeoForge／Mojang 官方網站下載，約數百 MB、2–10 分鐘。Forge 和 NeoForge 的模組不能互通，請放同一種的模組。", h("br"), a, h("a", {href: url, target: "_blank", rel: "noopener noreferrer", text: url}), b);
+}
+async function wizJava(){
+  const box = $("#w-java"), ver = $("#w-ver").value;
+  javaOk = false; wizValid(); box.hidden = false; box.className = "hint"; box.textContent = "檢查 Java 版本…";
+  const r = await api("/api/mc/java?version=" + encodeURIComponent(ver));
+  if (ver !== $("#w-ver").value) return;
+  box.replaceChildren();
+  if (r.error) { box.className = "hint bad"; box.textContent = r.error; }
+  else if (r.ok) { javaOk = true; box.className = "hint good"; box.textContent = `Java 沒問題：這個版本需要 Java ${r.need}，電腦上有 Java ${r.have}。`; }
+  else {
+    box.className = "hint bad";
+    const u = safeUrl(r.help_url);
+    box.append(`這個版本需要 Java ${r.need}，電腦上還沒有。`, u ? h("a", {href: u, target: "_blank", rel: "noopener noreferrer", text: `點這裡下載 Java ${r.need}`}) : "",
+      "，一路按下一步裝好後 ", h("button", {class: "lnk", type: "button", text: "重新檢查", onclick: wizJava}), "。");
+  }
+  wizValid();
+}
+async function openWizard(){
+  $("#w-form").hidden = false; $("#w-run").hidden = true;
+  $("#w-eula").checked = false; $("#w-name").value = ""; $("#w-go").disabled = true;
+  $("#w-load").hidden = false; $("#w-load").className = "hint"; $("#w-load").textContent = "正在向 Minecraft 官方讀取版本清單…";
+  openDlg("#dlg-wiz", "#w-name");
+  const d = await api("/api/mc/versions");
+  if (d.error) { $("#w-load").className = "hint bad"; $("#w-load").textContent = d.error; return; }
+  $("#w-load").hidden = true; wizVersions = d.versions;
+  $("#w-ver").replaceChildren(...d.versions.map(v => new Option(v.id, v.id)));
+  $("#w-ram").replaceChildren();
+  const opts = [2, 4, 6, 8, 12, 16].filter(g => g <= Math.max(2, d.ram_total_gb - 2));
+  for (const g of opts) $("#w-ram").add(new Option(`${g} GB`, g));
+  $("#w-ram").value = opts.includes(4) ? 4 : opts[opts.length - 1];
+  $("#w-ram-sub").textContent = `這台電腦共有 ${d.ram_total_gb} GB。原版 2–4 GB 夠用，有裝模組建議 6 GB 以上。`;
+  if (!$("#w-parent").value) $("#w-parent").value = d.default_parent;
+  wizLoaders(); wizJava();
+}
+$("#w-ver").onchange = () => { wizLoaders(); wizJava(); };
+document.querySelectorAll('input[name="w-type"]').forEach(r => r.onchange = () => { wizModHint(); if (wizType() !== "vanilla" && +$("#w-ram").value < 6 && [...$("#w-ram").options].some(o => +o.value === 6)) $("#w-ram").value = 6; });
+["#w-name", "#w-parent"].forEach(s => $(s).oninput = wizValid);
+$("#w-eula").onchange = wizValid;
+$("#w-pick").onclick = () => pickInto($("#w-parent"));
+$("#w-no").onclick = () => closeDlg("#dlg-wiz");
+$("#w-go").onclick = async () => {
+  const loader = wizType();
+  const r = await api("/api/create", {name: $("#w-name").value, version: $("#w-ver").value, loader, ram_gb: +$("#w-ram").value, parent: $("#w-parent").value, eula: $("#w-eula").checked});
+  if (r.error) return alertBox("還不能建立", r.error);
+  $("#w-form").hidden = true; $("#w-run").hidden = false; $("#w-lines").hidden = true;
+  $("#w-src").textContent = loader === "forge" || loader === "neoforge" ? "安裝器會自己連官方網站下載約數百 MB，通常 2–10 分鐘；這個畫面在完成前不能關。" : "伺服器檔案從 Mojang／Fabric 官方網站下載，通常 1–3 分鐘；這個畫面在完成前不能關。";
+  const tick = setInterval(async () => {
+    let job; try { job = (await api("/api/state")).job; } catch { return; }
+    if (!job) return;
+    $("#w-msg").textContent = job.msg;
+    $("#w-bar").classList.toggle("loop", job.pct == null);
+    $("#w-bar").firstChild.style.width = job.pct == null ? "" : Math.round(job.pct) + "%";
+    if (job.lines && job.lines.length) { const o = $("#w-lines"); o.hidden = false; o.textContent = job.lines.slice(-80).join("\n"); o.scrollTop = o.scrollHeight; }
+    if (job.state === "running") return;
+    clearInterval(tick); closeDlg("#dlg-wiz");
+    if (job.state === "error") return alertBox("建立失敗", job.error, job.help_url);
+    await refresh(); if (job.id) select(job.id);
+    if (job.error) alertBox("建立好了，但還沒開機", job.error); else toast("建立完成，正在第一次開機");
+  }, 800);
+};
+$("#add-new").onclick = openWizard; $("#w-new").onclick = openWizard;
+$("#add-dir").onclick = openAdd; $("#w-add").onclick = openAdd;
+
+/* ---------- 開始 ---------- */
+api("/api/settings").then(s => { if (!s.error) settings = s; }).catch(() => {});
+refresh(); setInterval(refresh, 1500);
+setInterval(pullLogs, 1000);
+setInterval(() => { const s = byId[active]; if (s && s.uptime_s != null && view === "server") { s.uptime_s++; $("#h-up").textContent = fmtUp(s.uptime_s); } }, 1000);
+</script>
+</body>
+</html>
