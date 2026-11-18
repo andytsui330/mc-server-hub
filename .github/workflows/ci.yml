@@ -1,0 +1,86 @@
+{
+  "name": "2.0 Windows checks",
+  "on": {
+    "push": {
+      "branches": [
+        "main"
+      ]
+    },
+    "pull_request": {},
+    "workflow_dispatch": {}
+  },
+  "permissions": {
+    "contents": "read"
+  },
+  "jobs": {
+    "verify": {
+      "if": "${{ github.repository == 'andytsui330/mc-server-hub' && !github.event.repository.private }}",
+      "runs-on": "windows-2025",
+      "timeout-minutes": 30,
+      "env": {
+        "MCHUB_DATA_DIR": "${{ runner.temp }}/mchub-${{ github.run_id }}-${{ github.run_attempt }}",
+        "PYTHONIOENCODING": "utf-8"
+      },
+      "defaults": {
+        "run": {
+          "shell": "pwsh"
+        }
+      },
+      "steps": [
+        {
+          "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "with": {
+            "persist-credentials": false
+          }
+        },
+        {
+          "uses": "actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1",
+          "with": {
+            "node-version": "24.18.0",
+            "cache": "npm",
+            "cache-dependency-path": "app/package-lock.json"
+          }
+        },
+        {
+          "uses": "actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+          "with": {
+            "python-version": "3.14"
+          }
+        },
+        {
+          "name": "Install pinned Rust toolchain",
+          "run": "rustup toolchain install 1.99.1 --profile minimal --component clippy"
+        },
+        {
+          "name": "Resolve locked dependencies",
+          "run": "npm ci --ignore-scripts --prefix app\ncargo fetch --locked --target x86_64-pc-windows-msvc"
+        },
+        {
+          "name": "Prepare licenses, SBOM and release notes",
+          "run": "python -B scripts/release_support.py prepare"
+        },
+        {
+          "name": "Packaging contract tests",
+          "run": "python -B -m unittest discover -s tests -p test_release_support.py -v"
+        },
+        {
+          "name": "Rust regression and lint",
+          "run": "cargo test --workspace --locked\ncargo clippy --workspace --all-targets --locked -- -D warnings"
+        },
+        {
+          "name": "TypeScript and frontend production build",
+          "run": "npm run build --prefix app"
+        },
+        {
+          "uses": "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+          "with": {
+            "name": "release-support-${{ github.sha }}",
+            "path": "target/release-support/*",
+            "if-no-files-found": "error",
+            "retention-days": 14
+          }
+        }
+      ]
+    }
+  }
+}

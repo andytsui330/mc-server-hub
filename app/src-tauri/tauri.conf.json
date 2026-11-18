@@ -1,0 +1,70 @@
+{
+  "productName": "MC開服平台",
+  "version": "2.0.0",
+  "identifier": "io.github.mc-server-hub",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "MC 開服平台",
+        "width": 1360,
+        "height": 900,
+        "minWidth": 900,
+        "minHeight": 600
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": [
+      "nsis"
+    ],
+    "icon": [
+      "icons/icon.png",
+      "icons/icon.ico",
+      "icons/icon.icns"
+    ],
+    "publisher": "MC Server Hub contributors",
+    "homepage": "https://github.com/andytsui330/mc-server-hub",
+    "license": "MIT",
+    "licenseFile": "../../LICENSE",
+    "shortDescription": "在自己的電腦管理 Minecraft Java 版伺服器",
+    "resources": {
+      "../../LICENSE": "LICENSE",
+      "../../THIRD_PARTY_NOTICES.txt": "THIRD_PARTY_NOTICES.txt",
+      "../../docs/使用說明.txt": "使用說明.txt",
+      "../../target/release-support/THIRD_PARTY_LICENSES.txt": "THIRD_PARTY_LICENSES.txt",
+      "../../target/release-support/SBOM.cdx.json": "SBOM.cdx.json"
+    },
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "languages": ["TradChinese", "English"],
+        "displayLanguageSelector": false,
+        "template": "windows/installer.nsi"
+      }
+    },
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEUzQTNCMjQ1Q0RERkNEMjIKUldRaXpkL05SYktqNDg1ZmZYdkJZWldWWFo1dTNCR2M1dUlZSXZscnZyU1NkMEdaWS9EemRGZy8K",
+      "endpoints": [
+        "https://github.com/andytsui330/mc-server-hub/releases/latest/download/latest.json"
+      ],
+      "windows": {
+        "installMode": "passive"
+      },
+      "requireSignedVersion": true
+    }
+  }
+}

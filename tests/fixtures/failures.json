@@ -1,0 +1,141 @@
+{
+ "source": "legacy/src/hub.py 1.2.0",
+ "os": "win",
+ "cases": [
+  {
+   "fn": "explain_failure",
+   "args": {
+    "lines": [
+     "x UnsupportedClassVersionError: y has been compiled ... class file version 65.0, this"
+    ],
+    "code": 1,
+    "saw_done": false
+   },
+   "out": "Java 版本太舊：這台伺服器需要 Java 21 以上，請安裝後再開機。"
+  },
+  {
+   "fn": "explain_failure",
+   "args": {
+    "lines": [
+     "Error: Unable to access jarfile server.jar"
+    ],
+    "code": 1,
+    "saw_done": false
+   },
+   "out": "找不到伺服器主程式（jar 檔）。請確認 start.bat 寫的檔名和資料夾裡的檔案一樣。"
+  },
+  {
+   "fn": "explain_failure",
+   "args": {
+    "lines": [
+     "You need to agree to the EULA in order to run the server"
+    ],
+    "code": 0,
+    "saw_done": false
+   },
+   "out": "還沒同意 Minecraft 授權合約（EULA）。再按一次開機就會跳出同意畫面。"
+  },
+  {
+   "fn": "explain_failure",
+   "args": {
+    "lines": [
+     "**** FAILED TO BIND TO PORT!"
+    ],
+    "code": 1,
+    "saw_done": true
+   },
+   "out": "連接埠被別的程式佔用了。請關掉另一台伺服器，或改 server.properties 的 server-port。"
+  },
+  {
+   "fn": "explain_failure",
+   "args": {
+    "lines": [
+     "Error occurred during initialization of VM",
+     "Could not reserve enough space for 8388608KB object heap"
+    ],
+    "code": 1,
+    "saw_done": false
+   },
+   "out": "記憶體不夠：start.bat 的 -Xmx 設得比電腦能給的還多。請改小一點，或先關掉其他程式。"
+  },
+  {
+   "fn": "explain_failure",
+   "args": {
+    "lines": [
+     "'java' 不是內部或外部命令、可執行的程式或批次檔。"
+    ],
+    "code": 9009,
+    "saw_done": false
+   },
+   "out": "找不到 Java。請先安裝 Java，或確認 start.bat 裡的路徑沒打錯。"
+  },
+  {
+   "fn": "explain_failure",
+   "args": {
+    "lines": [
+     "sh: java: command not found"
+    ],
+    "code": 127,
+    "saw_done": false
+   },
+   "out": "找不到 Java。請先安裝 Java，或確認 start.bat 裡的路徑沒打錯。"
+  },
+  {
+   "fn": "explain_failure",
+   "args": {
+    "lines": [
+     "Incompatible mods found!"
+    ],
+    "code": 1,
+    "saw_done": false
+   },
+   "out": "模組有問題：有模組缺少必要的前置模組，或和這個遊戲版本不合。請看主控台最後幾行寫的是哪一個模組。"
+  },
+  {
+   "fn": "explain_failure",
+   "args": {
+    "lines": [
+     "Missing or unsupported mandatory dependencies:"
+    ],
+    "code": 1,
+    "saw_done": false
+   },
+   "out": "模組少了前置模組，或前置模組版本不合（Forge／NeoForge）。主控台會寫哪個模組需要什麼，請到該模組的下載頁補上對應版本，放進 mods 資料夾。"
+  },
+  {
+   "fn": "explain_failure",
+   "args": {
+    "lines": [
+     "Done (3.2s)!",
+     "Stopping server"
+    ],
+    "code": 0,
+    "saw_done": true
+   },
+   "out": null
+  },
+  {
+   "fn": "explain_failure",
+   "args": {
+    "lines": [
+     "Done (3.2s)!",
+     "boom"
+    ],
+    "code": 1,
+    "saw_done": true
+   },
+   "out": "伺服器意外關閉（結束代碼 1）。請看主控台最後幾行，或資料夾裡的 crash-reports。"
+  },
+  {
+   "fn": "explain_failure",
+   "args": {
+    "lines": [
+     "ok"
+    ],
+    "code": 1,
+    "saw_done": false
+   },
+   "out": "伺服器還沒開好就結束了（結束代碼 1）。請看下方主控台最後幾行的錯誤訊息。"
+  }
+ ]
+}

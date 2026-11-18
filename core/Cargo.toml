@@ -1,0 +1,18 @@
+[package]
+name = "mc-hub-core"
+version = "2.0.0"
+edition = "2024"
+license = "MIT"
+description = "MC 開服平台核心邏輯：不引用 Tauri，將來換外殼可整包沿用"
+
+# 版本照計畫書第二節「鎖定版本」：只用發佈滿兩週的版本，以 = 鎖死
+[dependencies]
+serde_json = { version = "=1.0.154", features = ["preserve_order"] }   # preserve_order：設定檔欄位順序照原樣
+sha1 = "=0.10.7"
+sha2 = "=0.10.9"
+regex = { version = "=1.13.1", default-features = false, features = ["std", "unicode", "perf"] }   # 啟動檔解析、指令欄位驗證
+flate2 = "=1.1.10"   # 讀 jar（zip）：判斷伺服器版本、核對 Fabric 檔案；Tauri 本來就有用
+ureq = { version = "=3.5.0", default-features = false, features = ["rustls"] }
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "=0.61.2", features = ["Win32_Globalization", "Win32_Storage_FileSystem", "Win32_System_Diagnostics_ToolHelp", "Win32_System_ProcessStatus", "Win32_System_SystemInformation", "Win32_System_Threading"] }

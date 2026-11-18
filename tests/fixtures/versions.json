@@ -1,0 +1,733 @@
+{
+ "source": "legacy/src/hub.py 1.2.0",
+ "os": "win",
+ "cases": [
+  {
+   "fn": "mc_tuple",
+   "args": {
+    "v": "1.21.1"
+   },
+   "out": [
+    1,
+    21,
+    1
+   ]
+  },
+  {
+   "fn": "mc_tuple",
+   "args": {
+    "v": "1.21"
+   },
+   "out": [
+    1,
+    21
+   ]
+  },
+  {
+   "fn": "mc_tuple",
+   "args": {
+    "v": "26.3"
+   },
+   "out": [
+    26,
+    3
+   ]
+  },
+  {
+   "fn": "mc_tuple",
+   "args": {
+    "v": "26.3.1"
+   },
+   "out": [
+    26,
+    3,
+    1
+   ]
+  },
+  {
+   "fn": "mc_tuple",
+   "args": {
+    "v": "1.21.11"
+   },
+   "out": [
+    1,
+    21,
+    11
+   ]
+  },
+  {
+   "fn": "mc_tuple",
+   "args": {
+    "v": "1"
+   },
+   "out": null
+  },
+  {
+   "fn": "mc_tuple",
+   "args": {
+    "v": ""
+   },
+   "out": null
+  },
+  {
+   "fn": "mc_tuple",
+   "args": {
+    "v": "1.2.x"
+   },
+   "out": null
+  },
+  {
+   "fn": "mc_tuple",
+   "args": {
+    "v": "v1.2"
+   },
+   "out": null
+  },
+  {
+   "fn": "java_for_mc",
+   "args": {
+    "version": "1.21.1"
+   },
+   "out": 21
+  },
+  {
+   "fn": "java_for_mc",
+   "args": {
+    "version": "1.20.5"
+   },
+   "out": 21
+  },
+  {
+   "fn": "java_for_mc",
+   "args": {
+    "version": "1.20.4"
+   },
+   "out": 17
+  },
+  {
+   "fn": "java_for_mc",
+   "args": {
+    "version": "1.18"
+   },
+   "out": 17
+  },
+  {
+   "fn": "java_for_mc",
+   "args": {
+    "version": "1.17.1"
+   },
+   "out": 16
+  },
+  {
+   "fn": "java_for_mc",
+   "args": {
+    "version": "1.16.5"
+   },
+   "out": 8
+  },
+  {
+   "fn": "java_for_mc",
+   "args": {
+    "version": "1.8.9"
+   },
+   "out": 8
+  },
+  {
+   "fn": "java_for_mc",
+   "args": {
+    "version": "26.1"
+   },
+   "out": null
+  },
+  {
+   "fn": "java_for_mc",
+   "args": {
+    "version": ""
+   },
+   "out": null
+  },
+  {
+   "fn": "java_for_mc",
+   "args": {
+    "version": "abc"
+   },
+   "out": null
+  },
+  {
+   "fn": "forge_pick",
+   "args": {
+    "promos": {
+     "promos": {
+      "1.21.1-latest": "52.1.21",
+      "1.21.1-recommended": "52.1.20",
+      "1.21.4-latest": "54.1.22",
+      "1.20.1-recommended": "47.4.0",
+      "1.16.5-recommended": "36.2.34",
+      "1.21.3-latest": "53.0.0; rm"
+     }
+    },
+    "mc": "1.21.1"
+   },
+   "out": [
+    "52.1.20",
+    null
+   ]
+  },
+  {
+   "fn": "forge_pick",
+   "args": {
+    "promos": {
+     "promos": {
+      "1.21.1-latest": "52.1.21",
+      "1.21.1-recommended": "52.1.20",
+      "1.21.4-latest": "54.1.22",
+      "1.20.1-recommended": "47.4.0",
+      "1.16.5-recommended": "36.2.34",
+      "1.21.3-latest": "53.0.0; rm"
+     }
+    },
+    "mc": "1.21.4"
+   },
+   "out": [
+    "54.1.22",
+    null
+   ]
+  },
+  {
+   "fn": "forge_pick",
+   "args": {
+    "promos": {
+     "promos": {
+      "1.21.1-latest": "52.1.21",
+      "1.21.1-recommended": "52.1.20",
+      "1.21.4-latest": "54.1.22",
+      "1.20.1-recommended": "47.4.0",
+      "1.16.5-recommended": "36.2.34",
+      "1.21.3-latest": "53.0.0; rm"
+     }
+    },
+    "mc": "1.20.1"
+   },
+   "out": [
+    "47.4.0",
+    null
+   ]
+  },
+  {
+   "fn": "forge_pick",
+   "args": {
+    "promos": {
+     "promos": {
+      "1.21.1-latest": "52.1.21",
+      "1.21.1-recommended": "52.1.20",
+      "1.21.4-latest": "54.1.22",
+      "1.20.1-recommended": "47.4.0",
+      "1.16.5-recommended": "36.2.34",
+      "1.21.3-latest": "53.0.0; rm"
+     }
+    },
+    "mc": "1.16.5"
+   },
+   "out": [
+    null,
+    "這版 Forge 啟動方式不同，目前不支援"
+   ]
+  },
+  {
+   "fn": "forge_pick",
+   "args": {
+    "promos": {
+     "promos": {
+      "1.21.1-latest": "52.1.21",
+      "1.21.1-recommended": "52.1.20",
+      "1.21.4-latest": "54.1.22",
+      "1.20.1-recommended": "47.4.0",
+      "1.16.5-recommended": "36.2.34",
+      "1.21.3-latest": "53.0.0; rm"
+     }
+    },
+    "mc": "1.20"
+   },
+   "out": [
+    null,
+    "這版 Forge 啟動方式不同，目前不支援"
+   ]
+  },
+  {
+   "fn": "forge_pick",
+   "args": {
+    "promos": {
+     "promos": {
+      "1.21.1-latest": "52.1.21",
+      "1.21.1-recommended": "52.1.20",
+      "1.21.4-latest": "54.1.22",
+      "1.20.1-recommended": "47.4.0",
+      "1.16.5-recommended": "36.2.34",
+      "1.21.3-latest": "53.0.0; rm"
+     }
+    },
+    "mc": "1.21.2"
+   },
+   "out": [
+    null,
+    "Forge 還沒有這個遊戲版本"
+   ]
+  },
+  {
+   "fn": "forge_pick",
+   "args": {
+    "promos": {
+     "promos": {
+      "1.21.1-latest": "52.1.21",
+      "1.21.1-recommended": "52.1.20",
+      "1.21.4-latest": "54.1.22",
+      "1.20.1-recommended": "47.4.0",
+      "1.16.5-recommended": "36.2.34",
+      "1.21.3-latest": "53.0.0; rm"
+     }
+    },
+    "mc": "1.21.3"
+   },
+   "out": [
+    null,
+    "Forge 還沒有這個遊戲版本"
+   ]
+  },
+  {
+   "fn": "forge_pick",
+   "args": {
+    "promos": {
+     "promos": {
+      "1.21.1-latest": "52.1.21",
+      "1.21.1-recommended": "52.1.20",
+      "1.21.4-latest": "54.1.22",
+      "1.20.1-recommended": "47.4.0",
+      "1.16.5-recommended": "36.2.34",
+      "1.21.3-latest": "53.0.0; rm"
+     }
+    },
+    "mc": "abc"
+   },
+   "out": [
+    null,
+    "這版 Forge 啟動方式不同，目前不支援"
+   ]
+  },
+  {
+   "fn": "neoforge_mc",
+   "args": {
+    "v": "21.1.265"
+   },
+   "out": "1.21.1"
+  },
+  {
+   "fn": "neoforge_mc",
+   "args": {
+    "v": "21.0.167"
+   },
+   "out": "1.21"
+  },
+  {
+   "fn": "neoforge_mc",
+   "args": {
+    "v": "21.4.161"
+   },
+   "out": "1.21.4"
+  },
+  {
+   "fn": "neoforge_mc",
+   "args": {
+    "v": "26.3.0.12"
+   },
+   "out": "26.3"
+  },
+  {
+   "fn": "neoforge_mc",
+   "args": {
+    "v": "26.3.1.4"
+   },
+   "out": "26.3.1"
+  },
+  {
+   "fn": "neoforge_mc",
+   "args": {
+    "v": "20.4"
+   },
+   "out": null
+  },
+  {
+   "fn": "neoforge_mc",
+   "args": {
+    "v": "1.2.3.4.5"
+   },
+   "out": null
+  },
+  {
+   "fn": "neoforge_pick",
+   "args": {
+    "data": {
+     "versions": [
+      "21.1.9",
+      "21.1.265",
+      "21.1.30",
+      "21.1.300-beta",
+      "21.4.0-beta",
+      "21.4.1-beta",
+      "21.2.0-beta+snapshot",
+      "26.3.0.5",
+      "26.3.0.12",
+      "26.3.0.13-alpha",
+      "21.0.167"
+     ]
+    },
+    "mc": "1.21.1"
+   },
+   "out": [
+    "21.1.265",
+    null
+   ]
+  },
+  {
+   "fn": "neoforge_pick",
+   "args": {
+    "data": {
+     "versions": [
+      "21.1.9",
+      "21.1.265",
+      "21.1.30",
+      "21.1.300-beta",
+      "21.4.0-beta",
+      "21.4.1-beta",
+      "21.2.0-beta+snapshot",
+      "26.3.0.5",
+      "26.3.0.12",
+      "26.3.0.13-alpha",
+      "21.0.167"
+     ]
+    },
+    "mc": "26.3"
+   },
+   "out": [
+    "26.3.0.12",
+    null
+   ]
+  },
+  {
+   "fn": "neoforge_pick",
+   "args": {
+    "data": {
+     "versions": [
+      "21.1.9",
+      "21.1.265",
+      "21.1.30",
+      "21.1.300-beta",
+      "21.4.0-beta",
+      "21.4.1-beta",
+      "21.2.0-beta+snapshot",
+      "26.3.0.5",
+      "26.3.0.12",
+      "26.3.0.13-alpha",
+      "21.0.167"
+     ]
+    },
+    "mc": "1.21"
+   },
+   "out": [
+    "21.0.167",
+    null
+   ]
+  },
+  {
+   "fn": "neoforge_pick",
+   "args": {
+    "data": {
+     "versions": [
+      "21.1.9",
+      "21.1.265",
+      "21.1.30",
+      "21.1.300-beta",
+      "21.4.0-beta",
+      "21.4.1-beta",
+      "21.2.0-beta+snapshot",
+      "26.3.0.5",
+      "26.3.0.12",
+      "26.3.0.13-alpha",
+      "21.0.167"
+     ]
+    },
+    "mc": "1.21.4"
+   },
+   "out": [
+    null,
+    "NeoForge 這個遊戲版本只有測試版"
+   ]
+  },
+  {
+   "fn": "neoforge_pick",
+   "args": {
+    "data": {
+     "versions": [
+      "21.1.9",
+      "21.1.265",
+      "21.1.30",
+      "21.1.300-beta",
+      "21.4.0-beta",
+      "21.4.1-beta",
+      "21.2.0-beta+snapshot",
+      "26.3.0.5",
+      "26.3.0.12",
+      "26.3.0.13-alpha",
+      "21.0.167"
+     ]
+    },
+    "mc": "1.19.2"
+   },
+   "out": [
+    null,
+    "NeoForge 還沒有這個遊戲版本"
+   ]
+  },
+  {
+   "fn": "loader_choice",
+   "args": {
+    "kind": "forge",
+    "mc": "1.21.1",
+    "data": null
+   },
+   "out": {
+    "ok": false,
+    "version": null,
+    "why": "連不上 Forge 官方網站，稍後再試"
+   }
+  },
+  {
+   "fn": "loader_choice",
+   "args": {
+    "kind": "neoforge",
+    "mc": "1.21.1",
+    "data": null
+   },
+   "out": {
+    "ok": false,
+    "version": null,
+    "why": "連不上 NeoForge 官方網站，稍後再試"
+   }
+  },
+  {
+   "fn": "loader_choice",
+   "args": {
+    "kind": "forge",
+    "mc": "1.21.1",
+    "data": {
+     "promos": {
+      "1.21.1-latest": "52.1.21",
+      "1.21.1-recommended": "52.1.20",
+      "1.21.4-latest": "54.1.22",
+      "1.20.1-recommended": "47.4.0",
+      "1.16.5-recommended": "36.2.34",
+      "1.21.3-latest": "53.0.0; rm"
+     }
+    }
+   },
+   "out": {
+    "ok": true,
+    "version": "52.1.20",
+    "why": null
+   }
+  },
+  {
+   "fn": "loader_choice",
+   "args": {
+    "kind": "neoforge",
+    "mc": "1.21.4",
+    "data": {
+     "versions": [
+      "21.1.9",
+      "21.1.265",
+      "21.1.30",
+      "21.1.300-beta",
+      "21.4.0-beta",
+      "21.4.1-beta",
+      "21.2.0-beta+snapshot",
+      "26.3.0.5",
+      "26.3.0.12",
+      "26.3.0.13-alpha",
+      "21.0.167"
+     ]
+    }
+   },
+   "out": {
+    "ok": false,
+    "version": null,
+    "why": "NeoForge 這個遊戲版本只有測試版"
+   }
+  },
+  {
+   "fn": "forge_installer_url",
+   "args": {
+    "mc": "1.21.1",
+    "v": "52.1.20"
+   },
+   "out": "https://maven.minecraftforge.net/net/minecraftforge/forge/1.21.1-52.1.20/forge-1.21.1-52.1.20-installer.jar"
+  },
+  {
+   "fn": "neoforge_installer_url",
+   "args": {
+    "v": "21.1.265"
+   },
+   "out": "https://maven.neoforged.net/releases/net/neoforged/neoforge/21.1.265/neoforge-21.1.265-installer.jar"
+  },
+  {
+   "fn": "mc_of",
+   "args": {
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": [
+    1,
+    21,
+    1
+   ]
+  },
+  {
+   "fn": "mc_of",
+   "args": {
+    "label": "1.21.11 · Fabric"
+   },
+   "out": [
+    1,
+    21,
+    11
+   ]
+  },
+  {
+   "fn": "mc_of",
+   "args": {
+    "label": "26.3"
+   },
+   "out": [
+    26,
+    3
+   ]
+  },
+  {
+   "fn": "mc_of",
+   "args": {
+    "label": "版本未知"
+   },
+   "out": null
+  },
+  {
+   "fn": "mc_of",
+   "args": {
+    "label": ""
+   },
+   "out": null
+  },
+  {
+   "fn": "mc_of",
+   "args": {
+    "label": "Forge 1.20"
+   },
+   "out": [
+    1,
+    20
+   ]
+  },
+  {
+   "fn": "newer_version",
+   "args": {
+    "body": "2.0.0\n",
+    "current": "1.2.0"
+   },
+   "out": "2.0.0"
+  },
+  {
+   "fn": "newer_version",
+   "args": {
+    "body": "1.2.0",
+    "current": "1.2.0"
+   },
+   "out": null
+  },
+  {
+   "fn": "newer_version",
+   "args": {
+    "body": "0.9.9",
+    "current": "1.2.0"
+   },
+   "out": null
+  },
+  {
+   "fn": "newer_version",
+   "args": {
+    "body": "1.2.1",
+    "current": "1.2.0"
+   },
+   "out": "1.2.1"
+  },
+  {
+   "fn": "newer_version",
+   "args": {
+    "body": "",
+    "current": "1.2.0"
+   },
+   "out": null
+  },
+  {
+   "fn": "newer_version",
+   "args": {
+    "body": "<html>moved</html>",
+    "current": "1.2.0"
+   },
+   "out": null
+  },
+  {
+   "fn": "newer_version",
+   "args": {
+    "body": "1.0",
+    "current": "1.2.0"
+   },
+   "out": null
+  },
+  {
+   "fn": "newer_version",
+   "args": {
+    "body": "1.0.0.1",
+    "current": "1.2.0"
+   },
+   "out": null
+  },
+  {
+   "fn": "newer_version",
+   "args": {
+    "body": "v2.0.0",
+    "current": "1.2.0"
+   },
+   "out": null
+  },
+  {
+   "fn": "newer_version",
+   "args": {
+    "body": "2.0.0 rm -rf",
+    "current": "1.2.0"
+   },
+   "out": null
+  },
+  {
+   "fn": "newer_version",
+   "args": {
+    "body": "99999.0.0",
+    "current": "1.2.0"
+   },
+   "out": null
+  },
+  {
+   "fn": "newer_version",
+   "args": {
+    "body": "{\"v\":\"2.0.0\"}",
+    "current": "1.2.0"
+   },
+   "out": null
+  }
+ ]
+}

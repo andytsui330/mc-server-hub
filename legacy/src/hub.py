@@ -272,12 +272,30 @@ def mac_arch(run=subprocess.run):
     return "aarch64" if platform.machine() in ("arm64", "aarch64") else "x64"
 
 
+# 平台是背景程序，Windows 不准背景程序把視窗搶到最前面，選擇視窗會被平台主畫面蓋住、看起來像沒反應
+# （2026-11-14 實測：按幾次就在背後疊幾個）。先把自己的輸入佇列掛到目前最前面的視窗上，才拿得到「搶前景」的資格。
 PICK_FOLDER_PS = r"""
 [Console]::OutputEncoding = [Text.Encoding]::UTF8
 Add-Type -AssemblyName System.Windows.Forms
+Add-Type -Namespace MCHub -Name Fg -MemberDefinition @'
+[DllImport("user32.dll")] public static extern IntPtr GetForegroundWindow();
+[DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr h, IntPtr p);
+[DllImport("kernel32.dll")] public static extern uint GetCurrentThreadId();
+[DllImport("user32.dll")] public static extern bool AttachThreadInput(uint a, uint b, bool on);
+[DllImport("user32.dll")] public static extern bool SetForegroundWindow(IntPtr h);
+[DllImport("user32.dll")] public static extern bool BringWindowToTop(IntPtr h);
+'@
 $owner = New-Object System.Windows.Forms.Form
-$owner.TopMost = $true; $owner.ShowInTaskbar = $false; $owner.Opacity = 0; $owner.Show()
+$owner.TopMost = $true; $owner.ShowInTaskbar = $false; $owner.Opacity = 0
+$owner.StartPosition = 'CenterScreen'; $owner.Size = New-Object System.Drawing.Size(1, 1)
+$owner.Show()
+$fg = [MCHub.Fg]::GetWindowThreadProcessId([MCHub.Fg]::GetForegroundWindow(), [IntPtr]::Zero)
+$me = [MCHub.Fg]::GetCurrentThreadId()
+$attached = $fg -ne 0 -and $fg -ne $me -and [MCHub.Fg]::AttachThreadInput($fg, $me, $true)
+[void][MCHub.Fg]::SetForegroundWindow($owner.Handle); [void][MCHub.Fg]::BringWindowToTop($owner.Handle); $owner.Activate()
+if ($attached) { [void][MCHub.Fg]::AttachThreadInput($fg, $me, $false) }
 $d = New-Object System.Windows.Forms.FolderBrowserDialog
+$d.Description = '選擇伺服器資料夾'
 $d.ShowNewFolderButton = $true
 if ($d.ShowDialog($owner) -eq 'OK') { $d.SelectedPath }
 $owner.Close()
@@ -285,9 +303,20 @@ $owner.Close()
 
 
 PICK_FOLDER_OSA = 'POSIX path of (choose folder with prompt "選擇資料夾")'
+_pick_lock = threading.Lock()
 
 
 def pick_folder():
+    """同一時間只開一個選擇視窗：前一個還開著就提醒，不再疊一個。"""
+    if not _pick_lock.acquire(blocking=False):
+        return {"error": "資料夾選擇視窗已經開著了，請在工作列找一下它"}
+    try:
+        return _pick_folder()
+    finally:
+        _pick_lock.release()
+
+
+def _pick_folder():
     if OS == "mac":
         try:
             r = subprocess.run(["osascript", "-e", PICK_FOLDER_OSA], stdin=subprocess.DEVNULL, capture_output=True, timeout=600)
@@ -303,6 +332,138 @@ def pick_folder():
     except (OSError, subprocess.SubprocessError) as e:
         return {"error": f"資料夾選擇視窗打不開（{e}），請直接把路徑貼到欄位裡"}
     return {"path": r.stdout.decode("utf-8", "replace").strip().lstrip("﻿")}
+
+
+# ---------- 拖拉資料夾進視窗 ----------
+# 瀏覽器為了安全，拖進網頁的資料夾只給名稱和裡面的檔案，不給完整路徑。
+# 所以用「資料夾名稱＋最上層每個檔案的名稱與大小」當指紋，到電腦裡找出位置：
+# 先看開著的檔案總管視窗、桌面、下載、已加入伺服器的上層，找不到才在限時內往各磁碟找。
+EXPLORER_PS = r"""
+[Console]::OutputEncoding = [Text.Encoding]::UTF8
+foreach ($w in (New-Object -ComObject Shell.Application).Windows()) { try { $p = $w.Document.Folder.Self.Path; if ($p) { $p } } catch {} }
+"""
+SKIP_DIRS = {"windows", "program files", "program files (x86)", "programdata", "$recycle.bin", "system volume information",
+             "appdata", "node_modules", "library", "system", "applications", "private", "cores", "dev", "usr", "bin", "sbin",
+             "opt", "etc", "var", "tmp", "proc"}
+
+
+def explorer_folders():
+    """Windows：目前開著的檔案總管視窗各停在哪個資料夾（拖拉通常就是從這些視窗拖的）。"""
+    if OS != "win":
+        return []
+    try:
+        r = subprocess.run(["powershell.exe", "-NoProfile", "-NonInteractive", "-Command", EXPLORER_PS], stdin=subprocess.DEVNULL,
+                           capture_output=True, timeout=10, creationflags=NO_WINDOW)
+    except (OSError, subprocess.SubprocessError):
+        return []
+    return [x.strip() for x in r.stdout.decode("utf-8", "replace").lstrip("﻿").splitlines() if x.strip()]
+
+
+def search_roots():
+    home = Path.home()
+    if OS == "mac":
+        vols = Path("/Volumes")
+        return [home] + (sorted(p for p in vols.iterdir() if p.is_dir() and not p.is_symlink()) if vols.is_dir() else [])
+    roots = [home]
+    try:
+        mask = ctypes.windll.kernel32.GetLogicalDrives()
+        for i in range(2, 26):   # 跳過 A:、B:（軟碟機，查了會卡）
+            if mask >> i & 1:
+                d = f"{chr(65 + i)}:\\"
+                if ctypes.windll.kernel32.GetDriveTypeW(d) in (2, 3):   # 只找隨身碟和硬碟，不碰光碟機和網路磁碟
+                    roots.append(Path(d))
+    except (AttributeError, OSError):
+        pass
+    return roots
+
+
+def _clean_drop(name, files):
+    name = str(name or "").strip()
+    if not name or name in (".", "..") or re.search(r'[\\/:*?"<>|\x00-\x1f]', name):
+        return None, None
+    out = []
+    for f in files if isinstance(files, list) else []:
+        n = str((f or {}).get("n", "")) if isinstance(f, dict) else ""
+        size = f.get("size") if isinstance(f, dict) else None
+        if n and not re.search(r'[\\/:*?"<>|\x00-\x1f]', n) and isinstance(size, int) and size >= 0:
+            out.append((n, size))
+        if len(out) >= 40:
+            break
+    return name, out
+
+
+def _same_files(d, files):
+    for n, size in files:
+        try:
+            st = (d / n).stat()
+        except OSError:
+            return False
+        if st.st_size != size or not (d / n).is_file():
+            return False
+    return True
+
+
+def locate_dropped(name, files, extra=(), budget=6.0):
+    """回傳 {"path": ...}，或 {"error": 白話原因}。"""
+    name, files = _clean_drop(name, files)
+    if not name:
+        return {"error": "看不懂拖進來的東西，請拖整個伺服器資料夾進來"}
+    if not files:
+        return {"error": "這個資料夾最上層沒有檔案，不像伺服器資料夾"}
+    want = os.path.normcase(name)
+    found, seen = [], set()
+
+    def check(d):
+        try:
+            key = os.path.normcase(os.path.abspath(d))
+        except (OSError, ValueError):
+            return
+        if key in seen:
+            return
+        seen.add(key)
+        if os.path.normcase(d.name) == want and d.is_dir() and _same_files(d, files):
+            found.append(str(d))
+
+    def answer():
+        if len(found) == 1:
+            return {"path": found[0]}
+        if found:
+            return {"error": f"電腦裡有 {len(found)} 個內容一樣的「{name}」資料夾，分不出是哪一個，請改按「選擇…」"}
+        return None
+
+    home = Path.home()
+    quick = [Path(p) for p in explorer_folders()] + [home / "Desktop", home / "Downloads", home / "Documents", home] + [Path(p) for p in extra]
+    for base in quick:
+        check(base)
+        check(base / name)
+    r = answer()
+    if r:
+        return r
+    # 快速候選都沒有：從各磁碟往下找，淺的先找，最多 7 層、限時
+    deadline = time.monotonic() + budget
+    queue = collections.deque((root, 0) for root in search_roots())
+    hit_depth = None
+    while queue and time.monotonic() < deadline:
+        if found and hit_depth is None:
+            hit_depth = depth   # 找到了：同一層找完（確認沒有重複）就收手
+        if hit_depth is not None and queue[0][1] > hit_depth:
+            break
+        d, depth = queue.popleft()
+        try:
+            with os.scandir(d) as it:
+                entries = [e for e in it if e.is_dir(follow_symlinks=False)]
+        except OSError:
+            continue
+        for e in entries:
+            if os.path.normcase(e.name) == want:
+                check(Path(e.path))
+            if depth < 7 and not e.name.startswith((".", "$")) and e.name.lower() not in SKIP_DIRS:
+                queue.append((e.path, depth + 1))
+    r = answer()
+    if r:
+        return r
+    how = "在 Finder 對資料夾按 Option＋右鍵「拷貝為路徑名稱」" if OS == "mac" else "在檔案總管對資料夾按右鍵「複製路徑」"
+    return {"error": f"找不到「{name}」在電腦裡的位置{'（找太久先停了）' if queue else ''}。請改按「選擇…」，或{how}再貼上來"}
 
 
 def open_window(url):
@@ -1903,6 +2064,9 @@ def make_handler(hub):
                 return
             if path == "/api/pick-folder":
                 return self._send(200, pick_folder())
+            if path == "/api/locate-drop":
+                extra = {p for s in hub.all_servers() for p in (Path(s.dir).parent, Path(s.dir).parent.parent)}
+                return self._send(200, locate_dropped(body.get("name"), body.get("files"), extra))
             if path == "/api/add":
                 return self._reply(hub.add_existing(body.get("dir"), body.get("name")))
             if path == "/api/create":

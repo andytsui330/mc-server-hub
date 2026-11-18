@@ -1,8 +1,30 @@
 第三方授權聲明 THIRD-PARTY NOTICES
 
+2.0 安裝包另附 THIRD_PARTY_LICENSES.txt（逐套件授權全文）與 SBOM.cdx.json（鎖定依賴清單）。
+由 scripts/release_support.py 從本機已取得的 Cargo metadata／npm production lock 產生；缺件會停止，
+不自動下載工具、不把全部間接套件說成只有MIT。MPL套件原始碼取得網址列在完整附件。
+內含或引用第三方作者的著作權聲明，不代表那些姓名是本專案使用者的個人資料。
+
 本程式畫面內嵌兩套字型的拉丁子集（取自 Google Fonts），依 SIL Open Font License 1.1 授權：
 - Inter Tight（https://github.com/rsms/inter-tight）
 - Geist Mono（https://github.com/vercel/geist-font）
+
+2.0 直接使用的 Rust 套件（皆為 MIT OR Apache-2.0）：
+- tauri、tauri-build（https://github.com/tauri-apps/tauri）
+- tauri-plugin-dialog 2.8.4（2026-10-28，MIT OR Apache-2.0；https://github.com/tauri-apps/plugins-workspace）：原生資料夾選取；只從 Rust 開啟資料夾對話框，前端不開檔案讀寫或任意對話框權限
+  間接新增：tauri-plugin 2.7.2、tauri-plugin-fs 2.7.1（皆 2026-10-14，MIT OR Apache-2.0，同上）；rfd 0.17.2（2026-01-12，MIT；https://github.com/PolyMeilex/rfd）。均已查證發布滿兩週，固定於 Cargo.lock。
+- tauri-plugin-updater 2.14.1（2026-10-28）、tauri-plugin-single-instance 2.5.5（2026-10-28）、tauri-plugin-autostart 2.7.0（2026-10-01）：皆 MIT OR Apache-2.0，https://github.com/tauri-apps/plugins-workspace
+  用途：簽章更新、單一實例與登入啟動；精確鎖版，僅 Rust 外殼使用，不授予前端外掛的任意安裝/啟動權限。
+  第7步新增間接套件的逐版日期、授權及官方來源：docs/step7-dependencies.md。所有新增依賴已查證滿兩週且未撤回。
+  特別授權：webpki-root-certs 1.0.11 為 CDLA-Permissive-2.0；其餘授權逐列保留於上表，正式2.0打包附授權全文與SBOM。
+- ureq（https://github.com/algesten/ureq）：下載
+- reqwest 0.13.5（2026-09-08，MIT OR Apache-2.0；https://github.com/seanmonstar/reqwest）：原已由更新器間接使用，第7步升為直接精確鎖版，用於 HTTPS 與逐次轉址白名單，不額外啟用另一套 TLS provider。
+- serde_json（https://github.com/serde-rs/json）：設定檔
+- sha1、sha2（https://github.com/RustCrypto/hashes）：下載檢查碼
+- windows-sys（https://github.com/microsoft/windows-rs）：Windows 系統編碼轉換、量伺服器記憶體
+- regex（https://github.com/rust-lang/regex）：看懂啟動檔、檢查指令欄位
+- flate2（https://github.com/rust-lang/flate2-rs）：讀 jar 檔判斷伺服器版本、核對 Fabric 檔案
+（它們間接用到的套件，完整清單與授權全文在打包 2.0.0 時自動產生並附上。）
 
 ==================== Inter Tight ====================
 

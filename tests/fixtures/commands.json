@@ -1,0 +1,7549 @@
+{
+ "source": "legacy/src/hub.py 1.2.0",
+ "os": "win",
+ "cases": [
+  {
+   "fn": "commands_count",
+   "args": {},
+   "out": 55
+  },
+  {
+   "fn": "commands_for",
+   "args": {
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": [
+    {
+     "id": "day",
+     "cat": "時間天氣",
+     "name": "白天",
+     "tpl": "time set day",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "noon",
+     "cat": "時間天氣",
+     "name": "正午",
+     "tpl": "time set noon",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "night",
+     "cat": "時間天氣",
+     "name": "晚上",
+     "tpl": "time set night",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "midnight",
+     "cat": "時間天氣",
+     "name": "午夜",
+     "tpl": "time set midnight",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "clear",
+     "cat": "時間天氣",
+     "name": "放晴",
+     "tpl": "weather clear",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "rain",
+     "cat": "時間天氣",
+     "name": "下雨",
+     "tpl": "weather rain",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "thunder",
+     "cat": "時間天氣",
+     "name": "打雷",
+     "tpl": "weather thunder",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "time_stop",
+     "cat": "時間天氣",
+     "name": "停在現在時間",
+     "tpl": "gamerule <rule> false",
+     "danger": "",
+     "rule": "doDaylightCycle",
+     "fields": [],
+     "preview": "gamerule doDaylightCycle false",
+     "uncertain": false
+    },
+    {
+     "id": "time_go",
+     "cat": "時間天氣",
+     "name": "恢復時間流動",
+     "tpl": "gamerule <rule> true",
+     "danger": "",
+     "rule": "doDaylightCycle",
+     "fields": [],
+     "preview": "gamerule doDaylightCycle true",
+     "uncertain": false
+    },
+    {
+     "id": "weather_stop",
+     "cat": "時間天氣",
+     "name": "停止天氣變化",
+     "tpl": "gamerule <rule> false",
+     "danger": "",
+     "rule": "doWeatherCycle",
+     "fields": [],
+     "preview": "gamerule doWeatherCycle false",
+     "uncertain": false
+    },
+    {
+     "id": "weather_go",
+     "cat": "時間天氣",
+     "name": "恢復天氣變化",
+     "tpl": "gamerule <rule> true",
+     "danger": "",
+     "rule": "doWeatherCycle",
+     "fields": [],
+     "preview": "gamerule doWeatherCycle true",
+     "uncertain": false
+    },
+    {
+     "id": "gm_survival",
+     "cat": "遊戲模式",
+     "name": "生存",
+     "tpl": "gamemode survival <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "gm_creative",
+     "cat": "遊戲模式",
+     "name": "創造",
+     "tpl": "gamemode creative <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "gm_adventure",
+     "cat": "遊戲模式",
+     "name": "冒險",
+     "tpl": "gamemode adventure <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "gm_spectator",
+     "cat": "遊戲模式",
+     "name": "旁觀",
+     "tpl": "gamemode spectator <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "diff_peaceful",
+     "cat": "遊戲模式",
+     "name": "難度：和平",
+     "tpl": "difficulty peaceful",
+     "danger": "confirm",
+     "fields": []
+    },
+    {
+     "id": "diff_easy",
+     "cat": "遊戲模式",
+     "name": "難度：簡單",
+     "tpl": "difficulty easy",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "diff_normal",
+     "cat": "遊戲模式",
+     "name": "難度：普通",
+     "tpl": "difficulty normal",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "diff_hard",
+     "cat": "遊戲模式",
+     "name": "難度：困難",
+     "tpl": "difficulty hard",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "tp_player",
+     "cat": "傳送",
+     "name": "傳到玩家旁邊",
+     "tpl": "tp <player> <target>",
+     "danger": "",
+     "fields": [
+      "player",
+      "target"
+     ]
+    },
+    {
+     "id": "tp_xyz",
+     "cat": "傳送",
+     "name": "傳到座標",
+     "tpl": "execute at <player> run tp <player> <x> <y> <z>",
+     "danger": "",
+     "fields": [
+      "player",
+      "x",
+      "y",
+      "z"
+     ]
+    },
+    {
+     "id": "spawnpoint",
+     "cat": "傳送",
+     "name": "把玩家重生點設在他現在的位置",
+     "tpl": "execute at <player> run spawnpoint <player> ~ ~ ~",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "worldspawn",
+     "cat": "傳送",
+     "name": "把世界重生點設在玩家位置",
+     "tpl": "execute at <player> run setworldspawn ~ ~ ~",
+     "danger": "",
+     "note": "玩家要在主世界",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "give",
+     "cat": "給物品",
+     "name": "給物品",
+     "tpl": "give <player> minecraft:<item> <count>",
+     "danger": "",
+     "fields": [
+      "player",
+      "item",
+      "count"
+     ]
+    },
+    {
+     "id": "enchant",
+     "cat": "給物品",
+     "name": "附魔主手物品",
+     "tpl": "enchant <player> minecraft:<ench> <level>",
+     "danger": "",
+     "note": "手上要拿著能附魔的東西",
+     "fields": [
+      "player",
+      "ench",
+      "level"
+     ]
+    },
+    {
+     "id": "xp",
+     "cat": "給物品",
+     "name": "給經驗等級",
+     "tpl": "xp add <player> <count> levels",
+     "danger": "",
+     "fields": [
+      "player",
+      "count"
+     ]
+    },
+    {
+     "id": "summon",
+     "cat": "召喚生物",
+     "name": "在玩家旁邊召喚",
+     "tpl": "execute at <player> run summon minecraft:<mob> ~ ~ ~",
+     "danger": "",
+     "fields": [
+      "player",
+      "mob"
+     ]
+    },
+    {
+     "id": "effect",
+     "cat": "效果",
+     "name": "給效果",
+     "tpl": "effect give <player> minecraft:<effect> <secs> <amp> true",
+     "danger": "",
+     "fields": [
+      "player",
+      "effect",
+      "secs",
+      "amp"
+     ]
+    },
+    {
+     "id": "effect_clear",
+     "cat": "效果",
+     "name": "清除效果",
+     "tpl": "effect clear <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "keep_inv",
+     "cat": "規則",
+     "name": "死亡不掉落",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "keepInventory",
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule keepInventory <bool>",
+     "uncertain": false
+    },
+    {
+     "id": "mob_spawn",
+     "cat": "規則",
+     "name": "生物自然生成",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "doMobSpawning",
+     "confirm_if_false": true,
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule doMobSpawning <bool>",
+     "uncertain": false
+    },
+    {
+     "id": "mob_grief",
+     "cat": "規則",
+     "name": "生物破壞方塊（苦力怕炸地形等）",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "mobGriefing",
+     "confirm_if_false": true,
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule mobGriefing <bool>",
+     "uncertain": false
+    },
+    {
+     "id": "fire_tick",
+     "cat": "規則",
+     "name": "火焰蔓延",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "doFireTick",
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule doFireTick <bool>",
+     "uncertain": false
+    },
+    {
+     "id": "sleep_pct",
+     "cat": "規則",
+     "name": "幾成玩家睡覺就天亮",
+     "tpl": "gamerule <rule> <pct>",
+     "danger": "",
+     "rule": "playersSleepingPercentage",
+     "fields": [
+      "pct"
+     ],
+     "preview": "gamerule playersSleepingPercentage <pct>",
+     "uncertain": false
+    },
+    {
+     "id": "insomnia",
+     "cat": "規則",
+     "name": "幻翼出現",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "doInsomnia",
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule doInsomnia <bool>",
+     "uncertain": false
+    },
+    {
+     "id": "instant_respawn",
+     "cat": "規則",
+     "name": "死亡立即重生",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "doImmediateRespawn",
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule doImmediateRespawn <bool>",
+     "uncertain": false
+    },
+    {
+     "id": "list",
+     "cat": "伺服器",
+     "name": "誰在線上",
+     "tpl": "list",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "save",
+     "cat": "伺服器",
+     "name": "立刻存檔",
+     "tpl": "save-all",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "say",
+     "cat": "伺服器",
+     "name": "廣播訊息",
+     "tpl": "say <msg>",
+     "danger": "",
+     "fields": [
+      "msg"
+     ]
+    },
+    {
+     "id": "seed",
+     "cat": "伺服器",
+     "name": "查種子碼",
+     "tpl": "seed",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "wl_add",
+     "cat": "伺服器",
+     "name": "加入白名單",
+     "tpl": "whitelist add <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "wl_remove",
+     "cat": "伺服器",
+     "name": "移出白名單",
+     "tpl": "whitelist remove <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "wl_on",
+     "cat": "伺服器",
+     "name": "開啟白名單",
+     "tpl": "whitelist on",
+     "danger": "confirm",
+     "note": "不在白名單的人會進不來",
+     "fields": []
+    },
+    {
+     "id": "wl_off",
+     "cat": "伺服器",
+     "name": "關閉白名單",
+     "tpl": "whitelist off",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "wl_list",
+     "cat": "伺服器",
+     "name": "看白名單",
+     "tpl": "whitelist list",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "kick",
+     "cat": "伺服器",
+     "name": "踢出玩家",
+     "tpl": "kick <player> <reason>",
+     "danger": "confirm",
+     "fields": [
+      "player",
+      "reason"
+     ]
+    },
+    {
+     "id": "op",
+     "cat": "伺服器",
+     "name": "給管理員",
+     "tpl": "op <player>",
+     "danger": "strong",
+     "note": "管理員能下所有指令",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "deop",
+     "cat": "伺服器",
+     "name": "拿掉管理員",
+     "tpl": "deop <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "ban",
+     "cat": "伺服器",
+     "name": "封鎖玩家",
+     "tpl": "ban <player>",
+     "danger": "strong",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "pardon",
+     "cat": "伺服器",
+     "name": "解除封鎖",
+     "tpl": "pardon <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "banlist",
+     "cat": "伺服器",
+     "name": "看封鎖名單",
+     "tpl": "banlist",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "kill_items",
+     "cat": "清除",
+     "name": "清掉地上掉落物",
+     "tpl": "kill @e[type=minecraft:item]",
+     "danger": "strong",
+     "note": "地上所有掉落物會消失，不能復原",
+     "fields": []
+    },
+    {
+     "id": "kill_mob",
+     "cat": "清除",
+     "name": "清掉某種生物",
+     "tpl": "kill @e[type=minecraft:<mob>]",
+     "danger": "strong",
+     "note": "這種生物全部消失（含有取名的），不能復原",
+     "fields": [
+      "mob"
+     ]
+    },
+    {
+     "id": "kill_hostile",
+     "cat": "清除",
+     "name": "清掉所有敵對生物",
+     "tpl": "",
+     "danger": "strong",
+     "special": "clear_hostile",
+     "note": "做法是暫時切到和平再切回來；清不掉豬布林類、疣豬獸、終界龍",
+     "fields": []
+    },
+    {
+     "id": "clear_inv",
+     "cat": "清除",
+     "name": "清空玩家背包",
+     "tpl": "clear <player>",
+     "danger": "strong",
+     "note": "背包裡的東西全部消失，不能復原",
+     "fields": [
+      "player"
+     ]
+    }
+   ]
+  },
+  {
+   "fn": "commands_for",
+   "args": {
+    "label": "1.21.11"
+   },
+   "out": [
+    {
+     "id": "day",
+     "cat": "時間天氣",
+     "name": "白天",
+     "tpl": "time set day",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "noon",
+     "cat": "時間天氣",
+     "name": "正午",
+     "tpl": "time set noon",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "night",
+     "cat": "時間天氣",
+     "name": "晚上",
+     "tpl": "time set night",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "midnight",
+     "cat": "時間天氣",
+     "name": "午夜",
+     "tpl": "time set midnight",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "clear",
+     "cat": "時間天氣",
+     "name": "放晴",
+     "tpl": "weather clear",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "rain",
+     "cat": "時間天氣",
+     "name": "下雨",
+     "tpl": "weather rain",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "thunder",
+     "cat": "時間天氣",
+     "name": "打雷",
+     "tpl": "weather thunder",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "time_stop",
+     "cat": "時間天氣",
+     "name": "停在現在時間",
+     "tpl": "gamerule <rule> false",
+     "danger": "",
+     "rule": "doDaylightCycle",
+     "fields": [],
+     "preview": "gamerule advance_time false",
+     "uncertain": false
+    },
+    {
+     "id": "time_go",
+     "cat": "時間天氣",
+     "name": "恢復時間流動",
+     "tpl": "gamerule <rule> true",
+     "danger": "",
+     "rule": "doDaylightCycle",
+     "fields": [],
+     "preview": "gamerule advance_time true",
+     "uncertain": false
+    },
+    {
+     "id": "weather_stop",
+     "cat": "時間天氣",
+     "name": "停止天氣變化",
+     "tpl": "gamerule <rule> false",
+     "danger": "",
+     "rule": "doWeatherCycle",
+     "fields": [],
+     "preview": "gamerule advance_weather false",
+     "uncertain": false
+    },
+    {
+     "id": "weather_go",
+     "cat": "時間天氣",
+     "name": "恢復天氣變化",
+     "tpl": "gamerule <rule> true",
+     "danger": "",
+     "rule": "doWeatherCycle",
+     "fields": [],
+     "preview": "gamerule advance_weather true",
+     "uncertain": false
+    },
+    {
+     "id": "gm_survival",
+     "cat": "遊戲模式",
+     "name": "生存",
+     "tpl": "gamemode survival <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "gm_creative",
+     "cat": "遊戲模式",
+     "name": "創造",
+     "tpl": "gamemode creative <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "gm_adventure",
+     "cat": "遊戲模式",
+     "name": "冒險",
+     "tpl": "gamemode adventure <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "gm_spectator",
+     "cat": "遊戲模式",
+     "name": "旁觀",
+     "tpl": "gamemode spectator <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "diff_peaceful",
+     "cat": "遊戲模式",
+     "name": "難度：和平",
+     "tpl": "difficulty peaceful",
+     "danger": "confirm",
+     "fields": []
+    },
+    {
+     "id": "diff_easy",
+     "cat": "遊戲模式",
+     "name": "難度：簡單",
+     "tpl": "difficulty easy",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "diff_normal",
+     "cat": "遊戲模式",
+     "name": "難度：普通",
+     "tpl": "difficulty normal",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "diff_hard",
+     "cat": "遊戲模式",
+     "name": "難度：困難",
+     "tpl": "difficulty hard",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "tp_player",
+     "cat": "傳送",
+     "name": "傳到玩家旁邊",
+     "tpl": "tp <player> <target>",
+     "danger": "",
+     "fields": [
+      "player",
+      "target"
+     ]
+    },
+    {
+     "id": "tp_xyz",
+     "cat": "傳送",
+     "name": "傳到座標",
+     "tpl": "execute at <player> run tp <player> <x> <y> <z>",
+     "danger": "",
+     "fields": [
+      "player",
+      "x",
+      "y",
+      "z"
+     ]
+    },
+    {
+     "id": "spawnpoint",
+     "cat": "傳送",
+     "name": "把玩家重生點設在他現在的位置",
+     "tpl": "execute at <player> run spawnpoint <player> ~ ~ ~",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "worldspawn",
+     "cat": "傳送",
+     "name": "把世界重生點設在玩家位置",
+     "tpl": "execute at <player> run setworldspawn ~ ~ ~",
+     "danger": "",
+     "note": "玩家要在主世界",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "give",
+     "cat": "給物品",
+     "name": "給物品",
+     "tpl": "give <player> minecraft:<item> <count>",
+     "danger": "",
+     "fields": [
+      "player",
+      "item",
+      "count"
+     ]
+    },
+    {
+     "id": "enchant",
+     "cat": "給物品",
+     "name": "附魔主手物品",
+     "tpl": "enchant <player> minecraft:<ench> <level>",
+     "danger": "",
+     "note": "手上要拿著能附魔的東西",
+     "fields": [
+      "player",
+      "ench",
+      "level"
+     ]
+    },
+    {
+     "id": "xp",
+     "cat": "給物品",
+     "name": "給經驗等級",
+     "tpl": "xp add <player> <count> levels",
+     "danger": "",
+     "fields": [
+      "player",
+      "count"
+     ]
+    },
+    {
+     "id": "summon",
+     "cat": "召喚生物",
+     "name": "在玩家旁邊召喚",
+     "tpl": "execute at <player> run summon minecraft:<mob> ~ ~ ~",
+     "danger": "",
+     "fields": [
+      "player",
+      "mob"
+     ]
+    },
+    {
+     "id": "effect",
+     "cat": "效果",
+     "name": "給效果",
+     "tpl": "effect give <player> minecraft:<effect> <secs> <amp> true",
+     "danger": "",
+     "fields": [
+      "player",
+      "effect",
+      "secs",
+      "amp"
+     ]
+    },
+    {
+     "id": "effect_clear",
+     "cat": "效果",
+     "name": "清除效果",
+     "tpl": "effect clear <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "keep_inv",
+     "cat": "規則",
+     "name": "死亡不掉落",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "keepInventory",
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule keep_inventory <bool>",
+     "uncertain": false
+    },
+    {
+     "id": "mob_spawn",
+     "cat": "規則",
+     "name": "生物自然生成",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "doMobSpawning",
+     "confirm_if_false": true,
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule spawn_mobs <bool>",
+     "uncertain": false
+    },
+    {
+     "id": "mob_grief",
+     "cat": "規則",
+     "name": "生物破壞方塊（苦力怕炸地形等）",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "mobGriefing",
+     "confirm_if_false": true,
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule mob_griefing <bool>",
+     "uncertain": false
+    },
+    {
+     "id": "sleep_pct",
+     "cat": "規則",
+     "name": "幾成玩家睡覺就天亮",
+     "tpl": "gamerule <rule> <pct>",
+     "danger": "",
+     "rule": "playersSleepingPercentage",
+     "fields": [
+      "pct"
+     ],
+     "preview": "gamerule players_sleeping_percentage <pct>",
+     "uncertain": false
+    },
+    {
+     "id": "insomnia",
+     "cat": "規則",
+     "name": "幻翼出現",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "doInsomnia",
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule spawn_phantoms <bool>",
+     "uncertain": false
+    },
+    {
+     "id": "instant_respawn",
+     "cat": "規則",
+     "name": "死亡立即重生",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "doImmediateRespawn",
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule immediate_respawn <bool>",
+     "uncertain": false
+    },
+    {
+     "id": "list",
+     "cat": "伺服器",
+     "name": "誰在線上",
+     "tpl": "list",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "save",
+     "cat": "伺服器",
+     "name": "立刻存檔",
+     "tpl": "save-all",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "say",
+     "cat": "伺服器",
+     "name": "廣播訊息",
+     "tpl": "say <msg>",
+     "danger": "",
+     "fields": [
+      "msg"
+     ]
+    },
+    {
+     "id": "seed",
+     "cat": "伺服器",
+     "name": "查種子碼",
+     "tpl": "seed",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "wl_add",
+     "cat": "伺服器",
+     "name": "加入白名單",
+     "tpl": "whitelist add <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "wl_remove",
+     "cat": "伺服器",
+     "name": "移出白名單",
+     "tpl": "whitelist remove <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "wl_on",
+     "cat": "伺服器",
+     "name": "開啟白名單",
+     "tpl": "whitelist on",
+     "danger": "confirm",
+     "note": "不在白名單的人會進不來",
+     "fields": []
+    },
+    {
+     "id": "wl_off",
+     "cat": "伺服器",
+     "name": "關閉白名單",
+     "tpl": "whitelist off",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "wl_list",
+     "cat": "伺服器",
+     "name": "看白名單",
+     "tpl": "whitelist list",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "kick",
+     "cat": "伺服器",
+     "name": "踢出玩家",
+     "tpl": "kick <player> <reason>",
+     "danger": "confirm",
+     "fields": [
+      "player",
+      "reason"
+     ]
+    },
+    {
+     "id": "op",
+     "cat": "伺服器",
+     "name": "給管理員",
+     "tpl": "op <player>",
+     "danger": "strong",
+     "note": "管理員能下所有指令",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "deop",
+     "cat": "伺服器",
+     "name": "拿掉管理員",
+     "tpl": "deop <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "ban",
+     "cat": "伺服器",
+     "name": "封鎖玩家",
+     "tpl": "ban <player>",
+     "danger": "strong",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "pardon",
+     "cat": "伺服器",
+     "name": "解除封鎖",
+     "tpl": "pardon <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "banlist",
+     "cat": "伺服器",
+     "name": "看封鎖名單",
+     "tpl": "banlist",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "kill_items",
+     "cat": "清除",
+     "name": "清掉地上掉落物",
+     "tpl": "kill @e[type=minecraft:item]",
+     "danger": "strong",
+     "note": "地上所有掉落物會消失，不能復原",
+     "fields": []
+    },
+    {
+     "id": "kill_mob",
+     "cat": "清除",
+     "name": "清掉某種生物",
+     "tpl": "kill @e[type=minecraft:<mob>]",
+     "danger": "strong",
+     "note": "這種生物全部消失（含有取名的），不能復原",
+     "fields": [
+      "mob"
+     ]
+    },
+    {
+     "id": "kill_hostile",
+     "cat": "清除",
+     "name": "清掉所有敵對生物",
+     "tpl": "",
+     "danger": "strong",
+     "special": "clear_hostile",
+     "note": "做法是暫時切到和平再切回來；清不掉豬布林類、疣豬獸、終界龍",
+     "fields": []
+    },
+    {
+     "id": "clear_inv",
+     "cat": "清除",
+     "name": "清空玩家背包",
+     "tpl": "clear <player>",
+     "danger": "strong",
+     "note": "背包裡的東西全部消失，不能復原",
+     "fields": [
+      "player"
+     ]
+    }
+   ]
+  },
+  {
+   "fn": "commands_for",
+   "args": {
+    "label": "26.3"
+   },
+   "out": [
+    {
+     "id": "day",
+     "cat": "時間天氣",
+     "name": "白天",
+     "tpl": "time set day",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "noon",
+     "cat": "時間天氣",
+     "name": "正午",
+     "tpl": "time set noon",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "night",
+     "cat": "時間天氣",
+     "name": "晚上",
+     "tpl": "time set night",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "midnight",
+     "cat": "時間天氣",
+     "name": "午夜",
+     "tpl": "time set midnight",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "clear",
+     "cat": "時間天氣",
+     "name": "放晴",
+     "tpl": "weather clear",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "rain",
+     "cat": "時間天氣",
+     "name": "下雨",
+     "tpl": "weather rain",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "thunder",
+     "cat": "時間天氣",
+     "name": "打雷",
+     "tpl": "weather thunder",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "time_stop",
+     "cat": "時間天氣",
+     "name": "停在現在時間",
+     "tpl": "gamerule <rule> false",
+     "danger": "",
+     "rule": "doDaylightCycle",
+     "fields": [],
+     "preview": "gamerule advance_time false",
+     "uncertain": false
+    },
+    {
+     "id": "time_go",
+     "cat": "時間天氣",
+     "name": "恢復時間流動",
+     "tpl": "gamerule <rule> true",
+     "danger": "",
+     "rule": "doDaylightCycle",
+     "fields": [],
+     "preview": "gamerule advance_time true",
+     "uncertain": false
+    },
+    {
+     "id": "weather_stop",
+     "cat": "時間天氣",
+     "name": "停止天氣變化",
+     "tpl": "gamerule <rule> false",
+     "danger": "",
+     "rule": "doWeatherCycle",
+     "fields": [],
+     "preview": "gamerule advance_weather false",
+     "uncertain": false
+    },
+    {
+     "id": "weather_go",
+     "cat": "時間天氣",
+     "name": "恢復天氣變化",
+     "tpl": "gamerule <rule> true",
+     "danger": "",
+     "rule": "doWeatherCycle",
+     "fields": [],
+     "preview": "gamerule advance_weather true",
+     "uncertain": false
+    },
+    {
+     "id": "gm_survival",
+     "cat": "遊戲模式",
+     "name": "生存",
+     "tpl": "gamemode survival <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "gm_creative",
+     "cat": "遊戲模式",
+     "name": "創造",
+     "tpl": "gamemode creative <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "gm_adventure",
+     "cat": "遊戲模式",
+     "name": "冒險",
+     "tpl": "gamemode adventure <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "gm_spectator",
+     "cat": "遊戲模式",
+     "name": "旁觀",
+     "tpl": "gamemode spectator <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "diff_peaceful",
+     "cat": "遊戲模式",
+     "name": "難度：和平",
+     "tpl": "difficulty peaceful",
+     "danger": "confirm",
+     "fields": []
+    },
+    {
+     "id": "diff_easy",
+     "cat": "遊戲模式",
+     "name": "難度：簡單",
+     "tpl": "difficulty easy",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "diff_normal",
+     "cat": "遊戲模式",
+     "name": "難度：普通",
+     "tpl": "difficulty normal",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "diff_hard",
+     "cat": "遊戲模式",
+     "name": "難度：困難",
+     "tpl": "difficulty hard",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "tp_player",
+     "cat": "傳送",
+     "name": "傳到玩家旁邊",
+     "tpl": "tp <player> <target>",
+     "danger": "",
+     "fields": [
+      "player",
+      "target"
+     ]
+    },
+    {
+     "id": "tp_xyz",
+     "cat": "傳送",
+     "name": "傳到座標",
+     "tpl": "execute at <player> run tp <player> <x> <y> <z>",
+     "danger": "",
+     "fields": [
+      "player",
+      "x",
+      "y",
+      "z"
+     ]
+    },
+    {
+     "id": "spawnpoint",
+     "cat": "傳送",
+     "name": "把玩家重生點設在他現在的位置",
+     "tpl": "execute at <player> run spawnpoint <player> ~ ~ ~",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "worldspawn",
+     "cat": "傳送",
+     "name": "把世界重生點設在玩家位置",
+     "tpl": "execute at <player> run setworldspawn ~ ~ ~",
+     "danger": "",
+     "note": "玩家要在主世界",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "give",
+     "cat": "給物品",
+     "name": "給物品",
+     "tpl": "give <player> minecraft:<item> <count>",
+     "danger": "",
+     "fields": [
+      "player",
+      "item",
+      "count"
+     ]
+    },
+    {
+     "id": "enchant",
+     "cat": "給物品",
+     "name": "附魔主手物品",
+     "tpl": "enchant <player> minecraft:<ench> <level>",
+     "danger": "",
+     "note": "手上要拿著能附魔的東西",
+     "fields": [
+      "player",
+      "ench",
+      "level"
+     ]
+    },
+    {
+     "id": "xp",
+     "cat": "給物品",
+     "name": "給經驗等級",
+     "tpl": "xp add <player> <count> levels",
+     "danger": "",
+     "fields": [
+      "player",
+      "count"
+     ]
+    },
+    {
+     "id": "summon",
+     "cat": "召喚生物",
+     "name": "在玩家旁邊召喚",
+     "tpl": "execute at <player> run summon minecraft:<mob> ~ ~ ~",
+     "danger": "",
+     "fields": [
+      "player",
+      "mob"
+     ]
+    },
+    {
+     "id": "effect",
+     "cat": "效果",
+     "name": "給效果",
+     "tpl": "effect give <player> minecraft:<effect> <secs> <amp> true",
+     "danger": "",
+     "fields": [
+      "player",
+      "effect",
+      "secs",
+      "amp"
+     ]
+    },
+    {
+     "id": "effect_clear",
+     "cat": "效果",
+     "name": "清除效果",
+     "tpl": "effect clear <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "keep_inv",
+     "cat": "規則",
+     "name": "死亡不掉落",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "keepInventory",
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule keep_inventory <bool>",
+     "uncertain": false
+    },
+    {
+     "id": "mob_spawn",
+     "cat": "規則",
+     "name": "生物自然生成",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "doMobSpawning",
+     "confirm_if_false": true,
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule spawn_mobs <bool>",
+     "uncertain": false
+    },
+    {
+     "id": "mob_grief",
+     "cat": "規則",
+     "name": "生物破壞方塊（苦力怕炸地形等）",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "mobGriefing",
+     "confirm_if_false": true,
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule mob_griefing <bool>",
+     "uncertain": false
+    },
+    {
+     "id": "sleep_pct",
+     "cat": "規則",
+     "name": "幾成玩家睡覺就天亮",
+     "tpl": "gamerule <rule> <pct>",
+     "danger": "",
+     "rule": "playersSleepingPercentage",
+     "fields": [
+      "pct"
+     ],
+     "preview": "gamerule players_sleeping_percentage <pct>",
+     "uncertain": false
+    },
+    {
+     "id": "insomnia",
+     "cat": "規則",
+     "name": "幻翼出現",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "doInsomnia",
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule spawn_phantoms <bool>",
+     "uncertain": false
+    },
+    {
+     "id": "instant_respawn",
+     "cat": "規則",
+     "name": "死亡立即重生",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "doImmediateRespawn",
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule immediate_respawn <bool>",
+     "uncertain": false
+    },
+    {
+     "id": "list",
+     "cat": "伺服器",
+     "name": "誰在線上",
+     "tpl": "list",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "save",
+     "cat": "伺服器",
+     "name": "立刻存檔",
+     "tpl": "save-all",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "say",
+     "cat": "伺服器",
+     "name": "廣播訊息",
+     "tpl": "say <msg>",
+     "danger": "",
+     "fields": [
+      "msg"
+     ]
+    },
+    {
+     "id": "seed",
+     "cat": "伺服器",
+     "name": "查種子碼",
+     "tpl": "seed",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "wl_add",
+     "cat": "伺服器",
+     "name": "加入白名單",
+     "tpl": "whitelist add <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "wl_remove",
+     "cat": "伺服器",
+     "name": "移出白名單",
+     "tpl": "whitelist remove <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "wl_on",
+     "cat": "伺服器",
+     "name": "開啟白名單",
+     "tpl": "whitelist on",
+     "danger": "confirm",
+     "note": "不在白名單的人會進不來",
+     "fields": []
+    },
+    {
+     "id": "wl_off",
+     "cat": "伺服器",
+     "name": "關閉白名單",
+     "tpl": "whitelist off",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "wl_list",
+     "cat": "伺服器",
+     "name": "看白名單",
+     "tpl": "whitelist list",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "kick",
+     "cat": "伺服器",
+     "name": "踢出玩家",
+     "tpl": "kick <player> <reason>",
+     "danger": "confirm",
+     "fields": [
+      "player",
+      "reason"
+     ]
+    },
+    {
+     "id": "op",
+     "cat": "伺服器",
+     "name": "給管理員",
+     "tpl": "op <player>",
+     "danger": "strong",
+     "note": "管理員能下所有指令",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "deop",
+     "cat": "伺服器",
+     "name": "拿掉管理員",
+     "tpl": "deop <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "ban",
+     "cat": "伺服器",
+     "name": "封鎖玩家",
+     "tpl": "ban <player>",
+     "danger": "strong",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "pardon",
+     "cat": "伺服器",
+     "name": "解除封鎖",
+     "tpl": "pardon <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "banlist",
+     "cat": "伺服器",
+     "name": "看封鎖名單",
+     "tpl": "banlist",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "kill_items",
+     "cat": "清除",
+     "name": "清掉地上掉落物",
+     "tpl": "kill @e[type=minecraft:item]",
+     "danger": "strong",
+     "note": "地上所有掉落物會消失，不能復原",
+     "fields": []
+    },
+    {
+     "id": "kill_mob",
+     "cat": "清除",
+     "name": "清掉某種生物",
+     "tpl": "kill @e[type=minecraft:<mob>]",
+     "danger": "strong",
+     "note": "這種生物全部消失（含有取名的），不能復原",
+     "fields": [
+      "mob"
+     ]
+    },
+    {
+     "id": "kill_hostile",
+     "cat": "清除",
+     "name": "清掉所有敵對生物",
+     "tpl": "",
+     "danger": "strong",
+     "special": "clear_hostile",
+     "note": "做法是暫時切到和平再切回來；清不掉豬布林類、疣豬獸、終界龍",
+     "fields": []
+    },
+    {
+     "id": "clear_inv",
+     "cat": "清除",
+     "name": "清空玩家背包",
+     "tpl": "clear <player>",
+     "danger": "strong",
+     "note": "背包裡的東西全部消失，不能復原",
+     "fields": [
+      "player"
+     ]
+    }
+   ]
+  },
+  {
+   "fn": "commands_for",
+   "args": {
+    "label": "版本未知"
+   },
+   "out": [
+    {
+     "id": "day",
+     "cat": "時間天氣",
+     "name": "白天",
+     "tpl": "time set day",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "noon",
+     "cat": "時間天氣",
+     "name": "正午",
+     "tpl": "time set noon",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "night",
+     "cat": "時間天氣",
+     "name": "晚上",
+     "tpl": "time set night",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "midnight",
+     "cat": "時間天氣",
+     "name": "午夜",
+     "tpl": "time set midnight",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "clear",
+     "cat": "時間天氣",
+     "name": "放晴",
+     "tpl": "weather clear",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "rain",
+     "cat": "時間天氣",
+     "name": "下雨",
+     "tpl": "weather rain",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "thunder",
+     "cat": "時間天氣",
+     "name": "打雷",
+     "tpl": "weather thunder",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "time_stop",
+     "cat": "時間天氣",
+     "name": "停在現在時間",
+     "tpl": "gamerule <rule> false",
+     "danger": "",
+     "rule": "doDaylightCycle",
+     "fields": [],
+     "preview": "gamerule doDaylightCycle false",
+     "uncertain": true
+    },
+    {
+     "id": "time_go",
+     "cat": "時間天氣",
+     "name": "恢復時間流動",
+     "tpl": "gamerule <rule> true",
+     "danger": "",
+     "rule": "doDaylightCycle",
+     "fields": [],
+     "preview": "gamerule doDaylightCycle true",
+     "uncertain": true
+    },
+    {
+     "id": "weather_stop",
+     "cat": "時間天氣",
+     "name": "停止天氣變化",
+     "tpl": "gamerule <rule> false",
+     "danger": "",
+     "rule": "doWeatherCycle",
+     "fields": [],
+     "preview": "gamerule doWeatherCycle false",
+     "uncertain": true
+    },
+    {
+     "id": "weather_go",
+     "cat": "時間天氣",
+     "name": "恢復天氣變化",
+     "tpl": "gamerule <rule> true",
+     "danger": "",
+     "rule": "doWeatherCycle",
+     "fields": [],
+     "preview": "gamerule doWeatherCycle true",
+     "uncertain": true
+    },
+    {
+     "id": "gm_survival",
+     "cat": "遊戲模式",
+     "name": "生存",
+     "tpl": "gamemode survival <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "gm_creative",
+     "cat": "遊戲模式",
+     "name": "創造",
+     "tpl": "gamemode creative <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "gm_adventure",
+     "cat": "遊戲模式",
+     "name": "冒險",
+     "tpl": "gamemode adventure <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "gm_spectator",
+     "cat": "遊戲模式",
+     "name": "旁觀",
+     "tpl": "gamemode spectator <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "diff_peaceful",
+     "cat": "遊戲模式",
+     "name": "難度：和平",
+     "tpl": "difficulty peaceful",
+     "danger": "confirm",
+     "fields": []
+    },
+    {
+     "id": "diff_easy",
+     "cat": "遊戲模式",
+     "name": "難度：簡單",
+     "tpl": "difficulty easy",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "diff_normal",
+     "cat": "遊戲模式",
+     "name": "難度：普通",
+     "tpl": "difficulty normal",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "diff_hard",
+     "cat": "遊戲模式",
+     "name": "難度：困難",
+     "tpl": "difficulty hard",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "tp_player",
+     "cat": "傳送",
+     "name": "傳到玩家旁邊",
+     "tpl": "tp <player> <target>",
+     "danger": "",
+     "fields": [
+      "player",
+      "target"
+     ]
+    },
+    {
+     "id": "tp_xyz",
+     "cat": "傳送",
+     "name": "傳到座標",
+     "tpl": "execute at <player> run tp <player> <x> <y> <z>",
+     "danger": "",
+     "fields": [
+      "player",
+      "x",
+      "y",
+      "z"
+     ]
+    },
+    {
+     "id": "spawnpoint",
+     "cat": "傳送",
+     "name": "把玩家重生點設在他現在的位置",
+     "tpl": "execute at <player> run spawnpoint <player> ~ ~ ~",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "worldspawn",
+     "cat": "傳送",
+     "name": "把世界重生點設在玩家位置",
+     "tpl": "execute at <player> run setworldspawn ~ ~ ~",
+     "danger": "",
+     "note": "玩家要在主世界",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "give",
+     "cat": "給物品",
+     "name": "給物品",
+     "tpl": "give <player> minecraft:<item> <count>",
+     "danger": "",
+     "fields": [
+      "player",
+      "item",
+      "count"
+     ]
+    },
+    {
+     "id": "enchant",
+     "cat": "給物品",
+     "name": "附魔主手物品",
+     "tpl": "enchant <player> minecraft:<ench> <level>",
+     "danger": "",
+     "note": "手上要拿著能附魔的東西",
+     "fields": [
+      "player",
+      "ench",
+      "level"
+     ]
+    },
+    {
+     "id": "xp",
+     "cat": "給物品",
+     "name": "給經驗等級",
+     "tpl": "xp add <player> <count> levels",
+     "danger": "",
+     "fields": [
+      "player",
+      "count"
+     ]
+    },
+    {
+     "id": "summon",
+     "cat": "召喚生物",
+     "name": "在玩家旁邊召喚",
+     "tpl": "execute at <player> run summon minecraft:<mob> ~ ~ ~",
+     "danger": "",
+     "fields": [
+      "player",
+      "mob"
+     ]
+    },
+    {
+     "id": "effect",
+     "cat": "效果",
+     "name": "給效果",
+     "tpl": "effect give <player> minecraft:<effect> <secs> <amp> true",
+     "danger": "",
+     "fields": [
+      "player",
+      "effect",
+      "secs",
+      "amp"
+     ]
+    },
+    {
+     "id": "effect_clear",
+     "cat": "效果",
+     "name": "清除效果",
+     "tpl": "effect clear <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "keep_inv",
+     "cat": "規則",
+     "name": "死亡不掉落",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "keepInventory",
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule keepInventory <bool>",
+     "uncertain": true
+    },
+    {
+     "id": "mob_spawn",
+     "cat": "規則",
+     "name": "生物自然生成",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "doMobSpawning",
+     "confirm_if_false": true,
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule doMobSpawning <bool>",
+     "uncertain": true
+    },
+    {
+     "id": "mob_grief",
+     "cat": "規則",
+     "name": "生物破壞方塊（苦力怕炸地形等）",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "mobGriefing",
+     "confirm_if_false": true,
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule mobGriefing <bool>",
+     "uncertain": true
+    },
+    {
+     "id": "fire_tick",
+     "cat": "規則",
+     "name": "火焰蔓延",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "doFireTick",
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule doFireTick <bool>",
+     "uncertain": true
+    },
+    {
+     "id": "sleep_pct",
+     "cat": "規則",
+     "name": "幾成玩家睡覺就天亮",
+     "tpl": "gamerule <rule> <pct>",
+     "danger": "",
+     "rule": "playersSleepingPercentage",
+     "fields": [
+      "pct"
+     ],
+     "preview": "gamerule playersSleepingPercentage <pct>",
+     "uncertain": true
+    },
+    {
+     "id": "insomnia",
+     "cat": "規則",
+     "name": "幻翼出現",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "doInsomnia",
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule doInsomnia <bool>",
+     "uncertain": true
+    },
+    {
+     "id": "instant_respawn",
+     "cat": "規則",
+     "name": "死亡立即重生",
+     "tpl": "gamerule <rule> <bool>",
+     "danger": "",
+     "rule": "doImmediateRespawn",
+     "fields": [
+      "bool"
+     ],
+     "preview": "gamerule doImmediateRespawn <bool>",
+     "uncertain": true
+    },
+    {
+     "id": "list",
+     "cat": "伺服器",
+     "name": "誰在線上",
+     "tpl": "list",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "save",
+     "cat": "伺服器",
+     "name": "立刻存檔",
+     "tpl": "save-all",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "say",
+     "cat": "伺服器",
+     "name": "廣播訊息",
+     "tpl": "say <msg>",
+     "danger": "",
+     "fields": [
+      "msg"
+     ]
+    },
+    {
+     "id": "seed",
+     "cat": "伺服器",
+     "name": "查種子碼",
+     "tpl": "seed",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "wl_add",
+     "cat": "伺服器",
+     "name": "加入白名單",
+     "tpl": "whitelist add <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "wl_remove",
+     "cat": "伺服器",
+     "name": "移出白名單",
+     "tpl": "whitelist remove <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "wl_on",
+     "cat": "伺服器",
+     "name": "開啟白名單",
+     "tpl": "whitelist on",
+     "danger": "confirm",
+     "note": "不在白名單的人會進不來",
+     "fields": []
+    },
+    {
+     "id": "wl_off",
+     "cat": "伺服器",
+     "name": "關閉白名單",
+     "tpl": "whitelist off",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "wl_list",
+     "cat": "伺服器",
+     "name": "看白名單",
+     "tpl": "whitelist list",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "kick",
+     "cat": "伺服器",
+     "name": "踢出玩家",
+     "tpl": "kick <player> <reason>",
+     "danger": "confirm",
+     "fields": [
+      "player",
+      "reason"
+     ]
+    },
+    {
+     "id": "op",
+     "cat": "伺服器",
+     "name": "給管理員",
+     "tpl": "op <player>",
+     "danger": "strong",
+     "note": "管理員能下所有指令",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "deop",
+     "cat": "伺服器",
+     "name": "拿掉管理員",
+     "tpl": "deop <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "ban",
+     "cat": "伺服器",
+     "name": "封鎖玩家",
+     "tpl": "ban <player>",
+     "danger": "strong",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "pardon",
+     "cat": "伺服器",
+     "name": "解除封鎖",
+     "tpl": "pardon <player>",
+     "danger": "",
+     "fields": [
+      "player"
+     ]
+    },
+    {
+     "id": "banlist",
+     "cat": "伺服器",
+     "name": "看封鎖名單",
+     "tpl": "banlist",
+     "danger": "",
+     "fields": []
+    },
+    {
+     "id": "kill_items",
+     "cat": "清除",
+     "name": "清掉地上掉落物",
+     "tpl": "kill @e[type=minecraft:item]",
+     "danger": "strong",
+     "note": "地上所有掉落物會消失，不能復原",
+     "fields": []
+    },
+    {
+     "id": "kill_mob",
+     "cat": "清除",
+     "name": "清掉某種生物",
+     "tpl": "kill @e[type=minecraft:<mob>]",
+     "danger": "strong",
+     "note": "這種生物全部消失（含有取名的），不能復原",
+     "fields": [
+      "mob"
+     ]
+    },
+    {
+     "id": "kill_hostile",
+     "cat": "清除",
+     "name": "清掉所有敵對生物",
+     "tpl": "",
+     "danger": "strong",
+     "special": "clear_hostile",
+     "note": "做法是暫時切到和平再切回來；清不掉豬布林類、疣豬獸、終界龍",
+     "fields": []
+    },
+    {
+     "id": "clear_inv",
+     "cat": "清除",
+     "name": "清空玩家背包",
+     "tpl": "clear <player>",
+     "danger": "strong",
+     "note": "背包裡的東西全部消失，不能復原",
+     "fields": [
+      "player"
+     ]
+    }
+   ]
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "day",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "time set day"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "day",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "time set day"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "day",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "time set day"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "noon",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "time set noon"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "noon",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "time set noon"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "noon",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "time set noon"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "night",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "time set night"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "night",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "time set night"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "night",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "time set night"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "midnight",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "time set midnight"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "midnight",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "time set midnight"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "midnight",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "time set midnight"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "clear",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "weather clear"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "clear",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "weather clear"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "clear",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "weather clear"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "rain",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "weather rain"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "rain",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "weather rain"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "rain",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "weather rain"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "thunder",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "weather thunder"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "thunder",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "weather thunder"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "thunder",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "weather thunder"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "time_stop",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doDaylightCycle false"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "time_stop",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doDaylightCycle false"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "time_stop",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doDaylightCycle false"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "time_go",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doDaylightCycle true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "time_go",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doDaylightCycle true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "time_go",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doDaylightCycle true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "weather_stop",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doWeatherCycle false"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "weather_stop",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doWeatherCycle false"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "weather_stop",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doWeatherCycle false"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "weather_go",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doWeatherCycle true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "weather_go",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doWeatherCycle true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "weather_go",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doWeatherCycle true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "gm_survival",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamemode survival Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "gm_survival",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamemode survival Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "gm_survival",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamemode survival Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "gm_creative",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamemode creative Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "gm_creative",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamemode creative Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "gm_creative",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamemode creative Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "gm_adventure",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamemode adventure Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "gm_adventure",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamemode adventure Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "gm_adventure",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamemode adventure Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "gm_spectator",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamemode spectator Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "gm_spectator",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamemode spectator Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "gm_spectator",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamemode spectator Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "diff_peaceful",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "difficulty peaceful"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "diff_peaceful",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "difficulty peaceful"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "diff_peaceful",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "error": "這個指令要先按確認"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "diff_easy",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "difficulty easy"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "diff_easy",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "difficulty easy"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "diff_easy",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "difficulty easy"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "diff_normal",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "difficulty normal"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "diff_normal",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "difficulty normal"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "diff_normal",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "difficulty normal"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "diff_hard",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "difficulty hard"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "diff_hard",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "difficulty hard"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "diff_hard",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "difficulty hard"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "tp_player",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "tp Steve_01 .BedrockGuy"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "tp_player",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "tp Steve_01 .BedrockGuy"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "tp_player",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "tp Steve_01 .BedrockGuy"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "tp_xyz",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "execute at Steve_01 run tp Steve_01 10 -60 3.5"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "tp_xyz",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "execute at Steve_01 run tp Steve_01 10 -60 3.5"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "tp_xyz",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "execute at Steve_01 run tp Steve_01 10 -60 3.5"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "spawnpoint",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "execute at Steve_01 run spawnpoint Steve_01 ~ ~ ~"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "spawnpoint",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "execute at Steve_01 run spawnpoint Steve_01 ~ ~ ~"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "spawnpoint",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "execute at Steve_01 run spawnpoint Steve_01 ~ ~ ~"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "worldspawn",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "execute at Steve_01 run setworldspawn ~ ~ ~"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "worldspawn",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "execute at Steve_01 run setworldspawn ~ ~ ~"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "worldspawn",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "execute at Steve_01 run setworldspawn ~ ~ ~"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "give",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "give Steve_01 minecraft:diamond 64"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "give",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "give Steve_01 minecraft:diamond 64"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "give",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "give Steve_01 minecraft:diamond 64"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "enchant",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "enchant Steve_01 minecraft:sharpness 5"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "enchant",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "enchant Steve_01 minecraft:sharpness 5"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "enchant",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "enchant Steve_01 minecraft:sharpness 5"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "xp",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "xp add Steve_01 64 levels"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "xp",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "xp add Steve_01 64 levels"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "xp",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "xp add Steve_01 64 levels"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "summon",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "execute at Steve_01 run summon minecraft:horse ~ ~ ~"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "summon",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "execute at Steve_01 run summon minecraft:horse ~ ~ ~"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "summon",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "execute at Steve_01 run summon minecraft:horse ~ ~ ~"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "effect",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "effect give Steve_01 minecraft:speed 120 1 true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "effect",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "effect give Steve_01 minecraft:speed 120 1 true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "effect",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "effect give Steve_01 minecraft:speed 120 1 true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "effect_clear",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "effect clear Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "effect_clear",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "effect clear Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "effect_clear",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "effect clear Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "keep_inv",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule keepInventory true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "keep_inv",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule keepInventory true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "keep_inv",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule keepInventory true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "mob_spawn",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doMobSpawning true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "mob_spawn",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doMobSpawning true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "mob_spawn",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doMobSpawning true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "mob_grief",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule mobGriefing true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "mob_grief",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule mobGriefing true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "mob_grief",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule mobGriefing true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "fire_tick",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doFireTick true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "fire_tick",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doFireTick true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "fire_tick",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doFireTick true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "sleep_pct",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule playersSleepingPercentage 50"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "sleep_pct",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule playersSleepingPercentage 50"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "sleep_pct",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule playersSleepingPercentage 50"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "insomnia",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doInsomnia true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "insomnia",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doInsomnia true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "insomnia",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doInsomnia true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "instant_respawn",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doImmediateRespawn true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "instant_respawn",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doImmediateRespawn true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "instant_respawn",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "gamerule doImmediateRespawn true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "list",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "list"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "list",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "list"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "list",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "list"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "save",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "save-all"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "save",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "save-all"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "save",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "save-all"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "say",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "say 晚上 9 點重開"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "say",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "say 晚上 9 點重開"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "say",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "say 晚上 9 點重開"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "seed",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "seed"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "seed",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "seed"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "seed",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "seed"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "wl_add",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "whitelist add Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "wl_add",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "whitelist add Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "wl_add",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "whitelist add Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "wl_remove",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "whitelist remove Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "wl_remove",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "whitelist remove Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "wl_remove",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "whitelist remove Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "wl_on",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "whitelist on"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "wl_on",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "whitelist on"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "wl_on",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "error": "這個指令要先按確認"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "wl_off",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "whitelist off"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "wl_off",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "whitelist off"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "wl_off",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "whitelist off"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "wl_list",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "whitelist list"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "wl_list",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "whitelist list"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "wl_list",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "whitelist list"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "kick",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "kick Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "kick",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "kick Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "kick",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "error": "這個指令要先按確認"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "op",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "op Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "op",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "error": "這是會刪東西或給權限的指令，要先在畫面上強確認"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "op",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "error": "這是會刪東西或給權限的指令，要先在畫面上強確認"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "deop",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "deop Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "deop",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "deop Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "deop",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "deop Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "ban",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "ban Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "ban",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "error": "這是會刪東西或給權限的指令，要先在畫面上強確認"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "ban",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "error": "這是會刪東西或給權限的指令，要先在畫面上強確認"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "pardon",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "pardon Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "pardon",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "pardon Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "pardon",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "pardon Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "banlist",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "banlist"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "banlist",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "banlist"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "banlist",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "banlist"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "kill_items",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "kill @e[type=minecraft:item]"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "kill_items",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "error": "這是會刪東西或給權限的指令，要先在畫面上強確認"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "kill_items",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "error": "這是會刪東西或給權限的指令，要先在畫面上強確認"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "kill_mob",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "kill @e[type=minecraft:horse]"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "kill_mob",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "error": "這是會刪東西或給權限的指令，要先在畫面上強確認"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "kill_mob",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "error": "這是會刪東西或給權限的指令，要先在畫面上強確認"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "clear_inv",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1 · NeoForge"
+   },
+   "out": "clear Steve_01"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "clear_inv",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1 · NeoForge"
+   },
+   "error": "這是會刪東西或給權限的指令，要先在畫面上強確認"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "clear_inv",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1 · NeoForge"
+   },
+   "error": "這是會刪東西或給權限的指令，要先在畫面上強確認"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "keep_inv",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.11 · Fabric"
+   },
+   "out": "gamerule keep_inventory true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "time_stop",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "26.3"
+   },
+   "out": "gamerule advance_time false"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "sleep_pct",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "26.3.1"
+   },
+   "out": "gamerule players_sleeping_percentage 50"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "keep_inv",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "版本未知"
+   },
+   "out": "gamerule keepInventory true"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "fire_tick",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "26.3"
+   },
+   "error": "「火焰蔓延」這條規則在這個遊戲版本已經沒有了"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "mob_spawn",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "false",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1"
+   },
+   "error": "這個指令要先按確認"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "mob_spawn",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "false",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1"
+   },
+   "out": "gamerule doMobSpawning false"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "gm_creative",
+    "values": {
+     "player": "@a",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": null,
+    "label": "1.21.1"
+   },
+   "error": "這個指令要先按確認"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "gm_creative",
+    "values": {
+     "player": "@a",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": true,
+    "label": "1.21.1"
+   },
+   "out": "gamemode creative @a"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "give",
+    "values": {
+     "player": "a b",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "玩家只能是 1–16 個英數字或底線（基岩版玩家前面可有一個句點），或 @a 代表全部"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "give",
+    "values": {
+     "player": "xxxxxxxxxxxxxxxxx",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "玩家只能是 1–16 個英數字或底線（基岩版玩家前面可有一個句點），或 @a 代表全部"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "give",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "641",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "數量要在 1 到 640 之間"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "give",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "0",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "數量要在 1 到 640 之間"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "give",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "abc",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "數量要填整數"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "give",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "Diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "物品名稱只能是小寫英文、數字、底線（例如 diamond）"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "give",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond 64\nop me",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "物品不能換行"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "summon",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "player",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "生物名稱只能是小寫英文、數字、底線（例如 diamond）"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "effect",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "3601",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "秒數要在 1 到 3600 之間"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "tp_xyz",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "~5",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "座標 X 要填數字"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "say",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "a\nstop",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "訊息不能換行"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "say",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "訊息最多 200 字"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "say",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "訊息不能空白"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "enchant",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "mending",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "2",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "附魔等級要在 1 到 1 之間"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "keep_inv",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "yes",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "開／關只能選開或關"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "give",
+    "values": {
+     "player": "@e",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "玩家只能是 1–16 個英數字或底線（基岩版玩家前面可有一個句點），或 @a 代表全部"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "give",
+    "values": {
+     "player": "Steve\r",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "error": "玩家不能換行"
+  },
+  {
+   "fn": "build_command",
+   "args": {
+    "id": "kick",
+    "values": {
+     "player": "Steve_01",
+     "target": ".BedrockGuy",
+     "item": "diamond",
+     "mob": "horse",
+     "effect": "speed",
+     "ench": "sharpness",
+     "count": "64",
+     "secs": "120",
+     "amp": "2",
+     "level": "5",
+     "x": "10",
+     "y": "-60",
+     "z": "3.5",
+     "msg": "晚上 9 點重開",
+     "reason": "  吵  ",
+     "bool": "true",
+     "pct": "50"
+    },
+    "confirm": "strong",
+    "label": "1.21.1"
+   },
+   "out": "kick Steve_01 吵"
+  }
+ ]
+}

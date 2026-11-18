@@ -1,4 +1,5 @@
-﻿# 出版流程：打包 → 個人資料掃描 → 測試 exe → 存入 releases\<版本>\ → 記錄 SHA256 →（有設定才）另存原始碼備份。
+﻿# shortcut: 2.0 起舊版移到 legacy/，本檔打包原始碼時的 docs、pages、README 等路徑沒跟著改, 真的要再發 1.x 時才修
+# 出版流程：打包 → 個人資料掃描 → 測試 exe → 存入 releases\<版本>\ → 記錄 SHA256 →（有設定才）另存原始碼備份。
 # 任何一步失敗就停，不會產生發佈檔。跑法：在這個資料夾用 PowerShell 跑 .\build.ps1
 $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot

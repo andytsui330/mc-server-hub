@@ -1,0 +1,22 @@
+[package]
+name = "mc-server-hub"
+version = "2.0.0"
+edition = "2024"
+license = "MIT"
+description = "MC 開服平台：Tauri 外殼（視窗、權限、把 core 的功能交給畫面）"
+
+[build-dependencies]
+tauri-build = { version = "=2.7.4", features = [] }
+
+[dependencies]
+tauri = { version = "=2.12.5", features = ["tray-icon"] }
+tauri-plugin-dialog = "=2.8.4"
+tauri-plugin-autostart = "=2.7.0"
+tauri-plugin-single-instance = "=2.5.5"
+tauri-plugin-updater = "=2.14.1"
+reqwest = { version = "=0.13.5", default-features = false }
+mc-hub-core = { path = "../../core" }
+serde_json = { version = "=1.0.154", features = ["preserve_order"] }
+
+[dev-dependencies]
+tauri = { version = "=2.12.5", features = ["test"] }

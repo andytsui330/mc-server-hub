@@ -1,0 +1,354 @@
+{
+ "source": "legacy/src/hub.py 1.2.0",
+ "os": "win",
+ "cases": [
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.bat",
+    "text": "@echo off\njava -Xmx4G -jar server.jar nogui\npause\n"
+   },
+   "out": {
+    "cmd": "java -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 -Xmx4G -jar server.jar nogui",
+    "java": "java",
+    "mode": "direct"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.bat",
+    "text": "@echo off\ncd /d \"%~dp0\"\nset RAM=6G\nset \"J=C:\\Program Files\\Java\\jdk-21\\bin\\java.exe\"\n\"%J%\" -Xmx%RAM% ^\n  -jar s.jar %*\npause\n"
+   },
+   "out": {
+    "cmd": "\"C:\\Program Files\\Java\\jdk-21\\bin\\java.exe\" -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 -Xmx6G  -jar s.jar ",
+    "java": "C:\\Program Files\\Java\\jdk-21\\bin\\java.exe",
+    "mode": "direct"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.bat",
+    "text": "\"%~dp0jre\\bin\\java.exe\" -jar server.jar nogui\n"
+   },
+   "out": {
+    "cmd": "\"<DIR>\\jre\\bin\\java.exe\" -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 -jar server.jar nogui",
+    "java": "<DIR>\\jre\\bin\\java.exe",
+    "mode": "direct"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.bat",
+    "text": "java @user_jvm_args.txt @libraries/net/x/win_args.txt %*\r\npause\r\n"
+   },
+   "out": {
+    "cmd": "java -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 @user_jvm_args.txt @libraries/net/x/win_args.txt ",
+    "java": "java",
+    "mode": "direct"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.bat",
+    "text": ":top\njava -jar s.jar nogui\ntimeout /t 5\ngoto top\n"
+   },
+   "out": {
+    "cmd": "java -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 -jar s.jar nogui",
+    "java": "java",
+    "mode": "direct"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.bat",
+    "text": "title 我的伺服器\nchcp 65001\njavaw -Xms1G -Xmx2G -jar s.jar\n"
+   },
+   "out": {
+    "cmd": "javaw -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 -Xms1G -Xmx2G -jar s.jar",
+    "java": "javaw",
+    "mode": "direct"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "run.bat",
+    "text": "@echo off\r\nREM Forge requires a configured set of both JVM and program arguments.\r\njava @user_jvm_args.txt @libraries/net/neoforged/neoforge/21.1.266/win_args.txt %*\r\npause\r\n"
+   },
+   "out": {
+    "cmd": "java -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 @user_jvm_args.txt @libraries/net/neoforged/neoforge/21.1.266/win_args.txt ",
+    "java": "java",
+    "mode": "direct"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "run.bat",
+    "text": "@echo off\r\nREM Add custom JVM arguments (such as RAM allocation) to the user_jvm_args.txt\r\n\r\njava -jar forge-1.21.1-52.1.20-shim.jar --onlyCheckJava\r\nif %ERRORLEVEL% NEQ 0 (\r\n    echo.\r\n    echo If you're struggling to fix the error above, ask for help.\r\n    goto :exit\r\n)\r\n\r\njava @user_jvm_args.txt @libraries/net/minecraftforge/forge/1.21.1-52.1.20/win_args.txt %*\r\n\r\n:exit\r\npause\r\n"
+   },
+   "out": {
+    "cmd": "java -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 @user_jvm_args.txt @libraries/net/minecraftforge/forge/1.21.1-52.1.20/win_args.txt ",
+    "java": "java",
+    "mode": "direct"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "run.bat",
+    "text": "@echo off\r\nREM Add custom JVM arguments (such as RAM allocation) to the user_jvm_args.txt\r\n\r\njava -jar forge-1.21.1-52.1.20-shim.jar --other\r\nif %ERRORLEVEL% NEQ 0 (\r\n    echo.\r\n    echo If you're struggling to fix the error above, ask for help.\r\n    goto :exit\r\n)\r\n\r\njava @user_jvm_args.txt @libraries/net/minecraftforge/forge/1.21.1-52.1.20/win_args.txt %*\r\n\r\n:exit\r\npause\r\n"
+   },
+   "out": {
+    "cmd": "cmd.exe /d /c \".\\run.bat\"",
+    "java": "java",
+    "mode": "bat"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "run.bat",
+    "text": "@echo off\r\nREM Add custom JVM arguments (such as RAM allocation) to the user_jvm_args.txt\r\n\r\njava -jar forge-1.21.1-52.1.20-shim.jar --onlyCheckJava\r\nif exist x (\r\n    echo.\r\n    echo If you're struggling to fix the error above, ask for help.\r\n    goto :exit\r\n)\r\n\r\njava @user_jvm_args.txt @libraries/net/minecraftforge/forge/1.21.1-52.1.20/win_args.txt %*\r\n\r\n:exit\r\npause\r\n"
+   },
+   "out": {
+    "cmd": "cmd.exe /d /c \".\\run.bat\"",
+    "java": "java",
+    "mode": "bat"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.bat",
+    "text": "if exist s.jar (\n java -jar s.jar\n)\n"
+   },
+   "out": {
+    "cmd": "cmd.exe /d /c \".\\start.bat\"",
+    "java": "java",
+    "mode": "bat"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.bat",
+    "text": "java -jar s.jar | find \"x\"\n"
+   },
+   "out": {
+    "cmd": "cmd.exe /d /c \".\\start.bat\"",
+    "java": "java",
+    "mode": "bat"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.bat",
+    "text": "java -jar s.jar\njava -jar b.jar\n"
+   },
+   "out": {
+    "cmd": "cmd.exe /d /c \".\\start.bat\"",
+    "java": "java",
+    "mode": "bat"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.bat",
+    "text": "set /p X=?\njava -jar s.jar\n"
+   },
+   "out": {
+    "cmd": "cmd.exe /d /c \".\\start.bat\"",
+    "java": "java",
+    "mode": "bat"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.bat",
+    "text": "cd sub\njava -jar s.jar\n"
+   },
+   "out": {
+    "cmd": "cmd.exe /d /c \".\\start.bat\"",
+    "java": "java",
+    "mode": "bat"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.bat",
+    "text": "%UNKNOWN_VAR_X% -jar s.jar\n"
+   },
+   "out": {
+    "cmd": "cmd.exe /d /c \".\\start.bat\"",
+    "java": null,
+    "mode": "bat"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.bat",
+    "text": "py -3 run.py\n"
+   },
+   "out": {
+    "cmd": "cmd.exe /d /c \".\\start.bat\"",
+    "java": null,
+    "mode": "bat"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.bat",
+    "text": ":a\ngoto b\njava -jar s.jar\n:b\n"
+   },
+   "out": {
+    "cmd": "cmd.exe /d /c \".\\start.bat\"",
+    "java": "java",
+    "mode": "bat"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.bat",
+    "text": "\"C:\\Java\\bin\\java.exe\" -version >nul\nif errorlevel 1 exit\njava -jar s.jar\n"
+   },
+   "out": {
+    "cmd": "cmd.exe /d /c \".\\start.bat\"",
+    "java": "C:\\Java\\bin\\java.exe",
+    "mode": "bat"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.sh",
+    "text": "#!/bin/sh\ncd \"$(dirname \"$0\")\"\nexec \"/opt/jdk/bin/java\" -Xmx2G -jar server.jar nogui\n"
+   },
+   "out": {
+    "cmd": "\"/opt/jdk/bin/java\" -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 -Xmx2G -jar server.jar nogui",
+    "java": "/opt/jdk/bin/java",
+    "mode": "direct"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.sh",
+    "text": "#!/bin/sh\njava -Xmx4G -jar server.jar nogui \"$@\"\n"
+   },
+   "out": {
+    "cmd": "java -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 -Xmx4G -jar server.jar nogui",
+    "java": "java",
+    "mode": "direct"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.sh",
+    "text": "#!/bin/sh\nwhile true; do java -jar s.jar; done\n"
+   },
+   "out": {
+    "cmd": "/bin/sh ./start.sh",
+    "java": null,
+    "mode": "bat"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "run.sh",
+    "text": "#!/usr/bin/env sh\njava @user_jvm_args.txt @libraries/net/neoforged/neoforge/21.1.265/unix_args.txt \"$@\"\n"
+   },
+   "out": {
+    "cmd": "java -Dstdout.encoding=UTF-8 -Dstderr.encoding=UTF-8 @user_jvm_args.txt @libraries/net/neoforged/neoforge/21.1.265/unix_args.txt",
+    "java": "java",
+    "mode": "direct"
+   }
+  },
+  {
+   "fn": "parse_launch",
+   "args": {
+    "file": "start.sh",
+    "text": "#!/bin/sh\necho hi\n"
+   },
+   "out": {
+    "cmd": "/bin/sh ./start.sh",
+    "java": null,
+    "mode": "bat"
+   }
+  },
+  {
+   "fn": "modloader_args",
+   "args": {
+    "text": "@echo off\r\nREM Forge requires a configured set of both JVM and program arguments.\r\njava @user_jvm_args.txt @libraries/net/neoforged/neoforge/21.1.266/win_args.txt %*\r\npause\r\n"
+   },
+   "out": "@user_jvm_args.txt @libraries/net/neoforged/neoforge/21.1.266/win_args.txt"
+  },
+  {
+   "fn": "modloader_args",
+   "args": {
+    "text": "@echo off\r\nREM Add custom JVM arguments (such as RAM allocation) to the user_jvm_args.txt\r\n\r\njava -jar forge-1.21.1-52.1.20-shim.jar --onlyCheckJava\r\nif %ERRORLEVEL% NEQ 0 (\r\n    echo.\r\n    echo If you're struggling to fix the error above, ask for help.\r\n    goto :exit\r\n)\r\n\r\njava @user_jvm_args.txt @libraries/net/minecraftforge/forge/1.21.1-52.1.20/win_args.txt %*\r\n\r\n:exit\r\npause\r\n"
+   },
+   "out": "@user_jvm_args.txt @libraries/net/minecraftforge/forge/1.21.1-52.1.20/win_args.txt"
+  },
+  {
+   "fn": "modloader_args",
+   "args": {
+    "text": "java -jar server.jar\r\n"
+   },
+   "out": null
+  },
+  {
+   "fn": "modloader_args",
+   "args": {
+    "text": "REM java @user_jvm_args.txt @libraries/x/win_args.txt\r\n"
+   },
+   "out": null
+  },
+  {
+   "fn": "modloader_args",
+   "args": {
+    "text": "java @user_jvm_args.txt @libraries/x&calc/win_args.txt\r\n"
+   },
+   "out": null
+  },
+  {
+   "fn": "modloader_args",
+   "args": {
+    "text": "#!/usr/bin/env sh\njava @user_jvm_args.txt @libraries/net/neoforged/neoforge/21.1.265/unix_args.txt \"$@\"\n"
+   },
+   "out": "@user_jvm_args.txt @libraries/net/neoforged/neoforge/21.1.265/unix_args.txt"
+  },
+  {
+   "fn": "start_script",
+   "args": {
+    "java": "C:\\Program Files\\Java\\bin\\java.exe",
+    "args": "-Xmx4G -jar server.jar nogui",
+    "os": "win"
+   },
+   "out": "@echo off\r\ncd /d \"%~dp0\"\r\n\"C:\\Program Files\\Java\\bin\\java.exe\" -Xmx4G -jar server.jar nogui\r\npause\r\n"
+  },
+  {
+   "fn": "start_script",
+   "args": {
+    "java": "/opt/jdk/bin/java",
+    "args": "-Xmx4G -jar server.jar nogui",
+    "os": "mac"
+   },
+   "out": "#!/bin/sh\ncd \"$(dirname \"$0\")\"\nexec \"/opt/jdk/bin/java\" -Xmx4G -jar server.jar nogui\n"
+  }
+ ]
+}

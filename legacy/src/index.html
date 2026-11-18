@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <title>MC 開服平台</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABccqhmAAADdUlEQVR4nO3dMW4TQRiAURuFOyBNgdLQhCMgIS6TKlUO4iqVL0NDSxcfYSVuYU6AomgiJqvvvTrrHc06n/5mx4cDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPCS44t/wbs2xrjOXP/7y+3U/T/9/OU7tGMfVi8AWEcAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIOxm9QLYtz8/vk2dR+A8gbVMABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABDmPIA47+O3mQAgTAAgTAAgTAAgTAAgTAAgTAAgTAAgTAAgTAAgTAAgTAAgTAAgTAAgTAAg7Dj7AWOMqd+HX23btuk9KO/fLPu/dv9MABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABB2s3oBp6fz1PWPD/eHstn9m2X/z7vePxMAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhAkAhC0/D2C1McZ19RrK7P9aJgAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAIEwAI2/15AKfJ32fH/peZACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBMACBs9+cBPF8uU9d/vbt7s7Xw/3n+c0wAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAECYAELb78wDq7/M/Ptwvvf/p6bz0/vXnP8sEAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGECAGG7Pw+g/j7/988fD3te/+rzBOpMABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABAmABC2+/MAni+Xqev9vvy+ef5zTAAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQJgAQdpz9gDHG9W2WArzWtm1T/8MmAAgTAAgTAAgTAAgTAAgTAAgTAAgTAAgTAAgTAAgTAAgTAAgTAAgTAAgTAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOPzbXzJzPu+NKs3WAAAAAElFTkSuQmCC">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#08090a">
 <style>{{FONTS}}</style>
@@ -269,6 +270,10 @@ button.kbd:hover{color:var(--ink)}
 .hint.good{color:var(--body); border-left-color:var(--ok)}
 .hint.bad{color:var(--wait); border-left-color:var(--wait)}
 .hint.err{color:#ff9a9a; border-left-color:var(--bad)}
+.drop{margin:-6px 0 16px; padding:12px 14px; border:1px dashed var(--ln2); font-size:12.5px; line-height:1.6; color:var(--mut); text-align:center}
+.drop.busy{color:var(--body); border-color:var(--ok)}
+body.dragging .drop{border-color:var(--ok); color:var(--body); background:var(--s2)}
+body.dragging::after{content:"放開就加入這個伺服器資料夾"; position:fixed; inset:10px; display:grid; place-items:center; border:2px dashed var(--ok); background:#000000b0; color:#fff; font:600 16px var(--ui); letter-spacing:.04em; z-index:60; pointer-events:none}
 .check{display:flex; gap:10px; align-items:flex-start; line-height:1.6; margin:0 0 14px; cursor:pointer; color:var(--body)}
 .check input{margin-top:4px; flex:none; accent-color:var(--tech)}
 .cards{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px}
@@ -449,6 +454,7 @@ button.kbd:hover{color:var(--ink)}
   <h3 id="ad-title">加入現有伺服器</h3>
   <p>選擇已經有 {{SCRIPT}} 的伺服器資料夾（原版、Fabric、Forge、NeoForge 都可以），連接埠和版本會自動讀取。</p>
   <div class="f"><span>伺服器資料夾</span><div class="inline"><input type="text" id="ad-dir" aria-label="伺服器資料夾" autocomplete="off" spellcheck="false" placeholder="按右邊選擇，或把路徑貼上來…"><button class="b" id="ad-pick">選擇…</button></div></div>
+  <div class="drop" id="ad-drop">也可以直接把伺服器資料夾（有 {{SCRIPT}} 的那個）拖進這個視窗</div>
   <label class="f"><span>顯示名稱（可不填）</span><input type="text" id="ad-name" maxlength="40" autocomplete="off" placeholder="不填就用資料夾名稱"></label>
   <div class="hint err" id="ad-err" role="alert" hidden></div>
   <div class="row"><button class="b" id="ad-no">取消</button><button class="b pri" id="ad-go">加入</button></div>
@@ -1476,6 +1482,45 @@ async function pickInto(input){
 }
 function openAdd(){ $("#ad-dir").value = $("#ad-name").value = ""; $("#ad-err").hidden = true; openDlg("#dlg-add", "#ad-dir"); }
 $("#ad-pick").onclick = () => pickInto($("#ad-dir"));
+
+/* 拖拉資料夾：瀏覽器只給資料夾名稱和裡面的檔案、不給完整路徑，
+   所以把「名稱＋最上層檔案的名稱與大小」交給後端，到電腦裡比對出位置 */
+const SCRIPT_EXT = "." + "{{SCRIPT}}".split(".").pop().toLowerCase();
+const hasFiles = e => !!e.dataTransfer && [...e.dataTransfer.types].includes("Files");
+const readAll = reader => new Promise((res, rej) => { const out = []; const next = () => reader.readEntries(b => { if (!b.length) return res(out); out.push(...b); next(); }, rej); next(); });
+const entryFile = x => new Promise((res, rej) => x.file(res, rej));
+let dragDepth = 0;
+const dragOff = () => { dragDepth = 0; document.body.classList.remove("dragging"); };
+window.addEventListener("dragenter", e => { if (!hasFiles(e)) return; e.preventDefault(); dragDepth++; document.body.classList.add("dragging"); });
+window.addEventListener("dragleave", e => { if (hasFiles(e) && --dragDepth <= 0) dragOff(); });
+window.addEventListener("dragover", e => { if (!hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = "copy"; });
+window.addEventListener("drop", e => {   // 一律攔下來，避免瀏覽器把檔案直接打開、把平台畫面換掉
+  if (!hasFiles(e)) return; e.preventDefault(); dragOff();
+  const items = [...e.dataTransfer.items].filter(i => i.kind === "file").map(i => i.webkitGetAsEntry && i.webkitGetAsEntry()).filter(Boolean);
+  dropFolder(items);
+});
+async function dropFolder(items){
+  const top = stack.length ? stack[stack.length - 1].id : null;
+  if (top && top !== "#dlg-add") return toast("請先關掉目前的視窗，再把資料夾拖進來");
+  if (items.length !== 1 || !items[0].isDirectory) return toast("請拖「一個」伺服器資料夾進來（整個資料夾，不是裡面的檔案）");
+  const dir = items[0];
+  if (top !== "#dlg-add") openAdd();
+  const err = $("#ad-err"), drop = $("#ad-drop"), go = $("#ad-go"), hint = drop.textContent;
+  const fail = msg => { err.textContent = msg; err.hidden = false; };
+  err.hidden = true; go.disabled = true; drop.classList.add("busy"); drop.textContent = `正在找「${dir.name}」在電腦裡的位置…`;
+  try {
+    const files = (await readAll(dir.createReader())).filter(x => x.isFile);
+    if (!files.some(x => x.name.toLowerCase().endsWith(SCRIPT_EXT)))
+      return fail(`「${dir.name}」裡面沒有 ${SCRIPT_EXT} 檔，不像伺服器資料夾。要拖的是有 {{SCRIPT}} 的那一層。`);
+    files.sort((a, b) => b.name.toLowerCase().endsWith(SCRIPT_EXT) - a.name.toLowerCase().endsWith(SCRIPT_EXT));
+    const list = await Promise.all(files.slice(0, 40).map(async x => ({n: x.name, size: (await entryFile(x)).size})));
+    const r = await api("/api/locate-drop", {name: dir.name, files: list});
+    if (r.error) return fail(r.error);
+    $("#ad-dir").value = r.path; $("#ad-dir").dispatchEvent(new Event("input"));
+    toast("找到了，確認名稱後按「加入」");
+  } catch { fail("讀不到這個資料夾，請改按「選擇…」"); }
+  finally { go.disabled = false; drop.classList.remove("busy"); drop.textContent = hint; }
+}
 $("#ad-no").onclick = () => closeDlg("#dlg-add");
 $("#ad-go").onclick = async () => {
   const r = await api("/api/add", {dir: $("#ad-dir").value, name: $("#ad-name").value});

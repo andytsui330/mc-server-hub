@@ -1,0 +1,476 @@
+{
+ "source": "legacy/src/hub.py 1.2.0",
+ "os": "win",
+ "cases": [
+  {
+   "fn": "check_folder_name",
+   "args": {
+    "name": "週末 生存服"
+   },
+   "out": null
+  },
+  {
+   "fn": "check_folder_name",
+   "args": {
+    "name": ""
+   },
+   "out": "伺服器名稱要 1 到 40 個字"
+  },
+  {
+   "fn": "check_folder_name",
+   "args": {
+    "name": "a/b"
+   },
+   "out": "伺服器名稱不能有 < > : \" / \\ | ? * 這些符號，也不能以句點或空白結尾"
+  },
+  {
+   "fn": "check_folder_name",
+   "args": {
+    "name": "a.."
+   },
+   "out": "伺服器名稱不能有 < > : \" / \\ | ? * 這些符號，也不能以句點或空白結尾"
+  },
+  {
+   "fn": "check_folder_name",
+   "args": {
+    "name": "CON"
+   },
+   "out": "伺服器名稱不能有 < > : \" / \\ | ? * 這些符號，也不能以句點或空白結尾"
+  },
+  {
+   "fn": "check_folder_name",
+   "args": {
+    "name": "con.txt"
+   },
+   "out": "伺服器名稱不能有 < > : \" / \\ | ? * 這些符號，也不能以句點或空白結尾"
+  },
+  {
+   "fn": "check_folder_name",
+   "args": {
+    "name": "COM1"
+   },
+   "out": "伺服器名稱不能有 < > : \" / \\ | ? * 這些符號，也不能以句點或空白結尾"
+  },
+  {
+   "fn": "check_folder_name",
+   "args": {
+    "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   },
+   "out": "伺服器名稱要 1 到 40 個字"
+  },
+  {
+   "fn": "check_folder_name",
+   "args": {
+    "name": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   },
+   "out": null
+  },
+  {
+   "fn": "check_folder_name",
+   "args": {
+    "name": "..\\x"
+   },
+   "out": "伺服器名稱不能有 < > : \" / \\ | ? * 這些符號，也不能以句點或空白結尾"
+  },
+  {
+   "fn": "check_folder_name",
+   "args": {
+    "name": "a:b"
+   },
+   "out": "伺服器名稱不能有 < > : \" / \\ | ? * 這些符號，也不能以句點或空白結尾"
+  },
+  {
+   "fn": "check_folder_name",
+   "args": {
+    "name": "結尾空白 "
+   },
+   "out": "伺服器名稱不能有 < > : \" / \\ | ? * 這些符號，也不能以句點或空白結尾"
+  },
+  {
+   "fn": "clean_custom_commands",
+   "args": {
+    "items": [
+     {
+      "name": "回家",
+      "tpl": "/tp <player> 0 64 0",
+      "id": "my_home"
+     },
+     {
+      "id": "my_abc",
+      "name": "全體夜視",
+      "tpl": "effect give @a minecraft:night_vision 600 0 true",
+      "danger": "confirm"
+     }
+    ]
+   },
+   "out": [
+    {
+     "id": "my_home",
+     "cat": "我的筆記",
+     "name": "回家",
+     "tpl": "tp <player> 0 64 0",
+     "danger": "",
+     "note": ""
+    },
+    {
+     "id": "my_abc",
+     "cat": "我的筆記",
+     "name": "全體夜視",
+     "tpl": "effect give @a minecraft:night_vision 600 0 true",
+     "danger": "confirm",
+     "note": ""
+    }
+   ]
+  },
+  {
+   "fn": "clean_custom_commands",
+   "args": {
+    "items": [
+     {
+      "name": "x",
+      "tpl": "say a\nstop",
+      "id": "my_a"
+     }
+    ]
+   },
+   "error": "「x」：名稱 1–40 字、指令 1–300 字且不能換行"
+  },
+  {
+   "fn": "clean_custom_commands",
+   "args": {
+    "items": [
+     {
+      "name": "x",
+      "tpl": "say <密碼>",
+      "id": "my_a"
+     }
+    ]
+   },
+   "error": "「x」用了不認識的欄位 <密碼>，可用：<player>、<target>、<item>、<mob>、<effect>、<ench>、<count>、<secs>、<amp>、<level>、<x>、<y>、<z>、<msg>、<reason>、<bool>、<pct>"
+  },
+  {
+   "fn": "clean_custom_commands",
+   "args": {
+    "items": [
+     {
+      "name": "",
+      "tpl": "list",
+      "id": "my_a"
+     }
+    ]
+   },
+   "error": "「（沒名稱）」：名稱 1–40 字、指令 1–300 字且不能換行"
+  },
+  {
+   "fn": "clean_custom_commands",
+   "args": {
+    "items": [
+     {
+      "name": "x",
+      "tpl": "list",
+      "danger": "boom",
+      "id": "my_a"
+     }
+    ]
+   },
+   "error": "危險等級只能是無、確認、強確認"
+  },
+  {
+   "fn": "clean_custom_commands",
+   "args": {
+    "items": [
+     {
+      "name": "x",
+      "tpl": "list",
+      "id": "../x"
+     }
+    ]
+   },
+   "error": "我的筆記編號格式不對"
+  },
+  {
+   "fn": "clean_custom_commands",
+   "args": {
+    "items": "nope"
+   },
+   "error": "我的筆記最多 100 筆"
+  },
+  {
+   "fn": "clean_custom_commands",
+   "args": {
+    "items": [
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {},
+     {}
+    ]
+   },
+   "error": "我的筆記最多 100 筆"
+  },
+  {
+   "fn": "clean_links",
+   "args": {
+    "items": [
+     {
+      "name": "Wiki",
+      "url": "https://minecraft.wiki/"
+     }
+    ]
+   },
+   "out": [
+    {
+     "name": "Wiki",
+     "url": "https://minecraft.wiki/"
+    }
+   ]
+  },
+  {
+   "fn": "clean_links",
+   "args": {
+    "items": [
+     {
+      "name": "x",
+      "url": "http://a"
+     }
+    ]
+   },
+   "error": "連結「x」：名稱 1–40 字，網址要以 https:// 開頭"
+  },
+  {
+   "fn": "clean_links",
+   "args": {
+    "items": [
+     {
+      "name": "",
+      "url": "https://a"
+     }
+    ]
+   },
+   "error": "連結「https://a」：名稱 1–40 字，網址要以 https:// 開頭"
+  },
+  {
+   "fn": "clean_links",
+   "args": {
+    "items": "nope"
+   },
+   "error": "實用連結最多 20 個"
+  },
+  {
+   "fn": "join_text",
+   "args": {
+    "template": "【加入伺服器】\n1. 用 Minecraft Java 版（或 PrismLauncher）開 <版本>。\n2. 有裝模組的伺服器（<載入器>）：先裝同一個載入器，把伺服器給你的模組放進 mods 資料夾。Forge 和 NeoForge 的模組不能互通。\n3. 多人遊戲 → 新增伺服器 → 位址填：<連線網址>\n",
+    "server_cfg": {
+     "version": "1.21.1 · NeoForge",
+     "address": "abc.example.com"
+    }
+   },
+   "out": "【加入伺服器】\n1. 用 Minecraft Java 版（或 PrismLauncher）開 1.21.1。\n2. 有裝模組的伺服器（NeoForge）：先裝同一個載入器，把伺服器給你的模組放進 mods 資料夾。Forge 和 NeoForge 的模組不能互通。\n3. 多人遊戲 → 新增伺服器 → 位址填：abc.example.com\n"
+  },
+  {
+   "fn": "join_text",
+   "args": {
+    "template": "【加入伺服器】\n1. 用 Minecraft Java 版（或 PrismLauncher）開 <版本>。\n2. 有裝模組的伺服器（<載入器>）：先裝同一個載入器，把伺服器給你的模組放進 mods 資料夾。Forge 和 NeoForge 的模組不能互通。\n3. 多人遊戲 → 新增伺服器 → 位址填：<連線網址>\n",
+    "server_cfg": {
+     "version": "1.21.1 · Fabric · 100 模組"
+    }
+   },
+   "out": "【加入伺服器】\n1. 用 Minecraft Java 版（或 PrismLauncher）開 1.21.1。\n2. 有裝模組的伺服器（Fabric）：先裝同一個載入器，把伺服器給你的模組放進 mods 資料夾。Forge 和 NeoForge 的模組不能互通。\n3. 多人遊戲 → 新增伺服器 → 位址填：（屋主還沒設定連線網址）\n"
+  },
+  {
+   "fn": "join_text",
+   "args": {
+    "template": "【加入伺服器】\n1. 用 Minecraft Java 版（或 PrismLauncher）開 <版本>。\n2. 有裝模組的伺服器（<載入器>）：先裝同一個載入器，把伺服器給你的模組放進 mods 資料夾。Forge 和 NeoForge 的模組不能互通。\n3. 多人遊戲 → 新增伺服器 → 位址填：<連線網址>\n",
+    "server_cfg": {
+     "version": "1.20.1",
+     "loader": "Forge"
+    }
+   },
+   "out": "【加入伺服器】\n1. 用 Minecraft Java 版（或 PrismLauncher）開 1.20.1。\n2. 有裝模組的伺服器（Forge）：先裝同一個載入器，把伺服器給你的模組放進 mods 資料夾。Forge 和 NeoForge 的模組不能互通。\n3. 多人遊戲 → 新增伺服器 → 位址填：（屋主還沒設定連線網址）\n"
+  },
+  {
+   "fn": "join_text",
+   "args": {
+    "template": "【加入伺服器】\n1. 用 Minecraft Java 版（或 PrismLauncher）開 <版本>。\n2. 有裝模組的伺服器（<載入器>）：先裝同一個載入器，把伺服器給你的模組放進 mods 資料夾。Forge 和 NeoForge 的模組不能互通。\n3. 多人遊戲 → 新增伺服器 → 位址填：<連線網址>\n",
+    "server_cfg": {
+     "version": ""
+    }
+   },
+   "out": "【加入伺服器】\n1. 用 Minecraft Java 版（或 PrismLauncher）開 伺服器指定的版本。\n2. 有裝模組的伺服器（原版）：先裝同一個載入器，把伺服器給你的模組放進 mods 資料夾。Forge 和 NeoForge 的模組不能互通。\n3. 多人遊戲 → 新增伺服器 → 位址填：（屋主還沒設定連線網址）\n"
+  },
+  {
+   "fn": "join_text",
+   "args": {
+    "template": "【加入伺服器】\n1. 用 Minecraft Java 版（或 PrismLauncher）開 <版本>。\n2. 有裝模組的伺服器（<載入器>）：先裝同一個載入器，把伺服器給你的模組放進 mods 資料夾。Forge 和 NeoForge 的模組不能互通。\n3. 多人遊戲 → 新增伺服器 → 位址填：<連線網址>\n",
+    "server_cfg": {
+     "version": "版本未知"
+    }
+   },
+   "out": "【加入伺服器】\n1. 用 Minecraft Java 版（或 PrismLauncher）開 伺服器指定的版本。\n2. 有裝模組的伺服器（原版）：先裝同一個載入器，把伺服器給你的模組放進 mods 資料夾。Forge 和 NeoForge 的模組不能互通。\n3. 多人遊戲 → 新增伺服器 → 位址填：（屋主還沒設定連線網址）\n"
+  },
+  {
+   "fn": "set_ram",
+   "args": {
+    "text": "@echo off\r\n\"java\" -Xmx4G -jar s.jar nogui\r\n",
+    "gb": 8
+   },
+   "out": "@echo off\r\n\"java\" -Xmx8G -jar s.jar nogui\r\n"
+  },
+  {
+   "fn": "set_ram",
+   "args": {
+    "text": "\"java\" -Xms6G -Xmx6G -jar s.jar\r\n",
+    "gb": 4
+   },
+   "out": "\"java\" -Xms4G -Xmx4G -jar s.jar\r\n"
+  },
+  {
+   "fn": "set_ram",
+   "args": {
+    "text": "java -Xms512M -Xmx2048M -jar s.jar\n",
+    "gb": 3
+   },
+   "out": "java -Xms512M -Xmx3G -jar s.jar\n"
+  },
+  {
+   "fn": "set_ram",
+   "args": {
+    "text": "java -jar s.jar\n",
+    "gb": 4
+   },
+   "error": "這份啟動檔不是平台產生的格式（找不到剛好一個 -Xmx），請用記事本手動改。"
+  },
+  {
+   "fn": "set_ram",
+   "args": {
+    "text": "java -Xmx2G -Xmx4G -jar s.jar\n",
+    "gb": 4
+   },
+   "error": "這份啟動檔不是平台產生的格式（找不到剛好一個 -Xmx），請用記事本手動改。"
+  },
+  {
+   "fn": "read_ram_gb",
+   "args": {
+    "text": "java -Xmx4G -jar s.jar"
+   },
+   "out": 4
+  },
+  {
+   "fn": "read_ram_gb",
+   "args": {
+    "text": "java -Xmx2048M -jar s.jar"
+   },
+   "out": 2.0
+  },
+  {
+   "fn": "read_ram_gb",
+   "args": {
+    "text": "java -Xmx1536m -jar s.jar"
+   },
+   "out": 1.5
+  },
+  {
+   "fn": "read_ram_gb",
+   "args": {
+    "text": "java -jar s.jar"
+   },
+   "out": null
+  }
+ ]
+}

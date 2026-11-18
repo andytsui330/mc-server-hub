@@ -1,0 +1,33 @@
+/* 第7步：沿用既有面板、字體與線條，設定依工作分類呈現。 */
+.preferences{padding:28px 32px;overflow:auto;height:calc(100vh - 65px);max-width:1160px}
+.preferences-heading h2{font-size:24px;margin:0 0 6px;color:var(--ink)}
+.preferences-heading p{margin:0 0 28px;color:var(--mut)}
+.preferences-layout{display:grid;grid-template-columns:150px minmax(0,1fr);gap:32px}
+.preferences-layout nav{display:flex;flex-direction:column;gap:4px;align-self:start;position:sticky;top:0}
+.preferences-layout nav button{text-align:left;padding:10px 12px;min-height:40px;color:var(--mut);border:1px solid transparent}
+.preferences-layout nav button:hover,.preferences-layout nav button.active{background:var(--s2);color:var(--ink);border-color:var(--ln2)}
+.preferences-content{min-width:0;max-width:720px}.preferences-content h3{margin:4px 0 20px;font-size:18px;color:var(--ink)}
+.preferences-content p{max-width:70ch}.preference-toggle,.preference-field{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 0;border-bottom:1px solid var(--ln)}
+.preference-toggle b{font-weight:500}.preference-toggle small,.preference-field small{display:block;margin-top:4px;color:var(--mut);font-size:12px}
+.preference-field select,.preference-field input:not([type=range]){width:260px;max-width:50%;background:var(--bg);border:1px solid var(--ln2);padding:9px;color:var(--ink);min-height:40px;min-width:0}
+.preference-field input[type=number]{width:100px}.preference-field input[type=range]{max-width:45%;accent-color:var(--tech)}
+.preference-toggle input{width:20px;height:20px;flex:none;accent-color:var(--tech);cursor:pointer}.preference-field.path{display:block}.preference-field.path input{display:block;width:100%;max-width:100%;margin-top:10px}
+.preferences fieldset{border:1px solid var(--ln2);padding:16px;margin:24px 0}.preferences legend{padding:0 8px;color:var(--ink)}
+.preferences .row{justify-content:flex-start;flex-wrap:wrap;margin-top:20px}.preferences details{margin-top:20px;border-top:1px solid var(--ln);padding-top:16px}.preferences summary{cursor:pointer;min-height:32px;color:var(--ink)}
+.legal-text,.update-notes pre{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.7 var(--mono);max-height:380px;overflow:auto;background:var(--bg);padding:16px;border:1px solid var(--ln)}
+.preferences-actions{position:sticky;bottom:-28px;background:var(--s1);padding:16px;display:flex;justify-content:space-between;align-items:center;gap:16px;border-top:1px solid var(--ln2);margin-top:28px}
+.preference-error{color:var(--bad)}.update-result{margin-top:16px}.preferences-feedback:empty{display:none}
+body{font-size:var(--ui-size,14px)}.preferences,.preferences input,.preferences select{font-size:var(--ui-size,14px)}.log{font-size:calc(var(--ui-size,14px) - 1px)}
+html[data-theme=light]{--bg:#f7f8fa;--s1:#fff;--s2:#edf0f4;--s3:#e0e5eb;--ln:#dce1e7;--ln2:#b3becb;--line-only:#8c99a7;--ink:#17212d;--body:#263442;--mut:#526273;--off:#667382;--tech:#09699f;--ok:#137044;--bad:#b32626;--wait:#84540b;color-scheme:light}
+html[data-theme=light] .sheet,html[data-theme=light] .pop{background:var(--s1)}
+html[data-theme=light] .f input,html[data-theme=light] .f textarea,html[data-theme=light] .f select,html[data-theme=light] .logwrap,html[data-theme=light] .con,html[data-theme=light] .outbox{background:var(--bg);color:var(--body)}
+html[data-theme=light] .pw:not(.out):not(.force):not(.busy):not(.ext){background:var(--ink);color:var(--s1)}
+html[data-theme=light] .log .hub,html[data-theme=light] .log .warn,html[data-theme=light] .log .err,html[data-theme=light] .log .chat,html[data-theme=light] .log .me{color:var(--body)}
+html[data-theme=light] .cell.warn{color:var(--bad)}
+@media(max-width:1050px){.preferences{padding:24px 20px}.preferences-layout{grid-template-columns:120px minmax(0,1fr);gap:20px}.preference-field:not(.path){align-items:flex-start;flex-direction:column;gap:10px}.preference-field select{max-width:100%;width:100%}.preferences-actions{bottom:-24px}}
+@media(prefers-reduced-motion:reduce){.preferences *{scroll-behavior:auto;transition:none!important}}
+
+.preferences fieldset.preferences-fields{border:0;padding:0;margin:0;min-width:0}
+html[data-theme=light] .log{background:var(--bg);color:var(--body)}
+html[data-theme=light] .hero h2,html[data-theme=light] .ovmain .nm{color:var(--ink)!important}
+html[data-theme=light] .msg.bad,html[data-theme=light] .cat.dz,html[data-theme=light] .cell.warn .pv,html[data-theme=light] .form .note.bad{color:var(--bad)}

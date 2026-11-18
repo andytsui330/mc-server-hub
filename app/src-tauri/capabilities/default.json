@@ -1,0 +1,6 @@
+{
+  "identifier": "default",
+  "description": "權限最小：之後只加對話框、系統匣、自動啟動、更新器、通知（計畫書第三節原則 3）",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

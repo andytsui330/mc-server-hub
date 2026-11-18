@@ -1,0 +1,15 @@
+// Original 1.2.0 synthesised sounds: fixed volume .4, no remote audio files.
+type Kind='up'|'down'|'fail'|'K2'|'K3';
+declare global {interface Window {__sfxLog:{kind:Kind;sid:string|null;at:number;played:boolean}[];webkitAudioContext?:typeof AudioContext}}
+window.__sfxLog=[];
+let enabled=true,volume=.4;
+export function configureSound(on:boolean,level:number){enabled=on;volume=Math.max(0,Math.min(1,level/100));if(master)master.gain.value=enabled?volume:0}
+let audio:AudioContext|null=null,master:GainNode,noiseBuf:AudioBuffer,k2:ReturnType<typeof setTimeout>|undefined;
+export function unlockAudio(){if(!audio)try{audio=new (window.AudioContext||window.webkitAudioContext!)();master=audio.createGain();master.gain.value=enabled?volume:0;master.connect(audio.destination);noiseBuf=audio.createBuffer(1,audio.sampleRate,audio.sampleRate);const d=noiseBuf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1}catch{audio=null;return}if(audio.state==='suspended')void audio.resume().catch(()=>{})}
+function env(g:GainNode,t:number,peak:number,a:number,d:number){g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(peak,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d)}
+function tone(f:number,t:number,dur:number,type:OscillatorType='sine',peak=.3,f2?:number){if(!audio)return;const o=audio.createOscillator(),g=audio.createGain();o.type=type;o.frequency.setValueAtTime(f,t);if(f2)o.frequency.exponentialRampToValueAtTime(f2,t+dur);env(g,t,peak,.005,dur);o.connect(g).connect(master);o.start(t);o.stop(t+dur+.05)}
+function noise(t:number,dur:number,type:BiquadFilterType,f:number,peak=.2){if(!audio)return;const src=audio.createBufferSource(),fl=audio.createBiquadFilter(),g=audio.createGain();src.buffer=noiseBuf;fl.type=type;fl.Q.value=1;fl.frequency.setValueAtTime(f,t);env(g,t,peak,Math.min(.01,dur/3),dur);src.connect(fl).connect(g).connect(master);src.start(t);src.stop(t+dur+.05)}
+const sounds:Record<Kind,(t:number)=>void>={up(t){[220,330,440].forEach((f,i)=>{tone(f,t+i*.12,.07,'square',.14);noise(t+i*.12,.03,'highpass',3000,.06)});tone(130,t+.38,.3,'sine',.55,45);[440,660,880].forEach(f=>{tone(f,t+.38,.55,'sine',.12);tone(f*1.004,t+.38,.55,'sine',.06)})},down(t){[440,330,220].forEach((f,i)=>tone(f,t+i*.13,.08,'square',.13));tone(110,t+.4,.35,'sine',.4,38)},fail(t){tone(196,t,.42,'triangle',.2)},K2(t){tone(1400,t,.025,'sine',.14,900)},K3(t){tone(260,t,.045,'triangle',.22,170);noise(t,.03,'lowpass',600,.12)}};
+export function play(kind:Kind,sid?:string){if(!enabled||volume===0)return;unlockAudio();window.__sfxLog.push({kind,sid:sid||null,at:Date.now(),played:!!audio});if(window.__sfxLog.length>200)window.__sfxLog.shift();if(!audio)return;const asked=Date.now(),go=()=>{if(audio&&Date.now()-asked<1500)try{sounds[kind](audio.currentTime+.01)}catch{}};if(audio.state==='running')go();else void audio.resume().then(go,()=>{})}
+export function buttonSound(){clearTimeout(k2);k2=setTimeout(()=>{k2=undefined;play('K2')},0)}
+export function sendSound(){clearTimeout(k2);k2=undefined;play('K3')}

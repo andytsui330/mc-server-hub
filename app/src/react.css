@@ -1,0 +1,12 @@
+/* React shell corrections. Original 1.2.0 visual tokens and layout remain in style.css. */
+#root{height:100%}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.fld>label{font-size:12px;color:var(--mut)}
+.sheet.icons>div:not(.sr-only){display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.sheet p{white-space:pre-wrap}
+.ovmain .m .spark{width:60px;height:16px;display:inline-block;margin-left:8px}
+
+/* 鍵盤焦點沿用設計正本的 2px 冰藍框；不讓舊欄位樣式蓋掉。 */
+.fld input:focus-visible,.fld select:focus-visible,.f input:focus-visible,.f select:focus-visible,.f textarea:focus-visible{outline:2px solid var(--tech);outline-offset:2px}
+.foot form:focus-within{box-shadow:0 2px 0 var(--tech)}
+.wizard-fields{border:0;padding:0;margin:0;min-width:0}

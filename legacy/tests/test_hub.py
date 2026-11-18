@@ -61,7 +61,8 @@ page_ids = re.findall(r'\bid: "([a-z\-]+)"', px) + re.findall(r'\["(?:友善生�
 assert len(page_ids) == 93 == len(set(page_ids)) and set(page_ids) == hub.ICON_IDS, set(page_ids) ^ hub.ICON_IDS
 page_colors = re.findall(r'\["[^"]+", "(#[0-9a-f]{6})"\]', px[px.index("const COLORS"):])
 assert tuple(page_colors) == hub.ICON_COLORS and len(hub.ICON_COLORS) == 8, page_colors
-assert "data:image" not in PAGE_SRC and "snd-btn" not in PAGE_SRC and 'store.get("mute"' not in PAGE_SRC and 'store.get("vol"' not in PAGE_SRC
+assert PAGE_SRC.count('<link rel="icon" type="image/png" href="data:image/png;base64,') == 1   # 工作列／分頁的城堡圖示
+assert "data:image" not in re.sub(r'<link rel="icon"[^>]*>', "", PAGE_SRC) and "snd-btn" not in PAGE_SRC and 'store.get("mute"' not in PAGE_SRC and 'store.get("vol"' not in PAGE_SRC
 assert "SFX_VOL = 0.4" in PAGE_SRC and "K2(t)" in PAGE_SRC and "K3(t)" in PAGE_SRC
 # ---------- 其他小邏輯 ----------
 assert hub.java_for_mc("1.21.1") == 21 and hub.java_for_mc("1.20.4") == 17 and hub.java_for_mc("1.16.5") == 8 and hub.java_for_mc("26.1") is None
@@ -79,6 +80,25 @@ try:
     hub._open("http://piston-meta.mojang.com/x"); raise AssertionError("沒加密也能下載")
 except hub.UserError:
     pass
+# ---------- 拖拉資料夾：用名稱＋檔案大小找回完整路徑 ----------
+_dropbase = Path(tempfile.mkdtemp(prefix="mcdrop_"))
+for _sub, _bat in (("甲", b"java -jar a.jar"), ("乙", b"java -jar bb.jar")):   # 兩個同名資料夾，內容不同
+    (_dropbase / _sub / "我的 伺服器").mkdir(parents=True)
+    (_dropbase / _sub / "我的 伺服器" / "start.bat").write_bytes(_bat)
+_orig_explorer, hub.explorer_folders = hub.explorer_folders, lambda: []
+_orig_roots, hub.search_roots = hub.search_roots, lambda: [_dropbase]
+r = hub.locate_dropped("我的 伺服器", [{"n": "start.bat", "size": 15}])
+assert r == {"path": str(_dropbase / "甲" / "我的 伺服器")}, r                       # 從磁碟往下找到、大小對得上的那一個
+r = hub.locate_dropped("我的 伺服器", [{"n": "start.bat", "size": 16}], extra=[_dropbase / "乙"])
+assert r == {"path": str(_dropbase / "乙" / "我的 伺服器")}, r                       # 已知位置優先
+(_dropbase / "乙" / "我的 伺服器" / "start.bat").write_bytes(b"java -jar a.jar")
+assert "分不出" in hub.locate_dropped("我的 伺服器", [{"n": "start.bat", "size": 15}])["error"]
+assert "找不到" in hub.locate_dropped("不存在", [{"n": "start.bat", "size": 15}])["error"]
+assert "看不懂" in hub.locate_dropped("../x", [{"n": "start.bat", "size": 1}])["error"]
+assert "沒有檔案" in hub.locate_dropped("x", [{"n": "a/b", "size": 1}])["error"]
+hub.explorer_folders, hub.search_roots = _orig_explorer, _orig_roots
+shutil.rmtree(_dropbase, ignore_errors=True)
+assert isinstance(hub.explorer_folders(), list)
 # ---------- 新版提醒：有新版、沒新版、內容錯誤、斷網 ----------
 def boom():
     raise OSError("offline")

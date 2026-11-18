@@ -5,3 +5,7 @@ __pycache__/
 dist-mac/
 build.local.ps1
 releases/
+target/
+node_modules/
+app/dist/
+app/src-tauri/gen/
