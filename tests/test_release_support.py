@@ -142,6 +142,16 @@ class ReleaseSupportTests(unittest.TestCase):
         self.assertNotIn("D:\\\\", raw)
         self.assertGreater(len(bom["components"]), 250)
 
+    def test_sbom_serial_number_is_valid_stable_and_content_bound(self):
+        # actions/attest只接受同時有bomFormat、specVersion、serialNumber的CycloneDX
+        bom = json.loads((ROOT / "target/release-support/SBOM.cdx.json").read_text(encoding="utf-8"))
+        for key in ("bomFormat", "specVersion", "serialNumber"):
+            self.assertIn(key, bom)
+        self.assertRegex(bom["serialNumber"], r"^urn:uuid:[0-9a-f]{8}-[0-9a-f]{4}-5[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
+        self.assertEqual(release.with_serial_number(bom), bom)
+        changed = dict(bom, version=2)
+        self.assertNotEqual(release.with_serial_number(changed)["serialNumber"], bom["serialNumber"])
+
 
 if __name__ == "__main__":
     unittest.main()

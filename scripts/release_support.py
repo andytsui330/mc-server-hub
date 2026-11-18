@@ -12,6 +12,7 @@ import sys
 import time
 import tomllib
 from urllib.parse import quote
+import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "target/release-support"
@@ -132,6 +133,22 @@ def merge_metadata(parts):
     return {"packages": list(packages.values()), "resolve": {"nodes": list(nodes.values())}}
 
 
+SBOM_SERIAL_NAMESPACE = uuid.UUID("6f1d7c3e-2a4b-5c8d-9e0f-1a2b3c4d5e6f")
+
+
+def with_serial_number(bom):
+    """CycloneDX的serialNumber：由內容算出的uuid5，同內容永遠同序號（可重現）。"""
+    body = {k: v for k, v in bom.items() if k != "serialNumber"}
+    digest = json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    serial = "urn:uuid:" + str(uuid.uuid5(SBOM_SERIAL_NAMESPACE, digest))
+    ordered = {}
+    for key, value in body.items():
+        ordered[key] = value
+        if key == "specVersion":
+            ordered["serialNumber"] = serial
+    return ordered
+
+
 def prepare(metadata_file=None, target="x86_64-pc-windows-msvc"):
     targets = [target] if isinstance(target, str) else list(target)
     target = ",".join(targets)
@@ -216,6 +233,7 @@ def prepare(metadata_file=None, target="x86_64-pc-windows-msvc"):
                         "properties": [{"name": "mchub:target", "value": target},
                                        {"name": "mchub:scope", "value": "resolved Rust build/runtime and npm production dependency inventory; not binary reachability proof"}]},
            "components": components, "dependencies": dependencies}
+    bom = with_serial_number(bom)
     OUTPUT.mkdir(parents=True, exist_ok=True)
     (OUTPUT / "SBOM.cdx.json").write_text(json.dumps(bom, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (OUTPUT / "THIRD_PARTY_LICENSES.txt").write_text("\n\n".join(notices) + "\n", encoding="utf-8")
