@@ -90,6 +90,30 @@ class ReleaseSupportTests(unittest.TestCase):
                         self.assertRegex(step["uses"], r"^actions/[a-z-]+@[a-f0-9]{40}$")
                     self.assertNotIn("gh release", step.get("run", ""))
 
+    def test_ci_release_build_keeps_webview2_bootstrapper_and_only_skips_build_time_signing(self):
+        override = json.loads((ROOT / "app/src-tauri/tauri.ci-release.conf.json").read_text(encoding="utf-8"))
+        release.validate_ci_release_config(override)
+        self.assertNotIn("webviewInstallMode", json.dumps(override))
+        main = json.loads((ROOT / "app/src-tauri/tauri.conf.json").read_text(encoding="utf-8"))
+        self.assertNotIn("webviewInstallMode", main["bundle"].get("windows", {}))  # 預設＝自動補裝WebView2
+        with self.assertRaises(ValueError):
+            release.validate_ci_release_config({"bundle": {"createUpdaterArtifacts": False, "windows": {"webviewInstallMode": {"type": "skip"}}}})
+        workflow = json.loads((ROOT / ".github/workflows/package-windows.yml").read_text(encoding="utf-8"))
+        runs = [s.get("run", "") for s in workflow["jobs"]["package"]["steps"]]
+        self.assertTrue(any("build-windows-test" in r and "--profile ci-release" in r for r in runs))
+
+    def test_ci_release_profile_passes_its_own_config_to_tauri(self):
+        with patch.object(release, "nsis_preflight", return_value=[]), patch.object(release, "prepare"), \
+                patch.object(release.shutil, "which", return_value="npm"), patch.object(release.subprocess, "run") as run, \
+                patch.object(release.sys, "platform", "win32"), patch.object(release.Path, "glob", return_value=[]):
+            with self.assertRaisesRegex(ValueError, "exactly one"):
+                release.build_windows_test(False, "ci-release")
+        args = run.call_args[0][0]
+        self.assertEqual(args[args.index("--config") + 1], "src-tauri/tauri.ci-release.conf.json")
+        self.assertIn("--no-sign", args)
+        with self.assertRaisesRegex(ValueError, "unknown"):
+            release.build_windows_test(False, "release")
+
     def test_installer_config_is_current_user_and_signed_updates_stay_required(self):
         config = json.loads((ROOT / "app/src-tauri/tauri.conf.json").read_text(encoding="utf-8"))
         release.validate_config(config)

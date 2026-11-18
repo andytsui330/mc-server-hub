@@ -66,8 +66,8 @@
           "run": "python -B -m unittest discover -s tests -p test_release_support.py -v"
         },
         {
-          "name": "Build isolated-test candidate (no signing secrets)",
-          "run": "python -B scripts/release_support.py build-windows-test --allow-tool-download"
+          "name": "Build release candidate (WebView2 bootstrapper, no signing secrets)",
+          "run": "python -B scripts/release_support.py build-windows-test --allow-tool-download --profile ci-release"
         },
         {
           "uses": "actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6",

@@ -223,7 +223,23 @@ def prepare(metadata_file=None, target="x86_64-pc-windows-msvc"):
     print(json.dumps({"version": version, "rust_packages": len(seen), "npm_packages": len(npm_refs), "components": len(components)}, ensure_ascii=False))
 
 
-def stage_windows(installer, output):
+BUILD_PROFILES = {
+    # 本機隔離測試：不裝WebView2、不產更新簽章。
+    "local-test": ("src-tauri/tauri.local-test.conf.json",
+                   "Unsigned installer candidate for isolated testing. Not a release or signed updater.\n"),
+    # GitHub打包：WebView2照正式設定自動補裝；只關掉打包時的更新簽章（私鑰不上雲，發佈時在本機另簽）。
+    "ci-release": ("src-tauri/tauri.ci-release.conf.json",
+                   "Unsigned release candidate built by GitHub Actions (WebView2 bootstrapper kept). "
+                   "Updater signature is created separately at release time.\n"),
+}
+
+
+def validate_ci_release_config(override):
+    if override != {"bundle": {"createUpdaterArtifacts": False}}:
+        raise ValueError("ci-release config may only disable build-time updater artifacts")
+
+
+def stage_windows(installer, output, status=BUILD_PROFILES["local-test"][1]):
     installer, output = Path(installer).resolve(), Path(output).resolve()
     if not installer.is_file() or installer.suffix.lower() != ".exe" or installer.read_bytes()[:2] != b"MZ":
         raise ValueError("expected an existing Windows installer")
@@ -236,12 +252,17 @@ def stage_windows(installer, output):
         shutil.copy2(OUTPUT / name, output / name)
     for name in ("LICENSE", "THIRD_PARTY_NOTICES.txt"):
         shutil.copy2(ROOT / name, output / name)
-    (output / "BUILD-STATUS.txt").write_text("Unsigned installer candidate for isolated testing. Not a release or signed updater.\n", encoding="utf-8")
+    (output / "BUILD-STATUS.txt").write_text(status, encoding="utf-8")
     (output / "SHA256SUMS.txt").write_text(checksum_lines([f for f in output.iterdir() if f.is_file()]), encoding="utf-8")
     print(f"staged {FIXED_WINDOWS}; no publishing or updater manifest generated")
 
 
-def build_windows_test(allow_tool_download=False):
+def build_windows_test(allow_tool_download=False, profile="local-test"):
+    if profile not in BUILD_PROFILES:
+        raise ValueError(f"unknown build profile: {profile}")
+    config_path, status = BUILD_PROFILES[profile]
+    if profile == "ci-release":
+        validate_ci_release_config(json.loads((ROOT / "app" / config_path).read_text(encoding="utf-8")))
     directory = Path(os.environ.get("LOCALAPPDATA", "")) / "tauri/NSIS"
     problems = nsis_preflight(directory)
     if problems and directory.exists():
@@ -255,11 +276,11 @@ def build_windows_test(allow_tool_download=False):
     if not npm:
         raise ValueError("npm is not installed")
     subprocess.run([npm, "run", "tauri", "--", "build", "--ci", "--no-sign", "--bundles", "nsis",
-                    "--config", "src-tauri/tauri.local-test.conf.json"], cwd=ROOT / "app", check=True)
+                    "--config", config_path], cwd=ROOT / "app", check=True)
     installers = list((ROOT / "target/release/bundle/nsis").glob("*.exe"))
     if len(installers) != 1:
         raise ValueError("expected exactly one NSIS installer; preserve old artifacts and review instead of guessing")
-    stage_windows(installers[0], ROOT / "target" / f"windows-candidate-{time.time_ns()}")
+    stage_windows(installers[0], ROOT / "target" / f"windows-candidate-{time.time_ns()}", status)
 
 
 def main():
@@ -276,6 +297,8 @@ def main():
     stage_parser.add_argument("--output", required=True, type=Path)
     build_parser = commands.add_parser("build-windows-test")
     build_parser.add_argument("--allow-tool-download", action="store_true", help="Only after explicit approval; an existing incomplete cache is never removed")
+    build_parser.add_argument("--profile", choices=sorted(BUILD_PROFILES), default="local-test",
+                              help="local-test: isolated test build; ci-release: GitHub Actions release candidate")
     args = parser.parse_args()
     if args.command == "prepare":
         prepare(args.metadata, args.target or ["x86_64-pc-windows-msvc"])
@@ -286,7 +309,7 @@ def main():
     elif args.command == "stage-windows":
         stage_windows(args.installer, args.output)
     else:
-        build_windows_test(args.allow_tool_download)
+        build_windows_test(args.allow_tool_download, args.profile)
     return 0
 
 
