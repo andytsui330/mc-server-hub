@@ -3,19 +3,19 @@
 [![下載 Windows 安裝版](https://img.shields.io/badge/下載-Windows_安裝版-1674b8?style=for-the-badge)](https://github.com/andytsui330/mc-server-hub/releases/latest/download/MCServerHub-Setup-Windows.exe)
 [![下載 Mac 安裝版](https://img.shields.io/badge/下載-Mac_DMG-1674b8?style=for-the-badge)](https://github.com/andytsui330/mc-server-hub/releases/latest/download/MCServerHub-Mac.dmg)
 
-**2.0 安裝版準備中，尚未正式發佈。** 上方兩顆按鈕是上線後的固定入口，目前可能找不到檔案；現有公開版本見 [Releases](https://github.com/andytsui330/mc-server-hub/releases)。Windows 只提供安裝檔，Mac 只提供 DMG，不提供 2.0 可攜 ZIP。
+**2.0.0 已正式發佈（2026-11-19）。** 點上方按鈕下載最新版；所有版本、檢查碼與更新說明見 [Releases](https://github.com/andytsui330/mc-server-hub/releases)。Windows 只提供安裝檔，Mac 只提供 DMG，不提供 2.0 可攜 ZIP。
 
-在自己的電腦開 Minecraft Java 版伺服器：看誰在線、正常開關機、看主控台、下常用指令，以及管理玩家、模組與世界備份。介面使用繁體中文；此處說明以開發中的 2.0 為準。
+在自己的電腦開 Minecraft Java 版伺服器：看誰在線、正常開關機、看主控台、下常用指令，以及管理玩家、模組與世界備份。介面使用繁體中文；此處說明以 2.0 為準。
 
 | 平台 | 目前進度 |
 | :-- | :-- |
-| Windows x64 | 目標 Windows 10／11；本機安裝、解除與既有真服短測已驗證。最新文件版候選包仍需自己的安裝驗收，尚未正式發佈。 |
-| Mac Intel | universal DMG 已打包，Intel／macOS 15.8.1 原生操作及真實建服通過；登入啟動、更新與下載後首次開啟體驗仍未驗。 |
+| Windows x64 | 目標 Windows 10／11。正式安裝檔已實走下載、安裝、開啟，並驗過解除安裝與既有真服短測；缺少 WebView2 的乾淨電腦自動補裝尚未實測。 |
+| Mac Intel | universal DMG，Intel／macOS 15.8.1 原生操作及真實建服通過；登入啟動與下載後首次開啟體驗仍未驗。Mac 尚未提供自動更新，新版請到 Releases 手動下載。 |
 | Mac Apple 晶片 | DMG 內含 arm64 程式；Apple 晶片實機驗收暫緩，仍標示未驗，不能以 Intel 結果代替。 |
 
 Mac 打包下限設為 macOS 11，這是建置設定，不代表所有 macOS 版本均已實測。完整範圍見 [第12步準備與待驗清單](docs/step12-readiness.md)。
 
-> English — A local desktop manager for Minecraft: Java Edition servers. Tauri 2 + Rust + React; Traditional Chinese interface. Version 2.0 is not released yet. The control interface uses internal desktop IPC, not a listening HTTP server. Server game ports are separate and may be reachable according to your server/network settings. Not an official Minecraft product.
+> English — A local desktop manager for Minecraft: Java Edition servers. Tauri 2 + Rust + React; Traditional Chinese interface. Version 2.0.0 was released on 2026-11-19. The control interface uses internal desktop IPC, not a listening HTTP server. Server game ports are separate and may be reachable according to your server/network settings. Not an official Minecraft product.
 
 ![2.0主畫面，隔離假服示範](docs/screenshot.png)
 
@@ -23,7 +23,7 @@ Mac 打包下限設為 macOS 11，這是建置設定，不代表所有 macOS 版
 
 ### Windows
 
-1. 正式發佈後下載 `MCServerHub-Setup-Windows.exe`，先核對同一版的 `SHA256SUMS.txt`。
+1. 下載 `MCServerHub-Setup-Windows.exe`，先核對同一版的 `SHA256SUMS.txt`。Edge 可能顯示「不常下載」，確認是從本專案 Releases 下載後，按「…」→「保留」。
 2. 雙擊安裝檔，依畫面操作。安裝在目前使用者的資料夾，不需管理員權限；從開始功能表開啟「MC開服平台」，不建立桌面捷徑。
 3. 沒有伺服器就按「建立新伺服器」；已有資料夾就按「加入現有資料夾」。開機前先看檢查結果，再確認開機。
 
@@ -31,11 +31,11 @@ Mac 打包下限設為 macOS 11，這是建置設定，不代表所有 macOS 版
 
 ### Mac
 
-1. 正式發佈後下載 `MCServerHub-Mac.dmg`，先核對同版 SHA256。現有測試 DMG 不是正式下載版。
+1. 下載 `MCServerHub-Mac.dmg`，先核對同版 SHA256。
 2. 開啟 DMG，閱讀授權畫面後，把「MC開服平台」拖進「應用程式」。已有同名程式時，先關閉平台與伺服器並保留備份，再決定是否替換。
 3. 從「應用程式」開啟平台；既有伺服器選含 `start.sh`／`run.sh` 的資料夾。搜尋指令用 `⌘ K`，結束平台用 `⌘ Q`；仍有伺服器或工作在執行時會阻擋結束。
 
-目前 Mac 候選包僅有本機 ad-hoc 簽章，未取得 Developer ID 簽章或 Apple 公證。下載後的 Gatekeeper 開啟流程尚未驗證；若被系統阻擋，先核對來源與檢查碼，不要全域關閉 Gatekeeper 或批次移除下載保護標記。
+目前 Mac 版僅有本機 ad-hoc 簽章，未取得 Developer ID 簽章或 Apple 公證。下載後的 Gatekeeper 開啟流程尚未驗證；若被系統阻擋，先核對來源與檢查碼，不要全域關閉 Gatekeeper 或批次移除下載保護標記。
 
 ## 能做什麼
 
@@ -59,7 +59,7 @@ Windows 解除安裝只移除平台程式、開始功能表入口及安裝登記
 - 查版本／建服、模組搜尋與下載、Java 查詢與下載、檢查平台更新會連到對應官方服務。更新檢查可關閉；不自動上傳主控台、玩家、設定或診斷檔。
 - 平台更新、Java 安裝與模組套用都需確認。下載核對大小／雜湊，平台更新另驗簽章；正式更新器不接受未簽更新。Minecraft EULA 必須本人同意。
 - 未由平台管理的模組保持原狀；相同版本篩選不保證整包遊戲相容。交易中斷後可能需要人工救援；備份不能取代獨立離機副本。
-- 安裝與真服測試的歷程見 [第11步驗證紀錄](docs/step11-packaging.md)；後續 Mac 與發佈缺口見 [第12步準備與待驗清單](docs/step12-readiness.md)。本機測試包不代表已正式發佈。
+- 安裝與真服測試的歷程見 [第11步驗證紀錄](docs/step11-packaging.md)；後續 Mac 與發佈缺口見 [第12步準備與待驗清單](docs/step12-readiness.md)。正式版只從 Releases 下載；本機測試包不是正式下載版。
 
 ## 核對下載檔案
 
@@ -75,7 +75,7 @@ Mac 在「終端機」執行：
 shasum -a 256 MCServerHub-Mac.dmg
 ```
 
-比對結果與清單中同檔名的一行；不一致就不要執行。更新說明以 [CHANGELOG.md](CHANGELOG.md) 為唯一來源，供應鏈證明與 SBOM 在正式打包流程產生後才會附上，不以本機產檔冒充 GitHub 證明。
+比對結果與清單中同檔名的一行；不一致就不要執行。更新說明以 [CHANGELOG.md](CHANGELOG.md) 為唯一來源。Windows 安裝檔由 GitHub 打包並附來源證明，可用 `gh attestation verify MCServerHub-Setup-Windows.exe -R andytsui330/mc-server-hub` 驗證；Mac DMG 是本機建置，沒有 GitHub 證明，請以 SHA256 核對。
 
 ## 從原始碼執行
 
