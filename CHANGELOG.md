@@ -38,7 +38,7 @@
 ### 開發者備註
 - Tauri 2／Rust core／React與TypeScript；版本固定於鎖檔。測試使用TEMP隔離設定、真Tauri updater與假安裝器；不把替身驗證當成真OS登入、原生系統匣選單或正式NSIS驗證。
 - Windows只提供NSIS安裝檔，不再提供可攜ZIP。正式更新須有簽章；本機未簽測試包不產生更新資訊或自動發佈。
-- Mac universal 包裝合併兩個 target 的授權資源與 SBOM，新增 macOS app／DMG 設定與 start.sh 假服測試。現有 Mac 候選僅有 ad-hoc 簽章，未公證；下載後 Gatekeeper 體驗尚未驗證。
+- Mac universal 包裝合併兩個 target 的授權資源與 SBOM，新增 macOS app／DMG 設定與 start.sh 假服測試。Mac 版僅有 ad-hoc 簽章，未公證；下載後 Gatekeeper 體驗尚未驗證。
 - Windows 正式設定模式已驗證更新檢查連線失敗提示及重試；這不代表正式更新下載、驗簽、替換或重新啟動已實走通過。
 
 ## 未發佈的1.x文件修正（保留歷程，不另發1.2.1）

@@ -10,10 +10,10 @@
 | 平台 | 目前進度 |
 | :-- | :-- |
 | Windows x64 | 目標 Windows 10／11。正式安裝檔已實走下載、安裝、開啟，並驗過解除安裝與既有真服短測；缺少 WebView2 的乾淨電腦自動補裝尚未實測。 |
-| Mac Intel | universal DMG，Intel／macOS 15.8.1 原生操作及真實建服通過；登入啟動與下載後首次開啟體驗仍未驗。Mac 尚未提供自動更新，新版請到 Releases 手動下載。 |
+| Mac Intel | universal DMG，Intel／macOS 15.8.1 原生操作及真實建服通過；登入啟動與下載後首次開啟體驗仍未驗。Mac 版的自動更新檔尚未提供，提供前請到 Releases 手動下載新版。 |
 | Mac Apple 晶片 | DMG 內含 arm64 程式；Apple 晶片實機驗收暫緩，仍標示未驗，不能以 Intel 結果代替。 |
 
-Mac 打包下限設為 macOS 11，這是建置設定，不代表所有 macOS 版本均已實測。完整範圍見 [第12步準備與待驗清單](docs/step12-readiness.md)。
+Mac 打包下限設為 macOS 11，這是建置設定，不代表所有 macOS 版本均已實測。已驗與仍未驗的範圍見 [第12步驗收紀錄](docs/step12-readiness.md)。
 
 > English — A local desktop manager for Minecraft: Java Edition servers. Tauri 2 + Rust + React; Traditional Chinese interface. Version 2.0.0 was released on 2026-11-19. The control interface uses internal desktop IPC, not a listening HTTP server. Server game ports are separate and may be reachable according to your server/network settings. Not an official Minecraft product.
 
@@ -26,6 +26,7 @@ Mac 打包下限設為 macOS 11，這是建置設定，不代表所有 macOS 版
 1. 下載 `MCServerHub-Setup-Windows.exe`，先核對同一版的 `SHA256SUMS.txt`。Edge 可能顯示「不常下載」，確認是從本專案 Releases 下載後，按「…」→「保留」。
 2. 雙擊安裝檔，依畫面操作。安裝在目前使用者的資料夾，不需管理員權限；從開始功能表開啟「MC開服平台」，不建立桌面捷徑。
 3. 沒有伺服器就按「建立新伺服器」；已有資料夾就按「加入現有資料夾」。開機前先看檢查結果，再確認開機。
+4. 2.0.0 按視窗右上角 X 會結束平台（有伺服器在跑時會擋下）；想讓平台縮到右下角系統匣繼續執行，到「設定 → 一般 → 關窗行為」改成縮到系統匣。
 
 本專案尚未取得 Windows 程式碼簽章。SmartScreen 可能顯示無法辨識的應用程式；這項警告本身無法判定檔案是否安全。請確認來源與檢查碼，**不要為了安裝而關閉防毒或忽略病毒偵測**。安裝器可能在缺少 WebView2 時要求下載執行環境；Java 則由平台先說明版本、大小與來源，經你確認才安裝到平台專用資料夾。
 
@@ -35,7 +36,7 @@ Mac 打包下限設為 macOS 11，這是建置設定，不代表所有 macOS 版
 2. 開啟 DMG，閱讀授權畫面後，把「MC開服平台」拖進「應用程式」。已有同名程式時，先關閉平台與伺服器並保留備份，再決定是否替換。
 3. 從「應用程式」開啟平台；既有伺服器選含 `start.sh`／`run.sh` 的資料夾。搜尋指令用 `⌘ K`，結束平台用 `⌘ Q`；仍有伺服器或工作在執行時會阻擋結束。
 
-目前 Mac 版僅有本機 ad-hoc 簽章，未取得 Developer ID 簽章或 Apple 公證。下載後的 Gatekeeper 開啟流程尚未驗證；若被系統阻擋，先核對來源與檢查碼，不要全域關閉 Gatekeeper 或批次移除下載保護標記。
+目前 Mac 版僅有本機 ad-hoc 簽章，未取得 Developer ID 簽章或 Apple 公證。下載後的 Gatekeeper 開啟流程尚未驗證；若被系統阻擋，先核對來源與檢查碼，再到「系統設定 → 隱私權與安全性」找到這個 App 按「強制打開」（macOS 15 起不能再用按右鍵「打開」繞過；此步驟尚未用下載版實測）。不要全域關閉 Gatekeeper 或批次移除下載保護標記。
 
 ## 能做什麼
 
@@ -49,7 +50,7 @@ Mac 打包下限設為 macOS 11，這是建置設定，不代表所有 macOS 版
 
 ## 從 1.x 升級、解除安裝
 
-先正常關閉所有伺服器並備份世界。第一次開啟 2.0，會把 1.x 的 `hub_config.json` 複製成備份後匯入 `config.json`；舊設定與伺服器資料夾保留。不要同時讓兩版平台管理同一台伺服器。
+先正常關閉所有伺服器並備份世界。1.x 跳出的新版提示寫「下載壓縮檔、蓋掉 exe」，那是 1.x 時代的做法；2.0 請改從 [Releases](https://github.com/andytsui330/mc-server-hub/releases/latest) 下載安裝檔（Windows）或 DMG（Mac）。第一次開啟 2.0，會把 1.x 的 `hub_config.json` 複製成備份後匯入 `config.json`；舊設定與伺服器資料夾保留。不要同時讓兩版平台管理同一台伺服器。
 
 Windows 解除安裝只移除平台程式、開始功能表入口及安裝登記，保留設定、世界與使用者的伺服器資料夾。平台設定在 Windows 為 `%APPDATA%\MCServerHub\`，Mac 為 `~/Library/Application Support/MCServerHub/`；不要把伺服器或世界存進平台程式的安裝資料夾。Mac 登入啟動尚未實機驗證，移除前若曾啟用，需另外確認登入項目狀態。
 
@@ -59,7 +60,7 @@ Windows 解除安裝只移除平台程式、開始功能表入口及安裝登記
 - 查版本／建服、模組搜尋與下載、Java 查詢與下載、檢查平台更新會連到對應官方服務。更新檢查可關閉；不自動上傳主控台、玩家、設定或診斷檔。
 - 平台更新、Java 安裝與模組套用都需確認。下載核對大小／雜湊，平台更新另驗簽章；正式更新器不接受未簽更新。Minecraft EULA 必須本人同意。
 - 未由平台管理的模組保持原狀；相同版本篩選不保證整包遊戲相容。交易中斷後可能需要人工救援；備份不能取代獨立離機副本。
-- 安裝與真服測試的歷程見 [第11步驗證紀錄](docs/step11-packaging.md)；後續 Mac 與發佈缺口見 [第12步準備與待驗清單](docs/step12-readiness.md)。正式版只從 Releases 下載；本機測試包不是正式下載版。
+- 安裝與真服測試的歷程見 [第11步驗證紀錄](docs/step11-packaging.md)；發佈時仍未驗的項目見 [第12步驗收紀錄](docs/step12-readiness.md)。正式版只從 Releases 下載；本機測試包不是正式下載版。
 
 ## 核對下載檔案
 
@@ -91,7 +92,7 @@ npm run tauri -- dev
 
 打包、授權附件、隔離測試及 CI 規則見 [第11步驗證紀錄](docs/step11-packaging.md)。舊 Python 版在 `legacy/`，只供歷程對照，不是 2.0 的啟動入口。
 
-Mac 開發另需 Xcode Command Line Tools；universal 打包需兩個 Rust target：`x86_64-apple-darwin` 與 `aarch64-apple-darwin`。授權資源必須用 `release_support.py prepare` 的兩次 `--target` 合併產生，不能直接拿 Windows 的授權清單或 SBOM 充數。現有本機包裝狀態見 [第12步準備與待驗清單](docs/step12-readiness.md)。
+Mac 開發另需 Xcode Command Line Tools；universal 打包需兩個 Rust target：`x86_64-apple-darwin` 與 `aarch64-apple-darwin`。授權資源必須用 `release_support.py prepare` 的兩次 `--target` 合併產生，不能直接拿 Windows 的授權清單或 SBOM 充數。Mac 驗收範圍見 [第12步驗收紀錄](docs/step12-readiness.md)。
 
 ## 授權與聲明
 
