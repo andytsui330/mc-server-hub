@@ -1,6 +1,6 @@
 [package]
 name = "mc-server-hub"
-version = "2.0.0"
+version = "2.0.1"
 edition = "2024"
 license = "MIT"
 description = "MC 開服平台：Tauri 外殼（視窗、權限、把 core 的功能交給畫面）"

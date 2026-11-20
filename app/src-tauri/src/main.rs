@@ -57,6 +57,12 @@ async fn api(app: tauri::AppHandle, hub: tauri::State<'_, Arc<Hub>>, path: Strin
             "launch_at_login":if isolated{hub.preferences()["launch_at_login"].as_bool().unwrap_or(false)}else{app.autolaunch().is_enabled().unwrap_or(false)}}),
         );
     }
+    if path == "/api/desktop/hide" {
+        if let Some(w) = app.get_webview_window("main") {
+            let _ = w.hide();
+        }
+        return Ok(json!({"ok":true}));
+    }
     if path == "/api/desktop/quit" {
         return Ok(request_exit(&app,body["discard"]==true));
     }
@@ -211,7 +217,7 @@ fn main() {
             let menu = Menu::with_items(app, &[&open, &quit])?;
             TrayIconBuilder::with_id("main-tray")
                 .icon(app.default_window_icon().unwrap().clone())
-                .tooltip("MC 開服平台")
+                .tooltip("MC 開服平台（執行中）")
                 .menu(&menu)
                 .show_menu_on_left_click(false)
                 .on_tray_icon_event(|tray, event| {
@@ -262,7 +268,12 @@ fn main() {
             if let tauri::WindowEvent::CloseRequested { api, .. } = event {
                 let hub = window.state::<Arc<Hub>>();
                 let (dirty,busy)=*window.state::<DraftState>().0.lock().unwrap_or_else(|e|e.into_inner());
-                if hub.preferences()["close_action"] == "tray" {
+                let prefs = hub.preferences();
+                // 還沒選過就先問（Mac 關窗維持原行為，不跳）；選完由畫面呼叫 hide 或 quit。
+                if !cfg!(target_os = "macos") && prefs["close_asked"] != true {
+                    api.prevent_close();
+                    let _ = window.emit("close-ask", ());
+                } else if prefs["close_action"] == "tray" {
                     api.prevent_close();
                     let _ = window.hide();
                 } else if hub.busy() || hub.updating() || busy {

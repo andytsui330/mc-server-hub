@@ -10,7 +10,7 @@ pub const LEGACY_FILE: &str = "hub_config.json";
 pub const LEGACY_BACKUP: &str = "hub_config.1x-backup.json";
 
 pub fn default_preferences() -> Value {
-    json!({"launch_at_login":false,"start_hidden":false,"close_action":"quit","auto_start":[],
+    json!({"launch_at_login":false,"start_hidden":false,"close_action":"quit","close_asked":false,"auto_start":[],
         "channel":"stable","theme":"dark","font_size":14,"sound":true,"volume":40,"language":"zh-TW",
         "default_ram":4,"server_dir":"","java_path":"","stop_wait":120,"auto_backup":false,
         "backup_dir":"","backup_keep":10,"backup_schedule":false,"backup_time":"04:00","backup_snapshot":true})
@@ -23,7 +23,7 @@ pub fn clean_preferences(current: &Value, patch: &Value) -> Result<Value> {
     let obj = patch.as_object().ok_or_else(|| UserError::new("設定格式不正確"))?;
     for (k,v) in obj {
         let valid = match k.as_str() {
-            "launch_at_login"|"start_hidden"|"sound"|"auto_backup"|"backup_schedule" => v.is_boolean(),
+            "launch_at_login"|"start_hidden"|"sound"|"auto_backup"|"backup_schedule"|"close_asked" => v.is_boolean(),
             "backup_snapshot" => v==true,
             "backup_keep" => v.as_u64().is_some_and(|n|(1..=100).contains(&n)),
             "backup_time" => v.as_str().is_some_and(valid_backup_time),
@@ -114,6 +114,8 @@ impl Settings {
         if let Some(values) = self.data.get("preferences").and_then(Value::as_object) {
             for (k,v) in values { if let Ok(p) = clean_preferences(&prefs, &json!({k:v})) { prefs = p; } }
         }
+        // 測試頻道沒有 beta Release（2.0.1 隱藏選項）：舊設定存 beta 一律當穩定版。
+        if prefs["channel"] == "beta" { prefs["channel"] = json!("stable"); }
         prefs
     }
 
@@ -267,5 +269,16 @@ mod tests {
         s.save().unwrap();
         assert_eq!(Settings::load(&d).unwrap().view()["join_template"], "嗨 <版本>");
         fs::remove_dir_all(d).unwrap();
+    }
+    #[test]
+    fn old_prefs_still_ask_on_close_and_beta_reads_as_stable() {
+        let mut data = Map::new();
+        data.insert("preferences".into(), json!({"close_action":"quit","channel":"beta"}));
+        let s = Settings { path: PathBuf::new(), data };
+        let p = s.preferences();
+        assert_eq!(p["close_asked"], false, "2.0.0 使用者也要被問一次");
+        assert_eq!(p["channel"], "stable");
+        assert_eq!(clean_preferences(&p, &json!({"close_asked":true})).unwrap()["close_asked"], true);
+        assert!(clean_preferences(&p, &json!({"close_asked":"yes"})).is_err());
     }
 }

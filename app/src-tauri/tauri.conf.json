@@ -1,6 +1,6 @@
 {
   "productName": "MC開服平台",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "identifier": "io.github.mc-server-hub",
   "build": {
     "frontendDist": "../dist",
@@ -50,7 +50,8 @@
         "installMode": "currentUser",
         "languages": ["TradChinese", "English"],
         "displayLanguageSelector": false,
-        "template": "windows/installer.nsi"
+        "template": "windows/installer.nsi",
+        "sidebarImage": "windows/sidebar.bmp"
       }
     },
     "createUpdaterArtifacts": true

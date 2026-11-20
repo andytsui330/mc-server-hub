@@ -174,6 +174,9 @@ async function main() {
     await page.locator('#follow').click();
     console.log('PASS 開機與指令：EULA 取消、Done、玩家、手打/歷史、Ctrl K、打字強確認');
     await page.locator('#quit').click();
+    // 2.0.1：第一次關閉先詢問；選「結束平台」仍要被執行中的伺服器擋下。
+    await page.getByRole('dialog').getByText('結束平台', { exact: true }).click();
+    await page.getByRole('dialog').getByRole('button', { name: '確定', exact: true }).click();
     await page.locator('#toast').getByText('還有伺服器在執行或正在處理資料，請先關機再關閉平台', { exact: true }).waitFor();
     assert(!page.isClosed(), '伺服器執行中視窗不可以關閉');
     await page.locator('#h-power').click();
@@ -279,7 +282,7 @@ async function main() {
           await new Promise(resolve => setTimeout(resolve, 300));
         }
       }).catch(() => {});
-      await page.evaluate(() => window.__TAURI_INTERNALS__.invoke('close_window')).catch(() => {});
+      await page.evaluate(() => window.__TAURI_INTERNALS__.invoke('api', { path: '/api/desktop/quit', body: { discard: true } })).catch(() => {});
     }
     if (browser) await browser.close();
     await new Promise(resolve => {

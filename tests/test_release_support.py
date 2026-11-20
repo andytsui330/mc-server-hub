@@ -11,6 +11,9 @@ ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("release_support", ROOT / "scripts/release_support.py")
 release = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(release)
+bump_spec = importlib.util.spec_from_file_location("bump_version", ROOT / "scripts/bump_version.py")
+bump = importlib.util.module_from_spec(bump_spec)
+bump_spec.loader.exec_module(bump)
 
 
 class ReleaseSupportTests(unittest.TestCase):
@@ -76,6 +79,8 @@ class ReleaseSupportTests(unittest.TestCase):
         self.assertNotIn('RmDir /r "$LOCALAPPDATA', text)
         self.assertNotIn("DeleteAppDataCheckbox", text)
         self.assertIn('CreateShortcut "$SMPROGRAMS', text)
+        self.assertIn('DeleteRegKey HKCU "${MANUPRODUCTKEY}"', text)  # 2.0.1：解除時清本產品鍵
+        self.assertNotRegex(text, r'DeleteRegKey \w+ "\$\{MANUKEY\}"')  # 不刪製造商上層
 
     def test_workflows_are_public_only_read_only_and_actions_are_pinned(self):
         for name in ("ci.yml", "package-windows.yml"):
@@ -151,6 +156,48 @@ class ReleaseSupportTests(unittest.TestCase):
         self.assertEqual(release.with_serial_number(bom), bom)
         changed = dict(bom, version=2)
         self.assertNotEqual(release.with_serial_number(changed)["serialNumber"], bom["serialNumber"])
+
+    def _fixture(self, folder):
+        """在 TEMP 放一份最小版本檔（取自真 repo），不動 repo 本身。"""
+        names = [name for name, _, _ in bump.TARGETS] + ["CHANGELOG.md", "README.md", "docs/使用說明.txt"]
+        for name in names:
+            (folder / name).parent.mkdir(parents=True, exist_ok=True)
+            (folder / name).write_bytes((ROOT / name).read_bytes())
+        (folder / "app/src").mkdir(parents=True, exist_ok=True)
+        (folder / "app/src/ok.tsx").write_text("const v=await getVersion();", encoding="utf-8")
+
+    def test_bump_version_changes_every_file_together_and_fills_changelog_date(self):
+        with tempfile.TemporaryDirectory() as temp:
+            folder = Path(temp)
+            self._fixture(folder)
+            changelog = folder / "CHANGELOG.md"
+            text = changelog.read_bytes().decode("utf-8").replace("## 2.0.0", "## 9.9.9（預定日）\r\n\r\n- ok\r\n\r\n## 2.0.0", 1)
+            changelog.write_bytes(text.encode("utf-8"))
+            self.assertIn("CHANGELOG 標題要寫成「## 9.9.9（YYYY-MM-DD）」", release.release_doc_problems(folder, "9.9.9"))
+            changed = bump.bump(folder, "9.9.9", "2030-01-02")
+            self.assertEqual(len(changed), 7)
+            self.assertEqual(json.loads((folder / "app/src-tauri/tauri.conf.json").read_text(encoding="utf-8"))["version"], "9.9.9")
+            self.assertEqual((folder / "Cargo.lock").read_text(encoding="utf-8").count('version = "9.9.9"'), 2)
+            self.assertIn("\r\n## 9.9.9（2030-01-02）\r\n", changelog.read_bytes().decode("utf-8"))
+            self.assertEqual(release.release_doc_problems(folder, "9.9.9"), [])
+            before = (folder / "core/Cargo.toml").read_bytes()
+            with self.assertRaises(ValueError):
+                bump.bump(folder, "9.9.10", "2030-01-02")  # CHANGELOG 沒有這版 → 整批不寫
+            self.assertEqual((folder / "core/Cargo.toml").read_bytes(), before)
+
+    def test_release_docs_block_hardcoded_version_and_unreleased_wording(self):
+        with tempfile.TemporaryDirectory() as temp:
+            folder = Path(temp)
+            self._fixture(folder)
+            self.assertEqual(release.release_doc_problems(folder, "2.0.0"), [])
+            (folder / "app/src/ok.tsx").write_text("const big='12.0.01';", encoding="utf-8")
+            self.assertEqual(release.release_doc_problems(folder, "2.0.0"), [], "相似數字不誤判")
+            (folder / "app/src/bad.tsx").write_text("<b>v2.0.0</b>", encoding="utf-8")
+            with (folder / "README.md").open("a", encoding="utf-8") as f:
+                f.write("\n2.0.0 尚未正式發佈\n")
+            problems = release.release_doc_problems(folder, "2.0.0")
+            self.assertTrue(any("app/src/bad.tsx" in p for p in problems))
+            self.assertTrue(any("README.md" in p and "尚未正式" in p for p in problems))
 
 
 if __name__ == "__main__":

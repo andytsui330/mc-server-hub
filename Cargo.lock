@@ -2117,7 +2117,7 @@ dependencies = [
 
 [[package]]
 name = "mc-hub-core"
-version = "2.0.0"
+version = "2.0.1"
 dependencies = [
  "flate2",
  "regex",
@@ -2130,7 +2130,7 @@ dependencies = [
 
 [[package]]
 name = "mc-server-hub"
-version = "2.0.0"
+version = "2.0.1"
 dependencies = [
  "mc-hub-core",
  "reqwest",

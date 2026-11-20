@@ -874,6 +874,14 @@ Section Uninstall
   ; We do this when not updating (to preserve the registry value on updates)
   ${If} $UpdateMode <> 1
     DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "${PRODUCTNAME}"
+    ; 2.0.1: full uninstall also removes this product's install-location key (never the manufacturer parent) so a reinstall does not reuse the old path; kept on update.
+    !if "${INSTALLMODE}" == "both"
+      DeleteRegKey SHCTX "${MANUPRODUCTKEY}"
+    !else if "${INSTALLMODE}" == "perMachine"
+      DeleteRegKey HKLM "${MANUPRODUCTKEY}"
+    !else
+      DeleteRegKey HKCU "${MANUPRODUCTKEY}"
+    !endif
   ${EndIf}
 
   !ifmacrodef NSIS_HOOK_POSTUNINSTALL

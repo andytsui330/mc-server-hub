@@ -43,6 +43,31 @@ def release_notes(changelog, version):
     return re.split(r"^## ", rest, maxsplit=1, flags=re.M)[0].strip() + "\n"
 
 
+UNRELEASED_WORDS = ("未發佈", "尚未正式", "候選", "準備中", "預定")
+
+
+def release_doc_problems(root, version):
+    """發版把關：程式不得寫死版本、CHANGELOG 該版要有日期、對外文件不得留發佈前的字樣。"""
+    root = Path(root)
+    problems = []
+    literal = re.compile(r"(?<![\d.])" + re.escape(version) + r"(?![\d.])")
+    for file in sorted((root / "app/src").rglob("*")):
+        if file.suffix in {".ts", ".tsx", ".css", ".html"} and literal.search(file.read_text(encoding="utf-8")):
+            problems.append(f"app/src 寫死版本號 {version}：{file.relative_to(root).as_posix()}（改讀 getVersion()）")
+    changelog = (root / "CHANGELOG.md").read_text(encoding="utf-8")
+    if not re.search(r"^## " + re.escape(version) + r"[（(]\d{4}-\d{2}-\d{2}[）)][ \t]*\r?$", changelog, re.M):
+        problems.append(f"CHANGELOG 標題要寫成「## {version}（YYYY-MM-DD）」")
+    docs = {"README.md": (root / "README.md").read_text(encoding="utf-8"),
+            "docs/使用說明.txt": (root / "docs/使用說明.txt").read_text(encoding="utf-8-sig")}
+    try:
+        docs[f"CHANGELOG {version} 段落"] = release_notes(changelog, version)
+    except ValueError:
+        pass
+    for name, text in docs.items():
+        problems.extend(f"{name} 還有「{word}」" for word in UNRELEASED_WORDS if word in text)
+    return problems
+
+
 def checksum_lines(files):
     files = sorted(map(Path, files), key=lambda p: p.name)
     if len({p.name for p in files}) != len(files):
@@ -160,6 +185,9 @@ def prepare(metadata_file=None, target="x86_64-pc-windows-msvc"):
             raise ValueError("Rust version mismatch")
     if load_json(ROOT / "app/package.json")["version"] != version:
         raise ValueError("frontend version mismatch")
+    problems = release_doc_problems(ROOT, version)
+    if problems:
+        raise ValueError("release docs not ready:\n" + "\n".join(problems))
     if metadata_file:
         metadata = load_json(metadata_file)
     else:

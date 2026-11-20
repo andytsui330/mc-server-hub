@@ -21,4 +21,6 @@ export function onCloseBlocked(handler: () => void): Promise<() => void> {
   return listen("close-blocked", handler);
 }
 
+export function onCloseAsk(handler:()=>void):Promise<()=>void>{return listen('close-ask',handler)}
+
 export function onDraftClose(handler:()=>void):Promise<()=>void>{return listen('draft-close-requested',handler)}
