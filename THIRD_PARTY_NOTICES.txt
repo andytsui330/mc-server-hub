@@ -24,7 +24,7 @@
 - windows-sys（https://github.com/microsoft/windows-rs）：Windows 系統編碼轉換、量伺服器記憶體
 - regex（https://github.com/rust-lang/regex）：看懂啟動檔、檢查指令欄位
 - flate2（https://github.com/rust-lang/flate2-rs）：讀 jar 檔判斷伺服器版本、核對 Fabric 檔案
-（它們間接用到的套件，完整清單與授權全文在打包 2.0.0 時自動產生並附上。）
+（它們間接用到的套件，完整清單與授權全文在每次打包時自動產生並附上。）
 
 ==================== Inter Tight ====================
 

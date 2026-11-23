@@ -1,6 +1,6 @@
 {
   "productName": "MC開服平台",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "identifier": "io.github.mc-server-hub",
   "build": {
     "frontendDist": "../dist",

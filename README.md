@@ -3,19 +3,19 @@
 [![下載 Windows 安裝版](https://img.shields.io/badge/下載-Windows_安裝版-1674b8?style=for-the-badge)](https://github.com/andytsui330/mc-server-hub/releases/latest/download/MCServerHub-Setup-Windows.exe)
 [![下載 Mac 安裝版](https://img.shields.io/badge/下載-Mac_DMG-1674b8?style=for-the-badge)](https://github.com/andytsui330/mc-server-hub/releases/latest/download/MCServerHub-Mac.dmg)
 
-**2.0.0 已正式發佈（2026-11-19）。** 點上方按鈕下載最新版；所有版本、檢查碼與更新說明見 [Releases](https://github.com/andytsui330/mc-server-hub/releases)。Windows 只提供安裝檔，Mac 只提供 DMG，不提供 2.0 可攜 ZIP。
+點上方按鈕下載最新版；所有版本、檢查碼與更新說明見 [Releases](https://github.com/andytsui330/mc-server-hub/releases)。Windows 只提供安裝檔，Mac 只提供 DMG，不提供 2.0 可攜 ZIP。
 
 在自己的電腦開 Minecraft Java 版伺服器：看誰在線、正常開關機、看主控台、下常用指令，以及管理玩家、模組與世界備份。介面使用繁體中文；此處說明以 2.0 為準。
 
 | 平台 | 目前進度 |
 | :-- | :-- |
 | Windows x64 | 目標 Windows 10／11。正式安裝檔已實走下載、安裝、開啟，並驗過解除安裝與既有真服短測；缺少 WebView2 的乾淨電腦自動補裝尚未實測。 |
-| Mac Intel | universal DMG，Intel／macOS 15.8.1 原生操作及真實建服通過；登入啟動與下載後首次開啟體驗仍未驗。Mac 從 2.0.1 起提供自動更新檔，可在「設定 → 更新」更新；更新失敗時請到 Releases 手動下載新版。 |
+| Mac Intel | universal DMG，Intel／macOS 15.8.1 原生操作及真實建服通過；下載後首次開啟已實測（見下方「強制打開」）；登入啟動仍未驗。Mac 從 2.0.1 起提供自動更新檔，可在「設定 → 更新」更新：從 2.0.0／2.0.1 更新時，下載到 100% 後請關掉平台再重新打開；2.0.2 起更新完會自動重開。更新失敗時請到 Releases 手動下載新版。 |
 | Mac Apple 晶片 | DMG 內含 arm64 程式；Apple 晶片實機驗收暫緩，仍標示未驗，不能以 Intel 結果代替。 |
 
 Mac 打包下限設為 macOS 11，這是建置設定，不代表所有 macOS 版本均已實測。已驗與仍未驗的範圍見 [第12步驗收紀錄](docs/step12-readiness.md)。
 
-> English — A local desktop manager for Minecraft: Java Edition servers. Tauri 2 + Rust + React; Traditional Chinese interface. Version 2.0.0 was released on 2026-11-19. The control interface uses internal desktop IPC, not a listening HTTP server. Server game ports are separate and may be reachable according to your server/network settings. Not an official Minecraft product.
+> English — A local desktop manager for Minecraft: Java Edition servers. Tauri 2 + Rust + React; Traditional Chinese interface. The control interface uses internal desktop IPC, not a listening HTTP server. Server game ports are separate and may be reachable according to your server/network settings. Not an official Minecraft product.
 
 ![2.0主畫面，隔離假服示範](docs/screenshot.png)
 
@@ -36,7 +36,7 @@ Mac 打包下限設為 macOS 11，這是建置設定，不代表所有 macOS 版
 2. 開啟 DMG，閱讀授權畫面後，把「MC開服平台」拖進「應用程式」。已有同名程式時，先關閉平台與伺服器並保留備份，再決定是否替換。
 3. 從「應用程式」開啟平台；既有伺服器選含 `start.sh`／`run.sh` 的資料夾。搜尋指令用 `⌘ K`，結束平台用 `⌘ Q`；仍有伺服器或工作在執行時會阻擋結束。
 
-目前 Mac 版僅有本機 ad-hoc 簽章，未取得 Developer ID 簽章或 Apple 公證。下載後的 Gatekeeper 開啟流程尚未驗證；若被系統阻擋，先核對來源與檢查碼，再到「系統設定 → 隱私權與安全性」找到這個 App 按「強制打開」（macOS 15 起不能再用按右鍵「打開」繞過；此步驟尚未用下載版實測）。不要全域關閉 Gatekeeper 或批次移除下載保護標記。
+目前 Mac 版僅有本機 ad-hoc 簽章，未取得 Developer ID 簽章或 Apple 公證。第一次打開會被 Gatekeeper 擋下，看到「未打開『MC開服平台.app』」，只有「完成」和「丟到垃圾桶」兩個按鈕：先核對來源與檢查碼，**按「完成」，不要按「丟到垃圾桶」**；再到「系統設定 → 隱私權與安全性」，在下方找到這個 App 按「強制打開」（2026-11-23 用下載版實測可行；macOS 15 起不能再用按右鍵「打開」繞過）。不要全域關閉 Gatekeeper 或批次移除下載保護標記。
 
 ## 能做什麼
 

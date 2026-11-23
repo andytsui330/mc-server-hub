@@ -1,6 +1,6 @@
 [package]
 name = "mc-hub-core"
-version = "2.0.1"
+version = "2.0.2"
 edition = "2024"
 license = "MIT"
 description = "MC 開服平台核心邏輯：不引用 Tauri，將來換外殼可整包沿用"
