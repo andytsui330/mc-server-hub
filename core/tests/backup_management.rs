@@ -13,7 +13,9 @@ fn fixture() -> PathBuf {
     let base = PathBuf::from(
         std::env::var_os("MCHUB_DATA_DIR").expect("tests require isolated MCHUB_DATA_DIR"),
     );
-    assert!(base.starts_with(std::env::temp_dir()));
+    assert!(fs::canonicalize(&base)
+        .unwrap()
+        .starts_with(fs::canonicalize(std::env::temp_dir()).unwrap()));
     let dir = base.join(format!(
         "backup-{}-{}",
         SystemTime::now()

@@ -728,7 +728,9 @@ mod tests {
         let base = PathBuf::from(
             std::env::var_os("MCHUB_DATA_DIR").expect("isolated MCHUB_DATA_DIR required"),
         );
-        assert!(base.starts_with(std::env::temp_dir()));
+        assert!(fs::canonicalize(&base)
+            .unwrap()
+            .starts_with(fs::canonicalize(std::env::temp_dir()).unwrap()));
         let server = base.join(format!("restore-rollback-{}", unique()));
         let root = server.join("backups");
         for world in ["world", "world_nether", "world_the_end"] {
@@ -801,7 +803,9 @@ mod tests {
         let base = PathBuf::from(
             std::env::var_os("MCHUB_DATA_DIR").expect("isolated MCHUB_DATA_DIR required"),
         );
-        assert!(base.starts_with(std::env::temp_dir()));
+        assert!(fs::canonicalize(&base)
+            .unwrap()
+            .starts_with(fs::canonicalize(std::env::temp_dir()).unwrap()));
         let server = base.join(format!("restore-interrupted-{}", unique()));
         let root = server.join("backups");
         for world in ["world", "world_nether"] {

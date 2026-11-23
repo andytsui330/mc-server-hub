@@ -28,7 +28,7 @@
       "steps": [
         {
           "name": "Isolate app data folder",
-          "run": "$dir = Join-Path $env:RUNNER_TEMP \"mchub-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT\"\nNew-Item -ItemType Directory -Force -Path $dir | Out-Null\n\"MCHUB_DATA_DIR=$dir\" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append"
+          "run": "$dir = Join-Path ([System.IO.Path]::GetTempPath()) \"mchub-$env:GITHUB_RUN_ID-$env:GITHUB_RUN_ATTEMPT\"\nNew-Item -ItemType Directory -Force -Path $dir | Out-Null\n\"MCHUB_DATA_DIR=$dir\" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append"
         },
         {
           "uses": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
@@ -55,20 +55,28 @@
           "run": "rustup toolchain install 1.99.1 --profile minimal --component clippy"
         },
         {
-          "name": "Resolve locked dependencies",
-          "run": "npm ci --ignore-scripts --prefix app\ncargo fetch --locked --target x86_64-pc-windows-msvc"
+          "name": "Install locked frontend dependencies",
+          "run": "npm ci --ignore-scripts --prefix app"
+        },
+        {
+          "name": "Fetch locked Rust dependencies",
+          "run": "cargo fetch --locked --target x86_64-pc-windows-msvc"
         },
         {
           "name": "Prepare licenses, SBOM and release notes",
           "run": "python -B scripts/release_support.py prepare"
         },
         {
-          "name": "Packaging contract tests",
-          "run": "python -B -m unittest discover -s tests -p test_release_support.py -v"
+          "name": "Packaging and CI contract tests",
+          "run": "python -B -m unittest discover -s tests -p test_*.py -v"
         },
         {
-          "name": "Rust regression and lint",
-          "run": "cargo test --workspace --locked\ncargo clippy --workspace --all-targets --locked -- -D warnings"
+          "name": "Rust regression",
+          "run": "cargo test --workspace --locked --no-fail-fast"
+        },
+        {
+          "name": "Rust lint",
+          "run": "cargo clippy --workspace --all-targets --locked -- -D warnings"
         },
         {
           "name": "TypeScript and frontend production build",

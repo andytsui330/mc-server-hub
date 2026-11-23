@@ -160,17 +160,21 @@ mod ansi {
     }
 
     pub fn encode(text: &str) -> Option<Vec<u8>> {
+        encode_with_code_page(text, unsafe { GetACP() })
+    }
+
+    pub(super) fn encode_with_code_page(text: &str, code_page: u32) -> Option<Vec<u8>> {
         // 系統若設成「使用 UTF-8 全球語言支援」，系統編碼就是 UTF-8，不能帶下面的旗標
-        if text.is_empty() || unsafe { GetACP() } == 65001 {
+        if text.is_empty() || code_page == 65001 {
             return Some(text.as_bytes().to_vec());
         }
         let wide: Vec<u16> = text.encode_utf16().collect();
         let mut lossy = 0;
         unsafe {
-            let n = WideCharToMultiByte(CP_ACP, WC_NO_BEST_FIT_CHARS, wide.as_ptr(), wide.len() as i32,
+            let n = WideCharToMultiByte(code_page, WC_NO_BEST_FIT_CHARS, wide.as_ptr(), wide.len() as i32,
                 std::ptr::null_mut(), 0, std::ptr::null(), &mut lossy);
             let mut out = vec![0u8; n.max(0) as usize];
-            let n = WideCharToMultiByte(CP_ACP, WC_NO_BEST_FIT_CHARS, wide.as_ptr(), wide.len() as i32,
+            let n = WideCharToMultiByte(code_page, WC_NO_BEST_FIT_CHARS, wide.as_ptr(), wide.len() as i32,
                 out.as_mut_ptr(), n, std::ptr::null(), &mut lossy);
             (n > 0 && lossy == 0).then(|| {
                 out.truncate(n as usize);
@@ -206,10 +210,28 @@ mod tests {
     #[test]
     fn text_round_trip() {
         assert_eq!(decode_text(b"\xEF\xBB\xBFjava -jar"), "java -jar");
+        let ascii = "C:\\server\\java.exe";
+        assert_eq!(decode_text(&encode_text(ascii).unwrap()), ascii);
         let zh = "C:\\伺服器\\java.exe";
-        assert_eq!(decode_text(&encode_text(zh).unwrap()), zh);
+        assert_eq!(decode_text(zh.as_bytes()), zh);
         if cfg!(windows) && unsafe_acp_is_legacy() {
             assert!(encode_text("😀").is_none(), "系統編碼存不了的字要擋下");
+        }
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn encoding_respects_each_windows_code_page() {
+        let cases: &[(u32, &str, Option<&[u8]>)] = &[
+            (1252, "C:\\server\\java.exe", Some(b"C:\\server\\java.exe")),
+            (1252, "C:\\伺服器\\java.exe", None),
+            (950, "C:\\伺服器\\java.exe", Some(b"C:\\\xa6\xf8\xaaA\xbe\xb9\\java.exe")),
+            (950, "😀", None),
+            (65001, "C:\\伺服器\\java.exe", Some("C:\\伺服器\\java.exe".as_bytes())),
+            (65001, "😀", Some(b"\xf0\x9f\x98\x80")),
+        ];
+        for &(code_page, text, expected) in cases {
+            assert_eq!(ansi::encode_with_code_page(text, code_page).as_deref(), expected, "code page {code_page}");
         }
     }
 
